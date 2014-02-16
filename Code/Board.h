@@ -6,7 +6,7 @@
 #include "fsm.h"
 #include "rectangle.h"
 #include "object.h"
-
+test
 #ifdef _use_smart_ptr_
 #include "smartptrs/scoped_array.hpp"
 #endif 
