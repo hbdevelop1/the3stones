@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="code\Board.cpp" />
+    <ClCompile Include="code\Bboardtest.cpp" />
+    <ClCompile Include="code\Entry.cpp" />
+    <ClCompile Include="code\CountDown.cpp" />
+    <ClCompile Include="code\CTargaImage.cpp" />
+    <ClCompile Include="code\Game.cpp" />
+    <ClCompile Include="code\Intro.cpp" />
+    <ClCompile Include="code\memtest.cpp" />
+    <ClCompile Include="code\MemTracker.cpp" />
+    <ClCompile Include="code\Object.cpp" />
+    <ClCompile Include="code\ObjectsManager.cpp" />
+    <ClCompile Include="code\Rectangle.cpp" />
+    <ClCompile Include="code\Score.cpp" />
+    <ClCompile Include="code\TexturesManager.cpp" />
+    <ClCompile Include="code\Tile.cpp" />
+    <ClCompile Include="code\TimeCounter.cpp" />
+    <ClCompile Include="code\TimeOut.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code\Board.h" />
+    <ClInclude Include="code\Classids.h" />
+    <ClInclude Include="code\Common.h" />
+    <ClInclude Include="code\CountDown.h" />
+    <ClInclude Include="code\CTargaImage.h" />
+    <ClInclude Include="code\fsm.h" />
+    <ClInclude Include="code\Game.h" />
+    <ClInclude Include="code\Intro.h" />
+    <ClInclude Include="code\MemTracker.h" />
+    <ClInclude Include="code\Object.h" />
+    <ClInclude Include="code\ObjectsManager.h" />
+    <ClInclude Include="code\ObjectsRectangles.h" />
+    <ClInclude Include="code\Rectangle.h" />
+    <ClInclude Include="code\Score.h" />
+    <ClInclude Include="code\TexturesManager.h" />
+    <ClInclude Include="code\Tile.h" />
+    <ClInclude Include="code\TimeCounter.h" />
+    <ClInclude Include="code\TimeOut.h" />
+    <ClInclude Include="code\smartptrs\scoped_array.hpp">
+      <Filter>smartptrs</Filter>
+    </ClInclude>
+    <ClInclude Include="code\smartptrs\scoped_ptr.hpp">
+      <Filter>smartptrs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\The3Stonesreadme.txt" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="smartptrs">
+      <UniqueIdentifier>{4a9cf37e-7103-477e-9268-c738705f7431}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

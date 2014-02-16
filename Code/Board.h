@@ -8,7 +8,7 @@
 #include "object.h"
 
 #ifdef _use_smart_ptr_
-#include "boost/smart_ptr/scoped_array.hpp"
+#include "smartptrs/scoped_array.hpp"
 #endif 
 
 struct Tile;

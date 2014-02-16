@@ -5,7 +5,7 @@
 //#include <boost/smart_ptr/scoped_ptr.hpp>
 //#include <memory>
 //#include "smartptrs/autoptr.h"
-#include "boost/smart_ptr/scoped_ptr.hpp"
+#include "smartptrs/scoped_ptr.hpp"
 
 #endif
 
