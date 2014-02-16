@@ -7,9 +7,9 @@
 #include "objectsmanager.h"
 #include "objectsrectangles.h"
 
-#ifdef _use_smart_ptr_
+
 #include "smartptrs/scoped_ptr.hpp"
-#endif 
+ 
 
 
 #ifdef _use_my_mem_tracker_
@@ -42,11 +42,11 @@ Board::Board():r(ObjectsRectangles[e_rect_board]),
 	Tile::board=this;
 	click.notprocessed=false;
 
-#ifdef _use_smart_ptr_
+
 	tiles.reset(new TileTex [e_RowSize*e_ColumnSize]);
-#else
-	tiles=new TileTex [e_RowSize*e_ColumnSize];
-#endif
+
+	
+
 	
 	
 	for(uint8 i=0; i<e_ColumnSize; ++i)
@@ -125,12 +125,12 @@ void Board::Reset()
 
 Board::~Board()
 {
-#ifdef _use_smart_ptr_
-#elif _use_my_mem_tracker_
-	deletea<TileTex>(tiles);
-#else
-	delete [] tiles;
-#endif 
+
+
+
+
+
+
 }
 void Board::Draw()
 {

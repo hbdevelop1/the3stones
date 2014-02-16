@@ -7,10 +7,6 @@
 #include "timecounter.h"
 #include "score.h"
 
-#ifdef _use_smart_ptr_
-//#include <memory> //to use auto_ptr for assignement to scoped_ptr, as there is no function in the later for that effect
-//#include "smartptrs/autoptr.h"
-#endif
 
 #ifdef _use_my_mem_tracker_
 #define new new(__FILE__,__LINE__)
@@ -29,27 +25,9 @@ game::game()
 	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_game);
 
 
-#ifdef _use_smart_ptr_
 	board.reset(new Board );
 	score.reset( new Score );
 	timer.reset( new TimeCounter);
-	
-	/*
-	std::auto_ptr<Board> b( new Board );
-	board.reset(b.release());
-
-	std::auto_ptr<Score> s( new Score );
-	score.reset(s.release());
-
-	std::auto_ptr<TimeCounter> t( new TimeCounter);
-	timer.reset(t.release());
-	*/
-#else
-	board=new Board;
-	score=new Score;
-	timer=new TimeCounter;
-
-#endif
 
 	//ObjectsManager::GetInstance().PushBack(board,false);
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
@@ -69,16 +47,6 @@ game::~game()
 {
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
 
-#ifdef _use_smart_ptr_
-#elif _use_my_mem_tracker_ 
-	deleteo<Board>(board);
-	deleteo<Score>(score);
-	deleteo<TimeCounter>(timer);
-#else
-	delete board;
-	delete score;
-	delete timer;
-#endif
 
 
 }

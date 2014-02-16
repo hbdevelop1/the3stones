@@ -1,20 +1,12 @@
 
-#ifdef _use_smart_ptr_
 #include "smartptrs/scoped_array.hpp"
-//#include "CTargaImage.h"
-#endif
 
 class CTargaImage;
 
 class TexturesManager
 {
-#ifdef _use_smart_ptr_
 	boost::scoped_array<CTargaImage>	m_tex;
 	boost::scoped_array<unsigned int>	m_texObj;
-#else
-	CTargaImage				*m_tex;
-	unsigned int			*m_texObj;
-#endif
 
 	
 private:

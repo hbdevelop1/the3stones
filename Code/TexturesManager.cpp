@@ -23,18 +23,8 @@ TexturesManager::~TexturesManager()
 
 bool TexturesManager::TexInit()
 {
-#ifdef _use_smart_ptr_
 	m_tex.reset(new CTargaImage[e_tex_nbrofTextures]);
-#else
-	m_tex = new CTargaImage[e_tex_nbrofTextures];
-#endif
-	{
-		unsigned int *p= reinterpret_cast<unsigned int *>(&m_tex);
-		unsigned int y=p[0];
-		BOOST_ASSERT(y!=0);
-		m_tex.get();
-	}
-	
+
 	unsigned int i=0;
 	// load texture image data
 	if (!m_tex[e_tex_tile_blue		].Load("data/tile_blue.tga")) return false;
@@ -50,11 +40,7 @@ bool TexturesManager::TexInit()
 	if (!m_tex[e_tex_countdown		].SetOpaqueColor(0,0,0))
 		return false;
 
-#ifdef _use_smart_ptr_
 	m_texObj.reset(new unsigned int[e_tex_nbrofTextures]);
-#else
-	m_texObj = new unsigned int[e_tex_nbrofTextures];
-#endif
 
 	// now that the texture object is bound, specify a texture for it
 	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i)
@@ -93,15 +79,6 @@ void TexturesManager::TexUninit()
 //	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i) m_tex[i].Release();
 
 
-#ifdef _use_smart_ptr_
-
-#elif _use_my_mem_tracker_
-	deletea<CTargaImage>(m_tex);
-	deleteo<unsigned int>(m_texObj);
-#else
-	delete [] m_tex;
-	delete [] m_texObj;
-#endif
 
 }
 

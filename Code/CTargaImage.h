@@ -1,13 +1,8 @@
 #ifndef __TARGA_LIB
 #define __TARGA_LIB
 
-#ifdef _use_smart_ptr_
-//#include <boost/smart_ptr/scoped_ptr.hpp>
-//#include <memory>
-//#include "smartptrs/autoptr.h"
 #include "smartptrs/scoped_ptr.hpp"
 
-#endif
 
 enum TGATypes
 {
@@ -73,12 +68,9 @@ private:
 	unsigned char  m_colorDepth;
 	unsigned char  m_imageDataType;
 	unsigned char  m_imageDataFormat;
-#ifdef _use_smart_ptr_
+
 	boost::scoped_ptr<unsigned char> m_pImageData;
-	//hb::auto_ptr<unsigned char> m_pImageData;
-#else
-	unsigned char *m_pImageData;
-#endif  
+
 	unsigned short m_width;
 	unsigned short m_height;	
 	unsigned long  m_imageSize;

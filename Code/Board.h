@@ -6,10 +6,10 @@
 #include "fsm.h"
 #include "rectangle.h"
 #include "object.h"
-test
-#ifdef _use_smart_ptr_
+
+
 #include "smartptrs/scoped_array.hpp"
-#endif 
+ 
 
 struct Tile;
 struct TileColored;
@@ -58,11 +58,11 @@ private:
 	//SquareColored squares[e_RowSize][e_ColumnSize];
 	PositionInBoard positions[e_ColumnSize][e_RowSize+1];
 	//TileColored 
-#ifdef _use_smart_ptr_
+
 	boost::scoped_array<TileTex> tiles;
-#else
-	TileTex * tiles;
-#endif
+
+	
+
 	const hb::Rectangle & r;
 	Event		click;
 	hb::Pointu8	SelectedTilesPosition;

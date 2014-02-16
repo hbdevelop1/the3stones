@@ -11,6 +11,8 @@
 //  http://www.boost.org/libs/smart_ptr/scoped_ptr.htm
 //
 
+//modified by me to fit my needs
+
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
@@ -26,12 +28,6 @@ namespace boost
 
 // Debug hooks
 
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-
-void sp_scalar_constructor_hook(void * p);
-void sp_scalar_destructor_hook(void * p);
-
-#endif
 
 //  scoped_ptr mimics a built-in pointer except that it guarantees deletion
 //  of the object pointed to, either on destruction of the scoped_ptr or via
@@ -58,28 +54,24 @@ public:
 
     explicit scoped_ptr( T * p = 0 ): px( p ) // never throws
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px );
-#endif
     }
 
 #ifndef BOOST_NO_AUTO_PTR
 
     explicit scoped_ptr( std::auto_ptr<T> p ) BOOST_NOEXCEPT : px( p.release() )
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px );
-#endif
     }
 
 #endif
 
     ~scoped_ptr() // never throws
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( px );
-#endif
+#ifdef _use_my_mem_tracker_
+		deleteo4boost(px);
+#else
         boost::checked_delete( px );
+#endif
+		
     }
 
     void reset(T * p = 0) // never throws
