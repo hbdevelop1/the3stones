@@ -44,6 +44,7 @@
     <ClInclude Include="code\smartptrs\scoped_ptr.hpp">
       <Filter>smartptrs</Filter>
     </ClInclude>
+    <ClInclude Include="Code\MemNew.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\The3Stonesreadme.txt" />

@@ -23,6 +23,8 @@
 # include <memory>          // for std::auto_ptr
 #endif
 
+
+
 namespace boost
 {
 

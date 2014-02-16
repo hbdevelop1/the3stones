@@ -76,6 +76,7 @@ template<class T> void deletea4boost(T *p) //boost uses boost::checked_delete, s
 };
 
 
+
 #endif //_MEMTRACKER_
 
 #endif //_use_my_mem_tracker_

@@ -2,9 +2,7 @@
 #include "common.h"
 #include "rectangle.h"
 
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif //_use_my_mem_tracker_
+#include "MemNew.h"
 
 
 namespace hb

@@ -2,10 +2,8 @@
 
 #include "TexturesManager.h"
 #include "CTargaImage.h"
-
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif
+#include "Common.h"
+#include "MemNew.h"
 
 TexturesManager::TexturesManager()
 {

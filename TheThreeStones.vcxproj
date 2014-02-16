@@ -106,6 +106,7 @@
     <ClInclude Include="code\fsm.h" />
     <ClInclude Include="code\Game.h" />
     <ClInclude Include="code\Intro.h" />
+    <ClInclude Include="Code\MemNew.h" />
     <ClInclude Include="code\MemTracker.h" />
     <ClInclude Include="code\Object.h" />
     <ClInclude Include="code\ObjectsManager.h" />

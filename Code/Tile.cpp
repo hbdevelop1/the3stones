@@ -10,9 +10,7 @@
 #include "classids.h"
 #include "TexturesManager.h"
 
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif
+#include "MemNew.h"
 
 const unsigned int Tile::speedofswap=3;
 
