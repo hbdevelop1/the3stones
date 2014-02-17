@@ -25,7 +25,7 @@ namespace hbhash
 
 struct lALLOC_INFO
 {
-	long number;
+//	long number;
 	long address;
 	long size;
 	char file[FILENAMELEN+1];
@@ -49,12 +49,44 @@ long getHashValue(long addr)
 	return addr & 0x000000ff;
 }
 
+long getHashValue2(long addr)
+{
+	char a=0;
+	for(char i=0; i<8; ++i )
+	{
+		a |= (addr & (1<<(4*i)))>>((4*i)-i);
+		//printf("a=0x%02X  ",a);
+	}
+
+	//printf("\n");
+
+	return a;
+}
+
+char getHashValue3(long addr)
+{
+	register char *k=(char*)&addr;
+   register char a;
+//   a = 0xb9;  /* the golden ratio; an arbitrary value */
+a=(char )0xff;//cast to avoid warning C4309: '=' : truncation of constant value
+
+   a=a^k[3]; 
+   a=a^k[2];
+   a=a^k[1];
+   a=a^k[0];
+     
+   return a;
+}
+
+
 void AddTrack(long addr, long asize, char *filename, int line)
 {
 	long t1=getHashValue(addr);
+	long t2=getHashValue2(addr);
+	char t3=getHashValue3(addr);
 
-	//printf("hassan"); 	printf("hassan%x",addr); 	printf("hassan%x",t1);
-	printf("0x%08X->0x%02X\n",addr,t1);
+	printf("0x%08X->0x%02X:0x%02X:0x%02X\n",addr,t1,t2,t3);
+
 
 	lALLOC_INFO * info= (lALLOC_INFO *)malloc(sizeof(lALLOC_INFO));
 	info->address = addr;
@@ -90,7 +122,7 @@ void AddTrack(long addr, long asize, char *filename, int line)
 	}
 	else
 	{
-		assert(0);
+		hbassert(0);
 	}
 
 };

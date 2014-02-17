@@ -2,10 +2,11 @@
 #ifndef _OBJECT_
 #define _OBJECT_
 
+#include <boost/noncopyable.hpp>
 
 class ObjectsManager;
 
-class Object
+class Object  : private boost::noncopyable
 {
 #if DEBUGMODE & TESTING
 	public:

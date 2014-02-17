@@ -1,7 +1,8 @@
 
 #include "object.h"
+#include <boost/noncopyable.hpp>
 
-class ObjectsManager
+class ObjectsManager : private boost::noncopyable
 {
 	struct Delimitor : public Object
 	{
@@ -25,9 +26,12 @@ private:
 
 private:
 	ObjectsManager();
+	/*
 	ObjectsManager(const ObjectsManager &);
 	ObjectsManager & operator=(const ObjectsManager&);
 
+	replaced by inheretance of noncopyable class 
+	*/
 public:
 
 	~ObjectsManager();
