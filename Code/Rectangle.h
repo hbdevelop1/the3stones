@@ -56,6 +56,7 @@ typedef Point<uint8,sint8> Pointu8;
 Pointu8 Pointu8::Invalid(0xFF,0xFF);
 typedef Point<sint8> Points8;
 typedef Point<uint32,sint32> Pointu32;
+typedef Point<sint32,sint32> Points32;
 
 
 /*
@@ -67,19 +68,42 @@ public:
 };
 */
 
-struct Rectangle
+template<class T> struct stRectangle
 {
-	uint32 l;  //correct the type fields
-	uint32 b;
-	uint32 r;
-	uint32 t; //optim:members are defined in the order of the access
+	T l;
+	T b;
+	T r;
+	T t; //optim:members are defined in the order of the access
 public:
-	Rectangle();
-	Rectangle(uint32 _l, uint32 _b, uint32 _r, uint32 _t);
-	bool operator==(const Rectangle & r);
-	Rectangle operator+(const Rectangle & e) const;
+	stRectangle();
+	stRectangle(T _l, T _b, T _r, T _t);
+	bool operator==(const stRectangle<T> & r);
+	stRectangle<T> operator+(const stRectangle<T> & e) const;
 
 };
+
+template<class T> stRectangle<T>::stRectangle()
+{
+}
+
+
+template<class T> stRectangle<T>::stRectangle(T _l, T _b, T _r, T _t):l(_l),b(_b), r(_r),t(_t)
+{
+}
+
+template<class T> bool stRectangle<T>::operator==(const stRectangle<T> & e)
+{
+	return (l==e.l && b==e.b && r==e.r && t==e.t );
+}
+
+template<class T> stRectangle<T> stRectangle<T>::operator+(const stRectangle<T> & e) const
+{
+	return stRectangle<T>(l+e.l, b+e.b, r+e.r, t+e.t );
+}
+
+typedef stRectangle<uint32> Rectangle;
+typedef stRectangle<sint32> signedRectangle;
+
 
 }
 

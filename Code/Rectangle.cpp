@@ -8,25 +8,11 @@
 namespace hb
 {
 
-
-Rectangle::Rectangle()
+Rectangle operator+(const Rectangle & e, const signedRectangle & f)
 {
+	return Rectangle(f.l+e.l, f.b+e.b, f.r+e.r, f.t+e.t );
 }
 
-
-Rectangle::Rectangle(uint32 _l, uint32 _b, uint32 _r, uint32 _t):l(_l),b(_b), r(_r),t(_t)
-{
-}
-
-bool Rectangle::operator==(const Rectangle & e)
-{
-	return (l==e.l && b==e.b && r==e.r && t==e.t );
-}
-
-Rectangle Rectangle::operator+(const Rectangle & e) const
-{
-	return Rectangle(l+e.l, b+e.b, r+e.r, t+e.t );
-}
 
 
 }
