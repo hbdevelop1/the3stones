@@ -15,6 +15,7 @@
 #include "MemNew.h"
 
 
+
 PositionInBoard::PositionInBoard():tile(NULL)
 {
 	;
@@ -118,6 +119,43 @@ void Board::Reset()
 
 
 	START_BEHAVIOR(Board, Behavior_Stable);
+
+#if _bezier_ == 1
+	int m,n;
+	m=6,n=0;
+	m_bzP[0]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+
+	m=6,n=5;
+	m_bzP[1]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+	m=6,n=6;
+	m_bzP[2]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+
+	m=1,n=0;
+	m_bzP[3]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+
+	m_t=0;
+	m_stept=.01f;
+	m_tm=clock();
+
+#endif _bezier_ == 1
+
+#if _bezier_ == 2
+	int m,n;
+
+	m=6,n=0;
+	m_bzP[0]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+
+	m=6,n=6;
+	m_bzP[1]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+	
+	m=1,n=0;
+	m_bzP[2]=hb::Pointu32(tiles[m*e_RowSize+n].r.l,tiles[m*e_RowSize+n].r.b);
+
+	m_t=0;
+	m_stept=.01f;
+	m_tm=clock();
+
+#endif _bezier_ == 2
 }
 
 Board::~Board()
@@ -129,6 +167,9 @@ Board::~Board()
 
 
 }
+
+hb::Pointu32 sPoint,ePoint;
+
 void Board::Draw()
 {
     glColor3f (0.0, 0.0, 0.0);
@@ -158,6 +199,12 @@ void Board::Draw()
 
 	glDisable(GL_TEXTURE_2D);
 
+#if _bezier_ > 0
+	glRasterPos2f(m_txtpos.x, m_txtpos.y);
+	char* p = "bezier";
+	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
+#endif _bezier_ > 1
+
 }
 
 void Board::Update()
@@ -179,6 +226,72 @@ void Board::Update()
 			tiles[i*e_RowSize+j].Update();
 		}
 	}
+
+#if _bezier_ == 1
+	{
+		if(clock()-m_tm >= 100)
+		{
+			m_tm=clock();
+
+			if(m_t>=1.f)
+			{
+				m_t=0;
+			}
+			//m_t=0 -> p0
+			//m_t=1 -> p1
+
+			float _1_t = 1-m_t;
+			float _1_t2 = _1_t * _1_t;
+			float t2=m_t * m_t;
+			float t3=t2 * m_t;
+
+			float D=t3;
+			float C=3 * _1_t * t2;
+			float B=3 * _1_t2 * m_t;
+			float A=_1_t2 * _1_t;
+
+			float x=A*m_bzP[0].x+B*m_bzP[1].x+C*m_bzP[2].x+D*m_bzP[3].x;
+			float y=A*m_bzP[0].y+B*m_bzP[1].y+C*m_bzP[2].y+D*m_bzP[3].y;
+
+			m_txtpos.x=x;
+			m_txtpos.y=y;
+
+			m_t+=m_stept;
+		}		
+	}
+#endif _bezier_ == 1
+
+#if _bezier_ == 2
+	{
+		if(clock()-m_tm >= 100)
+		{
+			m_tm=clock();
+
+			if(m_t>=1.f)
+			{
+				m_t=0;
+			}
+			//m_t=0 -> p0
+			//m_t=1 -> p1
+
+			float _1_t = 1-m_t;
+			float _1_t2 = _1_t * _1_t;
+			float t2=m_t * m_t;
+			
+			float C=t2;
+			float B=2 * _1_t * m_t;
+			float A=_1_t2;
+
+			float x=A*m_bzP[0].x+B*m_bzP[1].x+C*m_bzP[2].x;
+			float y=A*m_bzP[0].y+B*m_bzP[1].y+C*m_bzP[2].y;
+
+			m_txtpos.x=x;
+			m_txtpos.y=y;
+
+			m_t+=m_stept;
+		}		
+	}
+#endif _bezier_ == 1
 }
 
 PositionInBoard * Board::GetFreePositionBelow(hb::Pointu8 l)

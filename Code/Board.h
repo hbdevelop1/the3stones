@@ -9,7 +9,13 @@
 
 
 #include "smartptrs/scoped_array.hpp"
- 
+
+#define _bezier_ 1
+
+#if _bezier_ > 0
+#include "time.h"
+#endif _bezier_ > 0
+
 
 struct Tile;
 struct TileColored;
@@ -61,7 +67,21 @@ private:
 
 	boost::scoped_array<TileTex> tiles;
 
-	
+#if _bezier_ == 1
+	hb::Pointu32	m_bzP[4];
+	hb::Pointu32	m_txtpos;
+	float			m_t; //goes from 0 to 1
+	float		m_stept; //=0.1 => will take 8 postions for the text to travel to its resting position
+	clock_t		m_tm;
+#endif _bezier_ == 1
+
+#if _bezier_ == 2
+	hb::Pointu32	m_bzP[3];
+	hb::Pointu32	m_txtpos;
+	float			m_t; //goes from 0 to 1
+	float		m_stept;
+	clock_t		m_tm;
+#endif _bezier_ == 1
 
 	const hb::Rectangle & r;
 	Event		click;
