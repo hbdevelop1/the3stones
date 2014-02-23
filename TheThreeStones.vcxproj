@@ -38,16 +38,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <IncludePath>$(ProjectDir)\libs;$(IncludePath);;C:\data\code\libs\boost_1_54_0</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\libs;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\libs;$(IncludePath);;C:\data\code\libs\boost_1_54_0</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessToFile>false</PreprocessToFile>
@@ -67,6 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
