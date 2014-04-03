@@ -10,15 +10,17 @@
 class Board;
 class TimeCounter;
 class Score;
-
+class  Encouragement;
 
 
 class game : public Object
 {
 	
-	boost::scoped_ptr<Board>		board;
-	boost::scoped_ptr<TimeCounter>	timer;
-	boost::scoped_ptr<Score>		score;
+	boost::scoped_ptr<Board>			board;
+	boost::scoped_ptr<TimeCounter>		timer;
+	boost::scoped_ptr<Score>			score;
+	boost::scoped_ptr<Encouragement>	encouragement_good;
+	boost::scoped_ptr<Encouragement>	encouragement_wow;
 
 private:
 	game(const game &);

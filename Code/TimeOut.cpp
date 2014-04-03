@@ -186,14 +186,14 @@ void TimeOut::OnClick(uint32 x,uint32 y)
 		dynamic_cast<Score*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score))->UpdateHighestScore();
 
 	//	game->reset();
-		ObjectsManager::GetInstance().Pop(this);
+		ObjectsManager::GetInstance().Pop(this,false);
 	}
 	else if(rquit.l<=x && x<=rquit.r && rquit.b<=y && y<=rquit.t)
 	{
 //		game *g=dynamic_cast<game*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game));
 	//	game->reset();
 		//ObjectsManager::GetInstance().Pop(this);
-		ObjectsManager::GetInstance().Pop(this);
+		ObjectsManager::GetInstance().Pop(this,false);
 		exit ( 0 );
 	}
 

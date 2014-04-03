@@ -47,7 +47,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_;DEBUGMODE;TESTING</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessToFile>false</PreprocessToFile>
@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="code\Board.cpp" />
     <ClCompile Include="code\Bboardtest.cpp" />
+    <ClCompile Include="Code\Encouragement.cpp" />
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
     <ClCompile Include="code\CTargaImage.cpp" />
@@ -97,6 +98,7 @@
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
+    <ClCompile Include="Code\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -104,6 +106,7 @@
     <ClInclude Include="code\Common.h" />
     <ClInclude Include="code\CountDown.h" />
     <ClInclude Include="code\CTargaImage.h" />
+    <ClInclude Include="Code\Encouragement.h" />
     <ClInclude Include="code\fsm.h" />
     <ClInclude Include="code\Game.h" />
     <ClInclude Include="code\Intro.h" />
@@ -120,6 +123,7 @@
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />
+    <ClInclude Include="Code\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\The3Stonesreadme.txt" />

@@ -18,6 +18,8 @@
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
+    <ClCompile Include="Code\Vector.cpp" />
+    <ClCompile Include="Code\Encouragement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -45,6 +47,8 @@
       <Filter>smartptrs</Filter>
     </ClInclude>
     <ClInclude Include="Code\MemNew.h" />
+    <ClInclude Include="Code\Vector.h" />
+    <ClInclude Include="Code\Encouragement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\The3Stonesreadme.txt" />

@@ -206,7 +206,7 @@ void Intro::OnClick(uint32 x,uint32 y)
 {
 	if(rplay.l<=x && x<=rplay.r && rplay.b<=y && y<=rplay.t)
 	{
-		ObjectsManager::GetInstance().Pop(this);
+		ObjectsManager::GetInstance().Pop(this,false);
 	}
 
 }

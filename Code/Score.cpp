@@ -148,7 +148,19 @@ void Text::Update()
 		currentPos.x=x;
 		currentPos.y=y;
 		t+=Text::stept;
-	}		
+	}
+	/*
+	hb::Vector vector(landingPoint-currentPos);
+	hb::Points32 distance=vector.GetDistance();
+
+	
+	get distance from destination point;
+	if(distance<10)
+	{
+		activate transparency computing;
+
+	}
+	*/
 }
 
 

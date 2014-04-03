@@ -6,6 +6,7 @@
 #include "board.h"
 #include "timecounter.h"
 #include "score.h"
+#include "Encouragement.h"
 
 
 #include "MemNew.h"
@@ -26,11 +27,13 @@ game::game()
 	board.reset(new Board );
 	score.reset( new Score );
 	timer.reset( new TimeCounter);
+	encouragement_good.reset( new Encouragement(5) );
+	encouragement_wow.reset( new Encouragement(4) );
 
-	//ObjectsManager::GetInstance().PushBack(board,false);
+	ObjectsManager::GetInstance().PushBack(board.get(),false);
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
-	//ObjectsManager::GetInstance().PushBack(score,false);
-//	ObjectsManager::GetInstance().PushBack(timer,false);
+	ObjectsManager::GetInstance().PushBack(score.get(),false);
+	ObjectsManager::GetInstance().PushBack(timer.get(),false);
 
 
 
@@ -51,9 +54,10 @@ game::~game()
 
 void game::WhenPushed()
 {
-	ObjectsManager::GetInstance().PushBack(board.get());
+/*	ObjectsManager::GetInstance().PushBack(board.get());
 	ObjectsManager::GetInstance().PushBack(score.get());
 	ObjectsManager::GetInstance().PushBack(timer.get());
+	*/
 }
 
 void game::Update()
@@ -87,7 +91,7 @@ CONSTRUCT_BEHAVIOR_BEGIN
 		board->Reset();
 		score->Reset();
 
-	ObjectsManager::GetInstance().PushBack(CLASSID_Intro);
+	ObjectsManager::GetInstance().PushBack(CLASSID_Intro,false);
 }
 CONSTRUCT_BEHAVIOR_END
 
@@ -111,7 +115,7 @@ void game::Behavior_countdown()
 		board->Reset();
 		score->Reset();
 
-		ObjectsManager::GetInstance().PushBack(CLASSID_CountDown);
+		ObjectsManager::GetInstance().PushBack(CLASSID_CountDown,false);
 	}
 	CONSTRUCT_BEHAVIOR_END
 
@@ -165,7 +169,7 @@ void game::Behavior_timeout()
 	*/
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		ObjectsManager::GetInstance().PushBack(CLASSID_TimeOut);
+		ObjectsManager::GetInstance().PushBack(CLASSID_TimeOut,false);
 	}
 	CONSTRUCT_BEHAVIOR_END
 

@@ -380,6 +380,7 @@ UPDATE_BEHAVIOR_BEGIN
 	if(positions[click.p.x][click.p.y].tile->pFreePositionToMoveTo==NULL && 
 		positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->pFreePositionToMoveTo==NULL)
 	{
+		//todo:use time instead of frames
 		if(nbrofframes2waitafterswap>0)
 			--nbrofframes2waitafterswap;
 		else

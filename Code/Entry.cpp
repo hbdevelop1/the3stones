@@ -20,7 +20,7 @@ void DumpUnfreed();
 void AtExit()
 {
 	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);
-	ObjectsManager::GetInstance().Pop(o);
+	ObjectsManager::GetInstance().Pop(o,true);
 
 #ifdef _use_my_mem_tracker_
 	DumpUnfreed();
@@ -34,7 +34,7 @@ void game_init()
 	if(atexit (AtExit))
 		exit(1);
 
-	ObjectsManager::GetInstance().PushBack(CLASSID_game);
+	ObjectsManager::GetInstance().PushBack(CLASSID_game,true);
 	
 }
 void game_deinit()

@@ -7,7 +7,8 @@ namespace hb
 {
 template <typename T1, typename T2=T1> struct Point
 {
-	T1 x,y;
+	T1 x;
+	T1 y;
 public:
 	static Point<T1, T2> Invalid;
 
