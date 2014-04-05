@@ -1,6 +1,7 @@
 
 #include "Encouragement.h"
 
+#include "MemNew.h"
 
 Encouragement::Encouragement(unsigned int n):m_nbrofelements(n)
 {

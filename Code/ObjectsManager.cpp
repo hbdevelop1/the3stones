@@ -235,6 +235,18 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 		Remove(o);
 }
 
+void ObjectsManager::Clear()
+{
+	Object *obj;
+	for(obj=activeobjects.next;obj!=&activeobjects;obj=obj->next)
+	{
+		if(obj->GetFlag() & Object::e_FLAG_MASTER)
+			Pop(obj,false);
+	}
+
+	RunDelayedFunctions();
+}
+
 Object * ObjectsManager::GetMaster()
 {
 	return activeobjects.next;

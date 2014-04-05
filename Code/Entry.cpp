@@ -19,8 +19,9 @@ void DumpUnfreed();
 
 void AtExit()
 {
-	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);
-	ObjectsManager::GetInstance().Pop(o,true);
+	ObjectsManager::GetInstance().Clear();
+
+	//Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	ObjectsManager::GetInstance().Pop(o,true);
 
 #ifdef _use_my_mem_tracker_
 	DumpUnfreed();

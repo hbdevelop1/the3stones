@@ -102,6 +102,7 @@ public:
 	void reset();
 	void Update();
 	void Draw();
+	void Clear();
 
 	Object * GetMaster();
 
