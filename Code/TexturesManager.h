@@ -1,5 +1,5 @@
 
-#include "smartptrs/scoped_array.hpp"
+#include <boost/smart_ptr/scoped_array.hpp>
 
 class CTargaImage;
 

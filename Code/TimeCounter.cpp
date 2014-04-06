@@ -38,9 +38,9 @@ void TimeCounter::Update()
 	*/
 	sprintf(time_str,"%01d:%02d",m,s);
 
-	if(s>=3)
+	if(s>=13)
 	{
-		//m_timeout=true;
+		m_timeout=true;
 	}
 	if(m>=1)
 	{

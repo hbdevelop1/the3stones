@@ -13,18 +13,18 @@
 
 #include "MemNew.h"
 
-#ifdef _use_my_mem_tracker_
-void DumpUnfreed();
-#endif
-
 void AtExit()
 {
 	ObjectsManager::GetInstance().Clear();
 
-	//Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	ObjectsManager::GetInstance().Pop(o,true);
+	/*freeing memory this way is not efficient as it doesn't remore Intro, TimeOut and Countdown if they are running. 
+	use ObjectsManager::GetInstance().Clear()
 
+	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	
+	ObjectsManager::GetInstance().Pop(o,true);
+	*/
 #ifdef _use_my_mem_tracker_
-	DumpUnfreed();
+	hbhash::DumpUnfreed();
 #endif
 }
 

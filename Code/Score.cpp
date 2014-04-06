@@ -8,7 +8,6 @@
 #include "TexturesManager.h"
 #include "objectsrectangles.h"
 
-#include "MemNew.h"
 
 #pragma warning (disable:4996)
 
@@ -108,6 +107,7 @@ Text::Text(const char* s, hb::Pointu32 sp, GlobalScore & gs)
 {
 	strncpy(str,s,MAXSTRSZ-1);
 }
+
 
 void Text::Reset(const char* s, hb::Pointu32 sp)
 {

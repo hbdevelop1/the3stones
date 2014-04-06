@@ -8,7 +8,7 @@
 #include "object.h"
 
 
-#include "smartptrs/scoped_array.hpp"
+#include <boost/smart_ptr/scoped_array.hpp>
 
 #define _bezier_ 1
 

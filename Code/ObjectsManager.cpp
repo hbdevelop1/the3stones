@@ -1,9 +1,8 @@
 
 #include "classids.h"
 #include "objectsmanager.h"
-#include "common.h"
 
-#define new new(__FILE__,__LINE__)
+
 
 typedef Object * (*ObjectsCreators)(void);
 
@@ -150,8 +149,9 @@ Object * ObjectsManager::Remove(Object * obj)
 	obj->prev->next=obj->next;
 
 	if(obj->GetFlag() & Object::e_FLAG_DELETE_ON_POP)
-		//delete obj;
-		deleteo<Object>(obj);
+		////delete obj;
+		//deleteo<Object>(obj);
+		delete obj;
 
 	return prev;
 }

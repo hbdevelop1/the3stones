@@ -21,6 +21,7 @@ TexturesManager::~TexturesManager()
 
 bool TexturesManager::TexInit()
 {
+	//m_tex = new CTargaImage[e_tex_nbrofTextures];
 	m_tex.reset(new CTargaImage[e_tex_nbrofTextures]);
 
 	unsigned int i=0;
@@ -38,6 +39,7 @@ bool TexturesManager::TexInit()
 	if (!m_tex[e_tex_countdown		].SetOpaqueColor(0,0,0))
 		return false;
 
+	//m_texObj = new unsigned int[e_tex_nbrofTextures];
 	m_texObj.reset(new unsigned int[e_tex_nbrofTextures]);
 
 	// now that the texture object is bound, specify a texture for it
@@ -76,7 +78,11 @@ void TexturesManager::TexUninit()
 
 //	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i) m_tex[i].Release();
 
+	////delete [] m_tex;
+	//deletea<CTargaImage>(m_tex);
 
+	////delete [] m_texObj;
+	//deleteo<unsigned int>(m_texObj);
 
 }
 

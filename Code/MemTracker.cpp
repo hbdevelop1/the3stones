@@ -155,17 +155,41 @@ bool RemoveTrack(long addr)
 	}
 	else
 	{
-		hbassert( bFound );
+		//Deque uses the standard global operator new, no the overloaded one. so it does not get registered.
+		//but at deletion, the overload global operator delete is used. which leads to this assert
+		//hbassert( bFound ); 
 	}
 
 	
 	return bFound;
 };
+
+
+void DumpUnfreed()
+{
+	long totalSize = 0;
+	printf("-------------------- Allocations ----------------------\n");
+	for(int i = 0; i < MAX_allocations; i++) 
+	{
+		lALLOC_INFO *pInfo = allocations[i].next;
+		while(pInfo)
+		{
+			printf("ADDRESS %x\t Size: %d unfreed - file %s at %d\n", pInfo->address, pInfo->size, pInfo->file, pInfo->line);
+			totalSize += pInfo->size;
+
+			pInfo=pInfo->next;
+		}
+
+	}
+	printf("------------------------------------------------------\n");
+	printf("Total Unfreed: %d bytes\n\n\n", totalSize);
+};
+
 }//namespace hash
 
 
 
-
+/*
 typedef struct 
 {
 	long number;
@@ -229,46 +253,6 @@ bool RemoveTrack(long addr)
 	return bFound;
 };
 
-//inline 
-void * operator new(size_t  size, char *filename, int line)
-{
-	void *ptr = //(void *)malloc(size);
-		::operator new(size);
-
-	AddTrack((long)ptr, size,filename, line);
-	hbhash::AddTrack((long)ptr, size,filename, line);
-	return(ptr);
-};
-
-//inline 
-void * operator new[](size_t size, char *filename, int line)
-{
-	void *ptr = //(void *)malloc(size);
-		::operator new[](size);
-
-	AddTrack((long)ptr, size,filename, line);
-	hbhash::AddTrack((long)ptr, size,filename, line);
-	return(ptr);
-};
-
-//inline 
-void operator delete(void *p, char *filename, int line)
-{
-	hbhash::RemoveTrack((long)p);
-	if ( RemoveTrack((long)p) )
-		//free(p);
-		delete p;
-};
-
-//inline 
-void operator delete[](void *p, char *filename, int line)
-{
-	hbhash::RemoveTrack((long)p);
-	if ( RemoveTrack((long)p) )
-		//free(p);
-		delete [] p;
-};
-
 
 void DumpUnfreed()
 {
@@ -282,6 +266,69 @@ totalSize += pInfo->size;
 }
 printf("------------------------------------------------------\n");
 printf("Total Unfreed: %d bytes\n\n\n", totalSize);
+};
+*/
+
+//inline 
+void * operator new(size_t  size, char *filename, int line)
+{
+	void *ptr = //(void *)malloc(size);
+		::operator new(size);
+
+	//AddTrack((long)ptr, size,filename, line);
+	hbhash::AddTrack((long)ptr, size,filename, line);
+	return(ptr);
+};
+
+//inline 
+void * operator new[](size_t size, char *filename, int line)
+{
+	void *ptr = //(void *)malloc(size);
+		::operator new[](size);
+
+	//AddTrack((long)ptr, size,filename, line);
+	hbhash::AddTrack((long)ptr, size,filename, line);
+	return(ptr);
+};
+
+//inline 
+void operator delete(void *p, char *filename, int line)
+{
+	//if ( hbhash::RemoveTrack((long)p))
+	//if ( RemoveTrack((long)p) )
+		//free(p);
+		delete p;
+};
+
+//inline 
+void operator delete[](void *p, char *filename, int line)
+{
+	//if ( hbhash::RemoveTrack((long)p))
+	//if ( RemoveTrack((long)p) )
+		//free(p);
+		delete [] p;
+};
+
+void operator delete(void *p)
+{
+	if(p)
+		hbhash::RemoveTrack((long)p);
+
+	free(p);
+	/*
+	if ( hbhash::RemoveTrack((long)p))
+	//if ( RemoveTrack((long)p) )
+		//free(p);
+		delete p;
+		*/
+};
+
+void operator delete[](void *p)
+{
+	if(p)
+		hbhash::RemoveTrack((long)p);
+
+	free(p);
 };
 
 #ifdef testingnewdelete
@@ -385,5 +432,6 @@ void main1()
 
 }
 #endif //testingnewdelete
+
 
 #endif //_use_my_mem_tracker_

@@ -14,8 +14,11 @@ ImplementCreator(Intro)
 const char *Introtextmsgs[]=
 {
 	"Rules of the game :",
-	"Arrange three tiles of the same color",
-	"to win 100 points.",
+
+	"Click on one tile, then click on a neigbooring one to swap",
+	"their positions.",
+	"If three tiles of the same color are lined up, vertically",
+	"or horizontally, you win 100 points.",
 };
 
 #if _anim_==1
@@ -98,6 +101,7 @@ Intro::~Intro()
 
 void Intro::Update()
 {
+#if _anim_==1
 	const hb::Rectangle & r0=ObjectsRectangles[e_rect_Intro];
 	
 	hb::Points32 * offset=anim.keyframelist[anim.currentkeyframe].offset;
@@ -125,6 +129,7 @@ void Intro::Update()
 			}
 		 }
 	}
+#endif //_anim_==1
 }
 
 void Intro::Draw()
@@ -150,14 +155,21 @@ void Intro::Draw()
 
 	glBindTexture(GL_TEXTURE_2D, m_texObj);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
+#if _anim_==1
 	glBegin(GL_POLYGON);
         glTexCoord2f(0, 0); glVertex2f (r[0].x, r[0].y);
         glTexCoord2f(1, 0); glVertex2f (r[1].x, r[1].y);
         glTexCoord2f(1, 1); glVertex2f (r[2].x, r[2].y);
         glTexCoord2f(0, 1); glVertex2f (r[3].x, r[3].y);
     glEnd();
-	
+#else
+	glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
+        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
+        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
+        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
+    glEnd();
+#endif
 	
 	glDisable(GL_TEXTURE_2D);
 
@@ -174,13 +186,19 @@ void Intro::Draw()
 	line=r.t-30;
 	column_left=r.l+25;
 #endif _anim_==1
-	hb::DrawText(Introtextmsgs[e_msg_rules],column_left, line);
 
+	int i=e_msg_rules;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	
 	line-=30;
-	hb::DrawText(Introtextmsgs[e_msg_arrange],column_left, line);
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	line-=20;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
 		
 	line-=30;
-	hb::DrawText(Introtextmsgs[e_msg_win],column_left, line);
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	line-=20;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
 
 
 

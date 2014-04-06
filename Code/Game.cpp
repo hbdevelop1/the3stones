@@ -8,8 +8,8 @@
 #include "score.h"
 #include "Encouragement.h"
 
-
-#include "MemNew.h"
+#include <new>
+//#include "MemNew.h"
 
 
 
@@ -23,6 +23,20 @@ game::game()
 //	ObjectsManager::GetInstance().PushBack(this); supposed to be done in game_init
 	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_game);
 
+	char * ii= //::operator new(16)
+		new char[4]
+		;
+	delete [] ii;
+	class OO
+	{
+	public:
+		~OO()
+		{
+		}
+	};
+	OO * oo=new OO[4];
+	delete [] oo;
+	//void *uu = ::operator new(16);	delete uu;
 
 	board.reset(new Board );
 	score.reset( new Score );
@@ -47,19 +61,19 @@ game::game()
 game::~game()
 {
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
-
-
-
+/*	deleteo<Board>(board);
+ 	deleteo<Score>(score);
+ 	deleteo<TimeCounter>(timer);
+ 	*/
 }
-
+/*
 void game::WhenPushed()
 {
-/*	ObjectsManager::GetInstance().PushBack(board.get());
+	ObjectsManager::GetInstance().PushBack(board.get());
 	ObjectsManager::GetInstance().PushBack(score.get());
 	ObjectsManager::GetInstance().PushBack(timer.get());
-	*/
 }
-
+*/
 void game::Update()
 {
 	/*

@@ -1,6 +1,7 @@
 
 #include "object.h"
 #include "Common.h"
+#include "MemNew.h"
 
 struct DelayedFunctionInfo
 {

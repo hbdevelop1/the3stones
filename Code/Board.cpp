@@ -7,8 +7,6 @@
 #include "objectsmanager.h"
 #include "objectsrectangles.h"
 
-
-#include "smartptrs/scoped_ptr.hpp"
  
 
 
@@ -98,13 +96,13 @@ void Board::Reset()
 
 	{//set map
 		Tile::type g[][e_RowSize]={
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5},
-			{ Tile::e_type4, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type5},
+			{ Tile::e_type4, Tile::e_type4, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5},
+			{ Tile::e_type4, Tile::e_type1, Tile::e_type4, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type5},
 			{ Tile::e_type2, Tile::e_type4, Tile::e_type3, Tile::e_type1, Tile::e_type3, Tile::e_type2, Tile::e_type5, Tile::e_type3},
 			{ Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2},
 			{ Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1},
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1},
-			{ Tile::e_type3, Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4},
+			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type1, Tile::e_type2, Tile::e_type1},
+			{ Tile::e_type3, Tile::e_type3, Tile::e_type4, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4},
 			{ Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3}
 		};
 

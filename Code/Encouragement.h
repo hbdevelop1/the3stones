@@ -3,21 +3,23 @@
 
 #include "object.h"
 #include "common.h"
-#include "smartptrs/scoped_array.hpp"
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 
 class Graphic
 {
 
 public:
+	//~Graphic(){}
 	void Draw();
 	void Update();
+
 };
 
 class Encouragement : public Object
 {//derives from Object so it can be pushed to the list of objects and updated and drawn by ObjectsManager
 
-	boost::scoped_array<Graphic>	m_elements;
+	boost::scoped_ptr<Graphic>	m_elements;
 	const unsigned int				m_nbrofelements;
 
 public:

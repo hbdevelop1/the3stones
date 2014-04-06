@@ -193,7 +193,9 @@ void TimeOut::OnClick(uint32 x,uint32 y)
 //		game *g=dynamic_cast<game*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game));
 	//	game->reset();
 		//ObjectsManager::GetInstance().Pop(this);
-		ObjectsManager::GetInstance().Pop(this,false);
+		
+		//ObjectsManager::GetInstance().Pop(this,true); will be popped and removed by ObjectsManager::Clear()
+		//just like Intro, CountDown are popped and removed
 		exit ( 0 );
 	}
 

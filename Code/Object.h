@@ -38,11 +38,11 @@ public:
 	virtual void Draw()=0;
 	virtual void Update()=0;
 	virtual void OnClick(unsigned int, unsigned int){}
-	virtual void WhenPushed(){}
+/*	virtual void WhenPushed(){}
 	virtual void WhenPopped(){}
 	virtual void WhenDeactivated(){}
 	virtual void WhenActivated(){}
-
+	*/
 
 
 	friend class ObjectsManager;

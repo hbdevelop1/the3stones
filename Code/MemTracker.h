@@ -10,22 +10,23 @@ void * operator new(size_t  size, char *filename, int line);
 void * operator new[](size_t size, char * filename, int line);
 void   operator delete(void *p, char *filename, int line);
 void   operator delete[](void *p, char *filename, int line);
+void operator delete(void *p);
+void operator delete[](void *p);
 
 namespace hbhash
 {
 bool RemoveTrack(long addr);
-}
-bool RemoveTrack(long addr);
 void DumpUnfreed();
-
+}
+#if 0
 
 template<class T> void deleteo(T *p)
 {
 	if (p==0)
 		return;//prevent RemoveTrack from asserting on a null pointer 
 
-	hbhash::RemoveTrack((long)p);
-	if ( RemoveTrack((long)p) )
+	if(hbhash::RemoveTrack((long)p))
+	//if ( RemoveTrack((long)p) )
 	{
 		delete p;
 	}
@@ -38,8 +39,8 @@ template<class T> void deletea(T *p)
 	if (p==0)
 		return;//prevent RemoveTrack from asserting on a null pointer 
 
-	hbhash::RemoveTrack((long)p - sizeof(unsigned int));
-	if ( RemoveTrack((long)p - sizeof(unsigned int)) )
+	if(hbhash::RemoveTrack((long)p - sizeof(unsigned int)))
+	//if ( RemoveTrack((long)p - sizeof(unsigned int)) )
 	{
 		delete [] p;
 	}
@@ -52,8 +53,8 @@ template<class T> void deleteo4boost(T *p) //boost uses boost::checked_delete, s
 	if (p==0)
 		return;//prevent RemoveTrack from asserting on a null pointer 
 
-	hbhash::RemoveTrack((long)p);
-	if ( RemoveTrack((long)p) )
+	if(hbhash::RemoveTrack((long)p))
+	//if ( RemoveTrack((long)p) )
 	{
 		boost::checked_delete( p );
 	}
@@ -66,8 +67,8 @@ template<class T> void deletea4boost(T *p) //boost uses boost::checked_delete, s
 	if (p==0)
 		return;//prevent RemoveTrack from asserting on a null pointer 
 
-	hbhash::RemoveTrack((long)p - sizeof(unsigned int));
-	if ( RemoveTrack((long)p - sizeof(unsigned int)) )
+	if(hbhash::RemoveTrack((long)p - sizeof(unsigned int)))
+	//if ( RemoveTrack((long)p - sizeof(unsigned int)) )
 	{
 		boost::checked_array_delete( p );
 	}
@@ -75,7 +76,7 @@ template<class T> void deletea4boost(T *p) //boost uses boost::checked_delete, s
 		hbassert(0);
 };
 
-
+#endif //0
 
 #endif //_MEMTRACKER_
 

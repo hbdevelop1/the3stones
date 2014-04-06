@@ -5,7 +5,7 @@
 #include "common.h"
 
 
-#include "smartptrs/scoped_ptr.hpp"
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 class Board;
 class TimeCounter;

@@ -63,9 +63,9 @@ const hb::Rectangle ObjectsRectangles[]=
 //e_rect_timeout_quitgame
 	hb::Rectangle(ObjectsRectangles[e_rect_timeout_playagain]+hb::Rectangle(128+20,0,128+20,0)),
 //e_rect_Intro
-	hb::Rectangle(ObjectsRectangles[e_rect_board].l+90, 
+	hb::Rectangle(ObjectsRectangles[e_rect_board].l-20, 
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2-TimeOut::e_Height/2,
-				  ObjectsRectangles[e_rect_board].r-90, 
+				  ObjectsRectangles[e_rect_board].r-10, 
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2+TimeOut::e_Height/2),
 //e_rect_Intro_start
 	hb::Rectangle( 

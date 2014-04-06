@@ -40,12 +40,6 @@
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />
-    <ClInclude Include="code\smartptrs\scoped_array.hpp">
-      <Filter>smartptrs</Filter>
-    </ClInclude>
-    <ClInclude Include="code\smartptrs\scoped_ptr.hpp">
-      <Filter>smartptrs</Filter>
-    </ClInclude>
     <ClInclude Include="Code\MemNew.h" />
     <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\Encouragement.h" />
@@ -53,10 +47,5 @@
   <ItemGroup>
     <None Include="..\The3Stonesreadme.txt" />
     <None Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="smartptrs">
-      <UniqueIdentifier>{4a9cf37e-7103-477e-9268-c738705f7431}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

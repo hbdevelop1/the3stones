@@ -117,8 +117,6 @@
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
-    <ClInclude Include="code\smartptrs\scoped_array.hpp" />
-    <ClInclude Include="code\smartptrs\scoped_ptr.hpp" />
     <ClInclude Include="code\TexturesManager.h" />
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />

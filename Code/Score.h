@@ -5,6 +5,7 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
+#include "MemNew.h"
 
 #include <queue>
 using namespace std;

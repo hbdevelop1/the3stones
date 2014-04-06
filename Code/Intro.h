@@ -6,7 +6,7 @@
 #include "rectangle.h"
 #include "object.h"
 
-#define _anim_ 1
+#define _anim_ 0
 
 #if _anim_==1
 #include <vector>
@@ -31,6 +31,8 @@ class Intro : public Object
 	{
 		e_msg_rules,
 		e_msg_arrange,
+		e_msg_position,
+		e_msg_if,
 		e_msg_win,
 
 		e_msg_nbroftextmsgs
