@@ -493,6 +493,26 @@ this is required for classes defining a destructor
 for buit-in type arrays and classes without destructor, scoped_ptr should be used.
 or scoped_array specialized and it destructor is redefined to use deleteo<>
 
+30.7 error
+while overloadeding allocator, i was very influenced by the original code, and was trying to use the new keyword 
+using the syntax for the standard global new operator
+		//|| (_Ptr = ::operator new(_Count * sizeof (_Ty))) == 0)
+		  || (_Ptr = new [_Count * sizeof (_Ty)]) == 0)
+and
+		//|| (_Ptr = ::operator new(_Count * sizeof (_Ty))) == 0)
+		  || (_Ptr = new (_Count * sizeof (_Ty))) == 0)
+instead of
+		//|| (_Ptr = ::operator new(_Count * sizeof (_Ty))) == 0)
+		  || (_Ptr = new _Ty[_Count]) == 0)
+
+30.8 allocator
+-deriving hb::allocator from std::allocator needed rebind, and hb::allocator constructors
+-container elements need default constructor
+-namespace hb
+{
+typedef std::deque<Text,hb::allocator<Text> > deque;
+}
+yields hb::deque
 
 
 
@@ -500,6 +520,9 @@ or scoped_array specialized and it destructor is redefined to use deleteo<>
 
 
 
+
+
+error:contains errors i did
 300-todo: 
 301-remove hbassert
 302-common.h to include MemNew.h
@@ -510,6 +533,20 @@ use smart ptr in this macro
 	{									\
 		return new classname;			\
 	}
+
+304-
+study the utility of the followinf and give a small example of its usage.
+template<class _Other> struct allocator ::rebind
+why the constructors are essential ?
+template<class _Ty, class _Alloc> class _Vector_val
+{
+...
+	_Vector_val(_Alloc _Al = _Alloc())
+		: _Alval(_Al)
+		{	// construct allocator from _Al
+		typename _Alloc::template rebind<_Container_proxy>::other 
+			_Alproxy(_Alval);
+
 
 
 

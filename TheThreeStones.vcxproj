@@ -101,6 +101,7 @@
     <ClCompile Include="Code\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\allocator.h" />
     <ClInclude Include="code\Board.h" />
     <ClInclude Include="code\Classids.h" />
     <ClInclude Include="code\Common.h" />
@@ -124,10 +125,10 @@
     <ClInclude Include="Code\Vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\The3Stonesreadme.txt" />
     <None Include="Readme.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="The3Stonesreadme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

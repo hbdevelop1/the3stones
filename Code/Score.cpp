@@ -95,6 +95,14 @@ const int	IndividualScore::ms_score_i=100;
 
 float Text::stept=.05f;
 
+Text::Text()
+	:t(0)
+	,tm(clock())
+	,end(false)
+	,m_gs(NULL)
+{
+}
+
 Text::Text(const char* s, hb::Pointu32 sp, GlobalScore & gs)
 	:initialPos(sp)
 	,currentPos(sp)
@@ -103,7 +111,7 @@ Text::Text(const char* s, hb::Pointu32 sp, GlobalScore & gs)
 	,t(0)
 	,tm(clock())
 	,end(false)
-	,m_gs(gs)
+	,m_gs(&gs)
 {
 	strncpy(str,s,MAXSTRSZ-1);
 }
@@ -130,7 +138,7 @@ void Text::Update()
 
 		if(t>=1.f)
 		{
-			m_gs.Increment();
+			m_gs->Increment();
 			end=true;
 		}
 
@@ -190,7 +198,7 @@ void IndividualScore::Reset()
 #if _bezierinscore_==1
 void IndividualScore::Update()
 {
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
 	{
 		if(!it->end)
 		{
@@ -202,7 +210,7 @@ void IndividualScore::Add(hb::Pointu32 sp)
 {
 	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
 
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
 	{
 		if(it->end)
 		{
@@ -223,7 +231,7 @@ void IndividualScore::Draw()
 {
 	glColor3f(.0f,.0f,.0f);
 
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
 	{
 		if(!it->end && it->t!=0 /*to avoid drawing a static text*/)
 		{

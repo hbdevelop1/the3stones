@@ -5,7 +5,7 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
-#include "MemNew.h"
+#include "allocator.h"
 
 #include <queue>
 using namespace std;
@@ -36,8 +36,9 @@ struct Text
 	float			t; //goes from 0 to 1
 	static float	stept;
 	clock_t			tm;
-	GlobalScore &	m_gs;
+	GlobalScore *	m_gs;
 
+	Text();
 	Text(const char*, hb::Pointu32 sp,GlobalScore & gs);
 	void Update();
 	void Reset(const char* s, hb::Pointu32 sp);
@@ -56,9 +57,15 @@ struct Text
 	//watch out:no cc for Text
 };
 #endif
+
+namespace hb
+{
+typedef std::deque<Text,hb::allocator<Text> > deque;
+}
+
 class IndividualScore
 {
-	deque<Text>		m_scores; //watch out:no cc for Text
+	hb::deque		m_scores; //watch out:no cc for Text
 	GlobalScore &	m_gs;
 
 public:

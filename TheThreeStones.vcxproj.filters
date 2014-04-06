@@ -43,9 +43,10 @@
     <ClInclude Include="Code\MemNew.h" />
     <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\Encouragement.h" />
+    <ClInclude Include="Code\allocator.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\The3Stonesreadme.txt" />
     <None Include="Readme.txt" />
+    <None Include="The3Stonesreadme.txt" />
   </ItemGroup>
 </Project>

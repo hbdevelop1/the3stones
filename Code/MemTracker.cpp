@@ -44,7 +44,7 @@ long getHashValue0(long addr)
 	long t1=(t>>12)+((t>>8) & 0x0000000f)+((t>>4) & 0x0000000f)+(t & 0x0000000f);
 	return t1;
 }
-long getHashValue(long addr)
+long getHashValue1(long addr)
 {
 	return addr & 0x000000ff;
 }
@@ -81,7 +81,7 @@ a=(char )0xff;//cast to avoid warning C4309: '=' : truncation of constant value
 
 void AddTrack(long addr, long asize, char *filename, int line)
 {
-	long t1=getHashValue(addr);
+	long t1=getHashValue1(addr);
 	long t2=getHashValue2(addr);
 	char t3=getHashValue3(addr);
 
@@ -129,8 +129,8 @@ void AddTrack(long addr, long asize, char *filename, int line)
 
 bool RemoveTrack(long addr)
 {
-	long t1=getHashValue(addr);
-
+	long t1=getHashValue1(addr);
+	printf("0x%08X->0x%02X\n",addr,t1);
 	bool bFound = false;
 
 	lALLOC_INFO ** p=&allocations[t1].next;
@@ -157,7 +157,7 @@ bool RemoveTrack(long addr)
 	{
 		//Deque uses the standard global operator new, no the overloaded one. so it does not get registered.
 		//but at deletion, the overload global operator delete is used. which leads to this assert
-		//hbassert( bFound ); 
+		hbassert( bFound ); 
 	}
 
 	
