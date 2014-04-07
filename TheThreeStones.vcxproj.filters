@@ -20,6 +20,7 @@
     <ClCompile Include="code\TimeOut.cpp" />
     <ClCompile Include="Code\Vector.cpp" />
     <ClCompile Include="Code\Encouragement.cpp" />
+    <ClCompile Include="code\anim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\Encouragement.h" />
     <ClInclude Include="Code\allocator.h" />
+    <ClInclude Include="code\anim.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

@@ -4,10 +4,14 @@
 #include "object.h"
 #include "common.h"
 #include <boost/smart_ptr/scoped_ptr.hpp>
+#include "rectangle.h"
 
+struct stAnim;
 
 class Graphic
 {
+	hb::Points32 r[4];
+	stAnim *anim;
 
 public:
 	//~Graphic(){}
