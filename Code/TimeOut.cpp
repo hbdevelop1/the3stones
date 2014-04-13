@@ -3,10 +3,10 @@
 #include "objectsmanager.h"
 #include "classids.h"
 #include "objectsrectangles.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 #include "common.h"
 
-#include "MemNew.h" 
+#include "Mem/MemNew.h" 
 
 #pragma warning (disable:4996)
 

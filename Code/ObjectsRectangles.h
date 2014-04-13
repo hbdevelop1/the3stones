@@ -22,7 +22,7 @@ enum
 	e_rect_timeout_playagain,
 	e_rect_timeout_quitgame,
 	e_rect_Intro,
-	e_rect_Intro_start,
+	e_rect_Intro_startbutton,
 
 	e_rect_nbrofrectangles
 };
@@ -67,7 +67,7 @@ const hb::Rectangle ObjectsRectangles[]=
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2-TimeOut::e_Height/2,
 				  ObjectsRectangles[e_rect_board].r-10, 
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2+TimeOut::e_Height/2),
-//e_rect_Intro_start
+//e_rect_Intro_startbutton
 	hb::Rectangle( 
 		ObjectsRectangles[e_rect_Intro].l + (ObjectsRectangles[e_rect_Intro].r -ObjectsRectangles[e_rect_Intro].l)/2 -Intro::e_width/2,
 		ObjectsRectangles[e_rect_Intro].b+10, 

@@ -3,11 +3,11 @@
 #include "objectsmanager.h"
 #include "classids.h"
 #include "objectsrectangles.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 
 
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 ImplementCreator(CountDown)
 

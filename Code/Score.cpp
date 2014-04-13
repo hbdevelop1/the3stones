@@ -5,7 +5,7 @@
 #include "board.h"
 #include "ObjectsManager.h"
 #include "classids.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 #include "objectsrectangles.h"
 
 

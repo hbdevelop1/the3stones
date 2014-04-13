@@ -2,11 +2,11 @@
 #include "TimeCounter.h"
 #include <stdio.h>
 #include "objectsmanager.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 #include "objectsrectangles.h"
 #include "common.h"
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 #pragma warning (disable:4996)
 

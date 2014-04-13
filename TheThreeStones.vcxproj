@@ -39,9 +39,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\libs;$(IncludePath);;C:\data\code\libs\boost_1_54_0</IncludePath>
+    <OutDir>$(SolutionDir)EXE\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)\libs;$(IncludePath);;C:\data\code\libs\boost_1_54_0</IncludePath>
+    <OutDir>$(SolutionDir)EXE\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,10 +57,11 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libs\glut\glut32.lib;libs\xml\expat.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) EXE</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,58 +76,66 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libs\xml\expat.lib;libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) EXE</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="code\anim.cpp" />
     <ClCompile Include="code\Board.cpp" />
     <ClCompile Include="code\Bboardtest.cpp" />
     <ClCompile Include="Code\Encouragement.cpp" />
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
-    <ClCompile Include="code\CTargaImage.cpp" />
     <ClCompile Include="code\Game.cpp" />
+    <ClCompile Include="Code\graphic\anim.cpp" />
+    <ClCompile Include="Code\graphic\CTargaImage.cpp" />
+    <ClCompile Include="Code\graphic\Sprite.cpp" />
+    <ClCompile Include="Code\graphic\TexturesManager.cpp" />
     <ClCompile Include="code\Intro.cpp" />
-    <ClCompile Include="code\memtest.cpp" />
-    <ClCompile Include="code\MemTracker.cpp" />
+    <ClCompile Include="Code\Mem\memtest.cpp" />
+    <ClCompile Include="Code\Mem\MemTracker.cpp" />
     <ClCompile Include="code\Object.cpp" />
     <ClCompile Include="code\ObjectsManager.cpp" />
     <ClCompile Include="code\Rectangle.cpp" />
     <ClCompile Include="code\Score.cpp" />
-    <ClCompile Include="code\TexturesManager.cpp" />
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
     <ClCompile Include="Code\Vector.cpp" />
+    <ClCompile Include="Code\xml\xml.cpp" />
+    <ClCompile Include="Code\xml\xmlmain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\allocator.h" />
-    <ClInclude Include="code\anim.h" />
     <ClInclude Include="code\Board.h" />
     <ClInclude Include="code\Classids.h" />
     <ClInclude Include="code\Common.h" />
     <ClInclude Include="code\CountDown.h" />
-    <ClInclude Include="code\CTargaImage.h" />
     <ClInclude Include="Code\Encouragement.h" />
     <ClInclude Include="code\fsm.h" />
     <ClInclude Include="code\Game.h" />
+    <ClInclude Include="Code\graphic\anim.h" />
+    <ClInclude Include="Code\graphic\CTargaImage.h" />
+    <ClInclude Include="Code\graphic\Sprite.h" />
+    <ClInclude Include="Code\graphic\TexturesManager.h" />
     <ClInclude Include="code\Intro.h" />
-    <ClInclude Include="Code\MemNew.h" />
-    <ClInclude Include="code\MemTracker.h" />
+    <ClInclude Include="Code\Mem\allocator.h" />
+    <ClInclude Include="Code\Mem\MemNew.h" />
+    <ClInclude Include="Code\Mem\MemTracker.h" />
     <ClInclude Include="code\Object.h" />
     <ClInclude Include="code\ObjectsManager.h" />
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
-    <ClInclude Include="code\TexturesManager.h" />
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />
     <ClInclude Include="Code\Vector.h" />
+    <ClInclude Include="Code\xml\xml.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">

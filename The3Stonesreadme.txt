@@ -298,6 +298,39 @@ struct.b;
 struct.a;
 struct.b;
 
+19.5
+figuring out the input and the result (the ouptut) of the container, then think out the input and output of the contained.
+
+figure out the container and its input and output, before tackling the details
+example:
+figure out how and whrer data for an Encouragement class will be and how will be accessed and processed
+before getting down to the sprite.
+this way of working is better because it helps setting the boundaries of objects. 
+I ended up having this sprite constructor
+instead of 
+Sprite * sprite=new(stAnim*, pointsofrectangleitanimates);
+Sprite * sprite=new(pointsofrectangleitanimates,texturename.c_str(), animationfile);
+
+in the first version, loading the animation is the responsibility of the container !!
+in the second version, loading the animation is the responsibility of the sprite.
+
+19.6 figuring out crashes:
+
+19.6.1- 
+read the call stack and figure out WHY each function is calling the other, and WHAT each function is doing and see 
+how is that RELEVANT and RELATED to the application.
+
+19.6.2- 
+an object's list elements are discovered to have been fred at destruction time when the game is ending. 
+trick at 19.6.1 helped a lot. a big call stack with scoped_ptr and std::list functions being called.
+I got to better understand the functions 
+here I discovered that scoped_ptr::swap is what to use for copying and not scoped_ptr::reset
+
+19.6.3- 
+write the erroneous code in one function/bloc and see why it is erroneous.
+
+a list element seems to not have been ever allocated.
+
 
 20-properties of the code
 extensible ?
@@ -414,6 +447,12 @@ how to test
 
 
 
+25 animation
+two kinds of sprites in the game
+regular and animated
+animated is a regular with animation structure + rectangle defined to be independent from any other rectangle in the game.
+ObjectsRectangles.h holds in one spot all the rectangles which positions depend on each other.
+animated sprites' rectangles do not depend on other rectangles. this is why the rectangle is defined as part of the xml data.
 
 30
 template<> class scoped_array<unsigned int>
@@ -488,10 +527,10 @@ but it important that any registered address is deleted.
 I take care that my allocation are registered by invoking the overloaded operator new and array new.
 
 30.5
-Not all arrays need to be pointed to by scoped_array
+Not all arrays need to be pointed to by scoped_array, which calls delete [] at destruction
 this is required for classes defining a destructor
 for buit-in type arrays and classes without destructor, scoped_ptr should be used.
-or scoped_array specialized and it destructor is redefined to use deleteo<>
+or scoped_array needs to be specialized and its destructor is redefined to use deleteo<>
 
 30.7 error
 while overloadeding allocator, i was very influenced by the original code, and was trying to use the new keyword 
@@ -514,10 +553,40 @@ typedef std::deque<Text,hb::allocator<Text> > deque;
 }
 yields hb::deque
 
+30.9
+copy contructor of Sprite::Sprite(const Sprite &s) was necessary because is holds a scoped_ptr, 
+which is a non-copiable class (assignment and copy constructor are private)
+
+30.10
+watch out : use scoped_ptr or scoped_array for pointer to objects only.
+do not use UNECESSARY them for objects and containers that are going to be destroyed anyway when their encompaing object
+is destructed:
+boost::scoped_ptr<std::list<Sprite> >				m_listofsprites;  !!!!!!!
+m_listofsprites.reset(new std::list<Sprite> );  !!!!!
+or
+boost::scoped_ptr<std::vector<stKeyFrame,hb::allocator<stKeyFrame> > > keyframelist;  !!!!!!
+keyframelist.reset(new std::vector<stKeyFrame,hb::allocator<stKeyFrame> > ); !!!!
+keyframelist->push_back(stKeyFrame(offset)); !!!
+
+compiling errors
+-----------------
+
+1>c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\allocator.h(24): error C2955: 'hb::allocator' : use of class template requires template argument list
+1>          c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\allocator.h(24) : see declaration of 'hb::allocator'
+1>          c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\allocator.h(49) : see reference to class template instantiation 'hb::allocator<_Ty>' being compiled
+solution include in this order:include <vector> before <allocator.h>
+
+1>c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\memtracker.h(9): error C2365: 'operator new' : redefinition; previous definition was 'function'
+1>c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\memtracker.h(9): error C2078: too many initializers
+1>c:\data2\code\c\the3stones0\bezier\the3stones\code\mem\memtracker.h(9): error C2440: 'initializing' : cannot convert from 'int' to 'void *'
+solution include in this order:
+#include "../mem/MemTracker.h"
+#include "../mem/allocator.h"
 
 
-
-
+test mem allocation in xml
+check whether vector<object *> deletes object at destruction
+make sure scoped_ptr<vector<.... works fine
 
 
 
@@ -546,7 +615,15 @@ template<class _Ty, class _Alloc> class _Vector_val
 		{	// construct allocator from _Al
 		typename _Alloc::template rebind<_Container_proxy>::other 
 			_Alproxy(_Alval);
-
+305-
+explain the following code TimeOut::Draw used to dim the board: why is alpha used ? explain how the dim happens ?
+	glEnable(GL_BLEND); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glColor4f (0.0, 0.0, 0.0,.25);
+306-
+Sprite(stAnim * _a, hb::Points32  _r[]);
+make sure that the array is passed just by address. that the whole array is not copied.
+who to pass the size of _r
 
 
 

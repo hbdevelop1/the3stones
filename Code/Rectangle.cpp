@@ -2,7 +2,7 @@
 #include "common.h"
 #include "rectangle.h"
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 
 namespace hb

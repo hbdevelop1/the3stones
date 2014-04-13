@@ -4,7 +4,7 @@
 #include "tile.h"
 #include <assert.h>
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 //#define _testingmove_ 1  //for a first test of movement
 //#define _testingmove_ 2 //for a move developed test of movement

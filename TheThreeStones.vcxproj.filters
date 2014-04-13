@@ -5,50 +5,98 @@
     <ClCompile Include="code\Bboardtest.cpp" />
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
-    <ClCompile Include="code\CTargaImage.cpp" />
     <ClCompile Include="code\Game.cpp" />
     <ClCompile Include="code\Intro.cpp" />
-    <ClCompile Include="code\memtest.cpp" />
-    <ClCompile Include="code\MemTracker.cpp" />
     <ClCompile Include="code\Object.cpp" />
     <ClCompile Include="code\ObjectsManager.cpp" />
     <ClCompile Include="code\Rectangle.cpp" />
     <ClCompile Include="code\Score.cpp" />
-    <ClCompile Include="code\TexturesManager.cpp" />
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
     <ClCompile Include="Code\Vector.cpp" />
     <ClCompile Include="Code\Encouragement.cpp" />
-    <ClCompile Include="code\anim.cpp" />
+    <ClCompile Include="Code\xml\xml.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\xml\xmlmain.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Mem\memtest.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Mem\MemTracker.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\graphic\anim.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\graphic\CTargaImage.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\graphic\Sprite.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\graphic\TexturesManager.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
     <ClInclude Include="code\Classids.h" />
     <ClInclude Include="code\Common.h" />
     <ClInclude Include="code\CountDown.h" />
-    <ClInclude Include="code\CTargaImage.h" />
     <ClInclude Include="code\fsm.h" />
     <ClInclude Include="code\Game.h" />
     <ClInclude Include="code\Intro.h" />
-    <ClInclude Include="code\MemTracker.h" />
     <ClInclude Include="code\Object.h" />
     <ClInclude Include="code\ObjectsManager.h" />
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
-    <ClInclude Include="code\TexturesManager.h" />
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />
-    <ClInclude Include="Code\MemNew.h" />
     <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\Encouragement.h" />
-    <ClInclude Include="Code\allocator.h" />
-    <ClInclude Include="code\anim.h" />
+    <ClInclude Include="Code\xml\xml.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Mem\allocator.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Mem\MemNew.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Mem\MemTracker.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\graphic\anim.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\graphic\CTargaImage.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\graphic\Sprite.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\graphic\TexturesManager.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="The3Stonesreadme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="xml">
+      <UniqueIdentifier>{00de74a8-daa1-4175-a642-7fb1433a0d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphic">
+      <UniqueIdentifier>{012d835b-9730-4503-b724-0b6beee2fe4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{0c759048-ecae-4910-a738-67a0cdb2e362}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

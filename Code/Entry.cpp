@@ -11,7 +11,7 @@
 #include "objectsrectangles.h"
 #include "common.h"
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 void AtExit()
 {

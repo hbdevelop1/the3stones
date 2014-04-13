@@ -6,7 +6,7 @@
 #include "rectangle.h"
 #include "object.h"
 
-#define _anim_ 1
+#define _anim_ 0
 
 
 
@@ -77,7 +77,9 @@ class Intro : public Object
 #endif
 
 	hb::Rectangle rplay;
+#if _anim_>0
 	stAnim anim;
+#endif
 	unsigned int m_texObj;
 
 	enum

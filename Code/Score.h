@@ -5,7 +5,7 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
-#include "allocator.h"
+#include "Mem/allocator.h"
 
 #include <queue>
 using namespace std;

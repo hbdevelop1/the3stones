@@ -3,7 +3,7 @@
 #include "objectsmanager.h"
 #include "classids.h"
 #include "objectsrectangles.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 #include "common.h"
 
 
@@ -22,10 +22,10 @@ const char *Introtextmsgs[]=
 };
 
 #if _anim_==1
-Intro::Intro():rplay(ObjectsRectangles[e_rect_Intro_start])
+Intro::Intro():rplay(ObjectsRectangles[e_rect_Intro_startbutton])
 #else
 Intro::Intro():r(ObjectsRectangles[e_rect_Intro]),
-					rplay(ObjectsRectangles[e_rect_Intro_start])
+					rplay(ObjectsRectangles[e_rect_Intro_startbutton])
 #endif
 {
 	SetFlag(e_FLAG_MASTER);

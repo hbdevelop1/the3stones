@@ -2,8 +2,8 @@
 
 #include "TexturesManager.h"
 #include "CTargaImage.h"
-#include "Common.h"
-#include "MemNew.h"
+#include "../Common.h"
+#include "../mem/MemNew.h"
 
 TexturesManager::TexturesManager()
 {

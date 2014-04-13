@@ -29,7 +29,7 @@ void DrawText(const char *txt, signed int x=-1, signed int y=-1);
 }
 
 
-#include "MemTracker.h"
+#include "Mem/MemTracker.h"
 
 
 #endif //_COMMON_

@@ -1,8 +1,8 @@
 #include <iostream>
 #include "CTargaImage.h"
-#include "common.h"
+#include "../common.h"
 
-#include "MemNew.h"
+#include "../mem/MemNew.h"
 
 #pragma warning (disable:4996)
 

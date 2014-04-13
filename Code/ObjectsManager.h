@@ -1,7 +1,7 @@
 
 #include "object.h"
 #include "Common.h"
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 struct DelayedFunctionInfo
 {
@@ -12,7 +12,7 @@ struct DelayedFunctionInfo
 
 	enum
 	{
-		e_NumberOfDelayedFunctionsToRun=4,
+		e_NumberOfDelayedFunctionsToRun=5,
 	};
 	int 				nbroffi;
 	FunctionInfoBase 	*arrayoffi[e_NumberOfDelayedFunctionsToRun];

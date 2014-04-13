@@ -2,7 +2,7 @@
 #include "common.h"
 #include "object.h"
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 Object::Object():next(NULL),prev(NULL),flag(e_FLAG_NOTHING)
 {

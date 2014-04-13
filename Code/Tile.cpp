@@ -8,9 +8,9 @@
 
 #include "ObjectsManager.h"
 #include "classids.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 
-#include "MemNew.h"
+#include "Mem/MemNew.h"
 
 const unsigned int Tile::speedofswap=3;
 

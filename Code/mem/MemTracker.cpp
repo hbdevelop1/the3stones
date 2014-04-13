@@ -9,7 +9,7 @@
 #else
 #include <stdlib.h>
 #endif
-#include "common.h" //for hbassert
+#include "../common.h" //for hbassert
 
 #pragma warning (disable:4996)
 
@@ -130,7 +130,7 @@ void AddTrack(long addr, long asize, char *filename, int line)
 bool RemoveTrack(long addr)
 {
 	long t1=getHashValue1(addr);
-	printf("0x%08X->0x%02X\n",addr,t1);
+	printf("deleting 0x%08X->0x%02X\n",addr,t1);
 	bool bFound = false;
 
 	lALLOC_INFO ** p=&allocations[t1].next;

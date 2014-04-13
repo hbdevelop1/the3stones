@@ -9,7 +9,7 @@
 #include "Encouragement.h"
 
 #include <new>
-//#include "MemNew.h"
+//#include "Mem/MemNew.h"
 
 
 
@@ -26,13 +26,14 @@ game::game()
 	board.reset(new Board );
 	score.reset( new Score );
 	timer.reset( new TimeCounter);
-	encouragement_good.reset( new Encouragement(5) );
-	encouragement_wow.reset( new Encouragement(4) );
+	//encouragement_good.reset( new Encouragement(5) );
+	encouragement_wow.reset( new Encouragement("data/wow.xml") );
 
 	ObjectsManager::GetInstance().PushBack(board.get(),false);
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
 	ObjectsManager::GetInstance().PushBack(score.get(),false);
 	ObjectsManager::GetInstance().PushBack(timer.get(),false);
+	ObjectsManager::GetInstance().PushBack(encouragement_wow.get(),false);
 
 
 
