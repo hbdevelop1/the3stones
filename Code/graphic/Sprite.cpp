@@ -42,22 +42,20 @@ Sprite::Sprite(const Sprite &s)
 
 void Sprite::Draw()
 {
-	/*
 	glEnable(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, m_texObj);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_r.l, m_r.b);
-        glTexCoord2f(1, 0); glVertex2f (m_r.r, m_r.b);
-        glTexCoord2f(1, 1); glVertex2f (m_r.r, m_r.t);
-        glTexCoord2f(0, 1); glVertex2f (m_r.l, m_r.t);
+        glTexCoord2f(0, 0); glVertex2f (m_r[0].x, m_r[0].y);
+        glTexCoord2f(1, 0); glVertex2f (m_r[1].x, m_r[1].y);
+        glTexCoord2f(1, 1); glVertex2f (m_r[2].x, m_r[2].y);
+        glTexCoord2f(0, 1); glVertex2f (m_r[3].x, m_r[3].y);
     glEnd();
 	
 	
 	glDisable(GL_TEXTURE_2D);
-	*/
 }
 
 void Sprite::Update()

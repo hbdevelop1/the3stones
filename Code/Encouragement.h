@@ -15,7 +15,6 @@ class Encouragement : public Object
 	//boost::scoped_array<Sprite>	m_sprites;
 	std::list<Sprite, hb::allocator<Sprite> >	m_listofsprites;
 	//const 
-		unsigned int			m_nbrofsprites;
 
 public:
 	Encouragement(char * filename);

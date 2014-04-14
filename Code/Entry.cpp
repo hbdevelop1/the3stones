@@ -17,7 +17,7 @@ void AtExit()
 {
 	ObjectsManager::GetInstance().Clear();
 
-	/*freeing memory this way is not efficient as it doesn't remore Intro, TimeOut and Countdown if they are running. 
+	/*freeing memory this way is not efficient as it doesn't remove Intro, TimeOut and Countdown if they are running on. 
 	use ObjectsManager::GetInstance().Clear()
 
 	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	

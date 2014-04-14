@@ -32,7 +32,7 @@ Encouragement::Encouragement(char * filename)
 		{
 			
 			hb::Points32 points[4];
-			String pointstring = child->getAttribute("rectangle");
+			String pointstring = child->getAttribute("points");
 			sscanf(pointstring.c_str(),"%d %d %d %d %d %d %d %d"
 				,&points[0].x,&points[0].y
 				,&points[1].x,&points[1].y
@@ -66,18 +66,12 @@ Encouragement::Encouragement(char * filename)
 
 void Encouragement::Draw()
 {
-	return;
-	for(unsigned int i=0; i<m_nbrofsprites; ++i)
+	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
 	{
-		//m_sprites[i].Draw();
+		it->Draw();
 	}
 }
 
 void Encouragement::Update()
 {
-	return;
-	for(unsigned int i=0; i<m_nbrofsprites; ++i)
-	{
-		//m_sprites[i].Update();
-	}
 }

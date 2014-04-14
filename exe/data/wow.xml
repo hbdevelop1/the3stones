@@ -2,19 +2,19 @@
 <number value="3" />
 
   <animatedsprite
-    rectangle="0 0 100 100"
+    points="0 0 100 0 100 100 0 100"
     texture="Encrg-W.tga"
     animation="data/anim1.xml"
   />
 
   <animatedsprite
-    rectangle="100 100 100 100"
+    points="100 0   200 0    200 100    100 100"
     texture="Encrg-O.tga"
     animation="data/anim1.xml"
   />
 
   <animatedsprite
-    rectangle="200 200 100 100"
+    points="200 0   300 0    300 100    200 100"
     texture="Encrg-W.tga"
     animation="data/anim1.xml"
   />
