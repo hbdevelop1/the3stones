@@ -1,7 +1,7 @@
 <root>
 
   <animatedsprite
-    points="0 100 100 100 100 400 0 400"
+    points="0 50 100 50 100 350 0 350"
     texture="Encrg-W.tga"
     animation="data/anim1.xml"
   />
