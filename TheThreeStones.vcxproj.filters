@@ -87,6 +87,12 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="The3Stonesreadme.txt" />
+    <None Include="exe\data\wow.xml">
+      <Filter>data</Filter>
+    </None>
+    <None Include="exe\data\anim1.xml">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="xml">
@@ -97,6 +103,9 @@
     </Filter>
     <Filter Include="mem">
       <UniqueIdentifier>{0c759048-ecae-4910-a738-67a0cdb2e362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{c95f1cb5-4748-4a95-a6cf-2884e57e6c1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

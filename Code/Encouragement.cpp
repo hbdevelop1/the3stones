@@ -7,6 +7,22 @@
 using namespace std;
 #include "mem/MemNew.h"
 
+Encouragement::~Encouragement()
+{
+#ifdef _listofobjects_
+#else
+#ifdef _listofpointers_
+	Sprite * g;
+	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
+	{
+		delete *it;
+	}
+
+	m_listofsprites.clear();
+#else
+#endif _listofpointers_
+#endif _listofobjects_
+}
 Encouragement::Encouragement(char * filename)
 {
 	XmlParser xmlParser;
@@ -19,7 +35,17 @@ Encouragement::Encouragement(char * filename)
 //		MessageBox(NULL,"Problème de données.\nRépertoire \"data\" ou fichier \"map.xml\" introuvable.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
 		assert(0);
 	}
-
+	/*
+#ifdef _listofobjects_
+			m_listofsprites.push_back(Sprite(points,texturename.c_str(), animationfile.c_str()));
+#else
+#ifdef _listofpointers_
+			m_listofsprites.push_back(new Sprite(points,texturename.c_str(), animationfile.c_str()));
+#else
+	m_listofsprites.reset(new std::list<Sprite *, hb::allocator<Sprite *> > );
+#endif _listofpointers_
+#endif _listofobjects_
+	*/
 	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
 		XmlNodeRef child = rootNode->getChild(i);
@@ -42,7 +68,17 @@ Encouragement::Encouragement(char * filename)
 			String texturename = child->getAttribute("texture");
 			String animationfile = child->getAttribute("animation");
 
+#ifdef _listofobjects_
 			m_listofsprites.push_back(Sprite(points,texturename.c_str(), animationfile.c_str()));
+#else
+#ifdef _listofpointers_
+			m_listofsprites.push_back(new Sprite(points,texturename.c_str(), animationfile.c_str()));
+#else
+/*			m_listofsprites.get()->push_back(new Sprite(points,texturename.c_str(), animationfile.c_str()));
+			(*m_listofsprites).push_back(new Sprite(points,texturename.c_str(), animationfile.c_str()));*/
+			m_listofsprites->push_back(new Sprite(points,texturename.c_str(), animationfile.c_str()));
+#endif _listofpointers_
+#endif _listofobjects_
 		}
 	}
 	/*
@@ -66,12 +102,34 @@ Encouragement::Encouragement(char * filename)
 
 void Encouragement::Draw()
 {
+/*#ifdef _listofobjects_
+
+#ifdef _listofpointers_
+#else
+*/
 	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
 	{
-		it->Draw();
+#ifdef _listofobjects_
+		(*it).Draw();
+#else
+#ifdef _listofpointers_
+		(*it)->Draw();
+#endif _listofpointers_
+#endif _listofobjects_
 	}
+//#endif
 }
 
 void Encouragement::Update()
 {
+	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
+	{
+#ifdef _listofobjects_
+		(*it).Draw();
+#else
+#ifdef _listofpointers_
+		(*it)->Update();
+#endif _listofpointers_
+#endif _listofobjects_
+	}
 }

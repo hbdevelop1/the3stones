@@ -33,7 +33,7 @@ game::game()
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
 	ObjectsManager::GetInstance().PushBack(score.get(),false);
 	ObjectsManager::GetInstance().PushBack(timer.get(),false);
-	ObjectsManager::GetInstance().PushBack(encouragement_wow.get(),false);
+	//ObjectsManager::GetInstance().PushBack(encouragement_wow.get(),false);
 
 
 

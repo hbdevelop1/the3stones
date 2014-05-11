@@ -419,12 +419,7 @@ struct DelayedFunctionInfo
 can not update the list when issued by an element from the list 
 problematic updates of the list are: add a master. remove the current master or current object (this).
 
-23.7
-todo explain this code
-		void operator()()
-		{
-			(mo->*mf)(marg1,marg2);
-		}
+
 	
 24
 memory management in 
@@ -568,6 +563,18 @@ boost::scoped_ptr<std::vector<stKeyFrame,hb::allocator<stKeyFrame> > > keyframel
 keyframelist.reset(new std::vector<stKeyFrame,hb::allocator<stKeyFrame> > ); !!!!
 keyframelist->push_back(stKeyFrame(offset)); !!!
 
+
+30.11
+	std::list<Sprite *, hb::allocator<Sprite *> >	m_listofsprites;
+	is more efficient than
+	std::list<Sprite , hb::allocator<Sprite > >	m_listofsprites;
+	because the earlier there is no copy constructor involved;
+	use of list of pointers to avoid the swap of objects which members points to dead objects when copy constructor uses scoped_ptr::swap
+	but needs explicit call of list::clear
+	better use a smart-ptr holding the list
+
+
+
 compiling errors
 -----------------
 
@@ -589,9 +596,13 @@ check whether vector<object *> deletes object at destruction
 make sure scoped_ptr<vector<.... works fine
 
 
+Things i forgot:
+operator=() should be a non-static class member !
 
 
 error:contains errors i did
+
+
 300-todo: 
 301-remove hbassert
 302-common.h to include MemNew.h
@@ -625,11 +636,89 @@ Sprite(stAnim * _a, hb::Points32  _r[]);
 make sure that the array is passed just by address. that the whole array is not copied.
 who to pass the size of _r
 
+307-use a scoped_ptr of list of Sprites in Encouragement
+308-how to read negative values from xml file ? consider using another way of reading data. look into using C++ Timesaving Techniques for Dummies/xml
+
+309-
+explain this code in ObjectsManager
+		void operator()()
+		{
+			(mo->*mf)(marg1,marg2);
+		}
+
+310-
+if A and B are two mutually exclusive preprocessor directives, what to specify for B in the following code ?
+#ifdef A
+	...
+#elif def B ???
+	...
+#endif
+
+instead of 
+
+#ifdef A
+	...
+#else
+	#ifdef B
+		...
+	#endif B
+#endif A
+
+311- 
+I am confused on the benefit of a scoped_ptr member. the following question shows the confusion:
+how is a scoped_ptr member of encouragement class beneficial when an exception happens in a encouragement function ?
+explain what happens then ?
+is the scoped_ptr destructor called then even when the encouragement destructor is not?
+ANSWER:
+1-typically the scoped_ptr is useful when declared and used in a bloc.
+if an exception is thrown in the middle, even by a called function, the subsequent is not run (which would leak memory if
+traditional mem alloc was used). but the destructor of scoped_ptr is called as it variable goes our of scope.
+2-when scoped_ptr data is member of encouragement class, it will be destroyed, and the mem it points to fred, when 
+the encouragement destructor, default or written one, is called.
+so it all depends on whether the Encouragement destructor is being called or not.
+the big benefit of scoped_ptr is in not having to write the Encouragement destructor 
 
 
+312-
+improve design to derive all objects from Sprite
+have Sprite and AnimatedSprite
 
 
+2Learn.1:
+STD::list
+std::list is a list of nodes. each node contains essentially three fields _Next, _Prev, _Myval
+_Myval is of type the element's data type. see below :
 
+	_Next	0x02e9cdb8 {_Next=0x02e9e070 _Prev=0x048be2a0 _Myval=0x048be1c8 }	std::_List_nod<Sprite *,hb::allocator<Sprite *> >::_Node *
+	_Prev	0x02e97db8 {_Next=0x02e97db8 _Prev=0x02e97db8 _Myval=0xcdcdcdcd }	std::_List_nod<Sprite *,hb::allocator<Sprite *> >::_Node *
+	_Myval	0x048bd100 {m_r=0x048bd100 m_offset=0x048bd120 m_texObj=0x00000008 ...}	Sprite *
+
+2Learn.2:
+std::list::clear() destroys the nodes of the list in turn. 
+std::_List_nod<Sprite,hb::allocator<Sprite> >::_Node does not define a custom destructor (which would be made so that it calls 
+the destructor of _Myval, whether it is an object or a pointer)
+std::_List_nod<Sprite,hb::allocator<Sprite> >::_Node uses instead the default destructor. which calls the destructor of _Myval
+when it is an object only.
+So to ensure destruction of _Myval as a pointer, i should free the memory pointed to by _Myval manually, before making a call
+to std::list::clear()
+
+Here is the code 
+	Sprite * g;
+	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
+	{
+		g=*it;
+		delete g;
+	}
+	m_listofsprites.clear();
+
+2Learn.3:
+*it for an std::list::iterator is programmed so it returns _Myval. this makes the following operation possible:
+
+	for(auto it=m_listofsprites.begin(); it!=m_listofsprites.end(); ++it)
+	{
+		delete *it;
+	}
+*it could have been programmed to return sth else.
 
 
 ACTIVE,board, tiles, score, timecounter, INACTIVE,menu pause, 

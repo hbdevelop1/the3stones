@@ -14,7 +14,7 @@ stKeyFrame::stKeyFrame()
 	offset[3]=hb::Points32(0,0);
 }
 
-stKeyFrame::stKeyFrame(hb::Points32 p[])
+stKeyFrame::stKeyFrame(hb::Points32 p[], clock_t t):time(t)
 {
 	for(int i=0; i<4; ++i)
 		offset[i]=p[i];
@@ -79,7 +79,7 @@ void stAnim::Update()
 	
 }
 */
-stAnim2::stAnim2(const char * animationfilename)
+stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rparent),animFrameRate(100)
 {
 	XmlParser xmlParser;
 	XmlNodeRef rootNode= xmlParser.parse(animationfilename);
@@ -94,26 +94,95 @@ stAnim2::stAnim2(const char * animationfilename)
 		if (child->isTag("keyframe"))
 		{
 			hb::Points32 offset[4];
+			clock_t t;
 			String v = child->getAttribute("value");
-			sscanf(v.c_str(),"%d %d %d %d %d %d %d %d"
+			sscanf(v.c_str(),"%d %d %d %d %d %d %d %d %d"
 				,&offset[0].x,&offset[0].y
 				,&offset[1].x,&offset[1].y
 				,&offset[2].x,&offset[2].y
-				,&offset[3].x,&offset[3].y);
+				,&offset[3].x,&offset[3].y
+				,&t);
 
-			keyframelist.push_back(stKeyFrame(offset));
+
+
+			keyframelist.push_back(stKeyFrame(offset,t));
 		}
 	}
+
+	firstkeyframetime = keyframelist.begin()->time;
+	assert(firstkeyframetime==0);
+	lastkeyframetime = keyframelist.rbegin()->time;
+	assert(lastkeyframetime>0);
+
+	starttime=0;
 }
 
 stAnim2::~stAnim2()
 {
 }
+
+void stAnim2::operator=(stAnim2* p)
+{
+	hb::Points32 *	t;
+
+	t=p->m_r;
+	p->m_r=this->m_r;
+	this->m_r=t;
+}
+
 void stAnim2::Update()
 {
+	if(starttime==0)
+		starttime=clock();
+
+	long t=clock();
+	if(t-starttime > animFrameRate)
+	{
+		long newframetime=(t-starttime)%(lastkeyframetime-firstkeyframetime);  //it is modulos not division
+
+		//go through the list of keyframes to find the two keyframes that encompass the newframetime.
+	
+	
+		/*
+		1-best solution :the search can be improved. binary search tree maybe
+		if(newframetime<next key frame time)
+		{
+		}
+	
+		2-second better solution : use find(begin, end, functor())
+		*/
+
+		std::vector<stKeyFrame,hb::allocator<stKeyFrame> >::iterator itframe1, itframe2;
+		itframe1=itframe2=keyframelist.begin();
+		for(; itframe2!=keyframelist.end(); ++itframe2)
+		{
+			if(newframetime<itframe2->time)
+			{
+				break;
+			}
+			else
+			{
+				itframe1=itframe2;
+			}
+		}
+		assert(itframe2!=keyframelist.end());
+	
+		Lerp(*itframe1,*itframe2,newframetime);
+	}
 }
 
-void stAnim2::SetRectangle(hb::Points32  _r[])
+void stAnim2::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
 {
-}
+	float t=((float)newframetime-frame1.time)/(frame2.time-frame1.time);
 
+	m_r[0].x=(1-t)*frame1.offset[0].x + t * frame2.offset[0].x;
+	m_r[0].y=(1-t)*frame1.offset[0].y + t * frame2.offset[0].y;
+	m_r[1].x=(1-t)*frame1.offset[1].x + t * frame2.offset[1].x;
+	m_r[1].y=(1-t)*frame1.offset[1].y + t * frame2.offset[1].y;
+	m_r[2].x=(1-t)*frame1.offset[2].x + t * frame2.offset[2].x;
+	m_r[2].y=(1-t)*frame1.offset[2].y + t * frame2.offset[2].y;
+	m_r[3].x=(1-t)*frame1.offset[3].x + t * frame2.offset[3].x;
+	m_r[3].y=(1-t)*frame1.offset[3].y + t * frame2.offset[3].y;
+	
+	
+}

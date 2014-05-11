@@ -14,10 +14,11 @@
 //the first resting position (default position) is a keyframe
 struct stKeyFrame
 {
-	hb::Points32 offset[4];//the displacement offset for each vertex in the rectangle, counter clockwise.
+	hb::Points32	offset[4];//the displacement offset for each vertex in the rectangle, counter clockwise.
+	clock_t			time;
 
 	stKeyFrame();
-	stKeyFrame(hb::Points32 p[]);
+	stKeyFrame(hb::Points32 p[], clock_t t);
 };
 /*
 struct stAnim 
@@ -45,13 +46,19 @@ struct stAnim2
 	unsigned char		currentkeyframe;//needed to know the next key frame to go to
 	bool				loop;
 	bool				ended;	//if !loop, ended=true when currentkeyframe==nbrofkeyframes-1
+	hb::Points32		*m_r;
 
+	clock_t				firstkeyframetime;
+	clock_t				lastkeyframetime;
+	clock_t				starttime;
+	const clock_t		animFrameRate;
 
-	stAnim2(const char * animationfilename);
+	stAnim2(const char * animationfilename, hb::Points32 []);
 	~stAnim2();
 	void Update();
-	void SetRectangle(hb::Points32  _r[]);
-
+	void Init();
+	void Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long );
+	void operator=(stAnim2* p);
 } ;
 
 

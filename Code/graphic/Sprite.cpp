@@ -25,9 +25,13 @@ Sprite::Sprite(hb::Points32 _r[], const char * texname, const char * animationfi
 {
 	for(int i=0; i<4; ++i)
 		m_r[i]=_r[i];
+
+	for(int i=0; i<4; ++i)
+		m_offset[i]=hb::Points32(0,0);
+
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_timeout);
 
-	m_anim.reset(new stAnim2(animationfilename));
+	m_anim.reset(new stAnim2(animationfilename, m_offset));
 
 }
 
@@ -35,9 +39,19 @@ Sprite::Sprite(const Sprite &s)
 {
 	for(int i=0; i<4; ++i)
 		m_r[i]=s.m_r[i];
+
+	for(int i=0; i<4; ++i)
+		m_offset[i]=s.m_offset[i];
+
 	m_texObj=s.m_texObj;
 
-	m_anim.swap(const_cast<Sprite &>(s).m_anim);
+	m_anim.swap(const_cast<Sprite &>(s).m_anim); //mutable
+}
+
+Sprite::~Sprite()
+{
+	char t;
+	t=8;
 }
 
 void Sprite::Draw()
@@ -48,10 +62,10 @@ void Sprite::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_r[0].x, m_r[0].y);
-        glTexCoord2f(1, 0); glVertex2f (m_r[1].x, m_r[1].y);
-        glTexCoord2f(1, 1); glVertex2f (m_r[2].x, m_r[2].y);
-        glTexCoord2f(0, 1); glVertex2f (m_r[3].x, m_r[3].y);
+        glTexCoord2f(0, 0); glVertex2f (m_r[0].x+m_offset[0].x, m_r[0].y+m_offset[0].y);
+        glTexCoord2f(1, 0); glVertex2f (m_r[1].x+m_offset[1].x, m_r[1].y+m_offset[1].y);
+        glTexCoord2f(1, 1); glVertex2f (m_r[2].x+m_offset[2].x, m_r[2].y+m_offset[2].y);
+        glTexCoord2f(0, 1); glVertex2f (m_r[3].x+m_offset[3].x, m_r[3].y+m_offset[3].y);
     glEnd();
 	
 	
