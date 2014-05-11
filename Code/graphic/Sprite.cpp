@@ -21,7 +21,8 @@ Sprite::Sprite(stAnim2 * _a, hb::Points32  _r[]):m_anim(_a)
 	;
 }
 */
-Sprite::Sprite(hb::Points32 _r[], const char * texname, const char * animationfilename)
+//Sprite::Sprite(hb::Points32 _r[], const char * texname, const char * animationfilename)
+Sprite::Sprite(hb::Points32 _r[], const int itex,const char * animationfilename)
 {
 	for(int i=0; i<4; ++i)
 		m_r[i]=_r[i];
@@ -29,7 +30,7 @@ Sprite::Sprite(hb::Points32 _r[], const char * texname, const char * animationfi
 	for(int i=0; i<4; ++i)
 		m_offset[i]=hb::Points32(0,0);
 
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_timeout);
+	m_texObj=TexturesManager::GetInstance().GetTextureObj(itex);
 
 	m_anim.reset(new stAnim2(animationfilename, m_offset));
 
@@ -50,8 +51,6 @@ Sprite::Sprite(const Sprite &s)
 
 Sprite::~Sprite()
 {
-	char t;
-	t=8;
 }
 
 void Sprite::Draw()

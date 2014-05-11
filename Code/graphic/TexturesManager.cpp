@@ -18,9 +18,39 @@ TexturesManager::~TexturesManager()
 {
 	TexUninit();
 }
+	/*
+int GetTexId(char * filefname)
+{
+	it=textures.find(filefname);
+	if (it==textures.end())
+	{
+		CTargaImage j;
+		j.Load(filename);
+
+		int v;
+		glGenTextures(1, &v);
+
+		// bind the texture object
+		glBindTexture(GL_TEXTURE_2D, v);
+
+		// minimum required to set the min and mag texture filters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		// now that the texture object is bound, specify a texture for it
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, j.GetWidth(), j.GetHeight(),
+						0, GL_RGB, GL_UNSIGNED_BYTE, j.GetImage());
+
+
+		textures.insert(pair<>(filename,v));
+	}
+}
+	*/
+
 
 bool TexturesManager::TexInit()
 {
+	
 	//m_tex = new CTargaImage[e_tex_nbrofTextures];
 	m_tex.reset(new CTargaImage[e_tex_nbrofTextures]);
 
@@ -35,14 +65,14 @@ bool TexturesManager::TexInit()
 	if (!m_tex[e_tex_timecounter	].Load("data/timecounter.tga")) return false;
 	if (!m_tex[e_tex_timeout		].Load("data/timeout.tga")) return false;	
 	if (!m_tex[e_tex_countdown		].Load("data/countdown.tga")) return false;	
+	if (!m_tex[e_tex_countdown		].SetOpaqueColor(0,0,0)) return false;
+	if (!m_tex[e_tex_encrg_good		].Load("data/Encrg-Good.tga")) return false;	
+	if (!m_tex[e_tex_encrg_wow		].Load("data/Encrg-Wow.tga")) return false;	
 	
-	if (!m_tex[e_tex_countdown		].SetOpaqueColor(0,0,0))
-		return false;
 
 	//m_texObj = new unsigned int[e_tex_nbrofTextures];
 	m_texObj.reset(new unsigned int[e_tex_nbrofTextures]);
 
-	// now that the texture object is bound, specify a texture for it
 	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i)
 	{
 		glGenTextures(1, &m_texObj[i]);
@@ -54,6 +84,7 @@ bool TexturesManager::TexInit()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+		// now that the texture object is bound, specify a texture for it
 		if(i==e_tex_countdown)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_tex[i].GetWidth(), m_tex[i].GetHeight(),

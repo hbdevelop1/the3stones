@@ -18,7 +18,8 @@ class Sprite
 
 public:
 	Sprite();
-	Sprite(hb::Points32 _r[], const char * texname,const char * animationfilename);
+	//Sprite(hb::Points32 _r[], const char * texname,const char * animationfilename);
+	Sprite(hb::Points32 _r[], const int itex,const char * animationfilename);
 	Sprite(const Sprite &);
 	//~Sprite(){} //i need this mainly so Sprite array is coherent with scoped_array
 	//Sprites are maintained in a list, in the Encouragement class, not in scoped_array

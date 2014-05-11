@@ -93,6 +93,9 @@
     <None Include="exe\data\anim1.xml">
       <Filter>data</Filter>
     </None>
+    <None Include="exe\data\wow1.xml">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="xml">

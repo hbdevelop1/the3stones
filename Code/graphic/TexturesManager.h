@@ -1,5 +1,6 @@
 
 #include <boost/smart_ptr/scoped_array.hpp>
+#include <unordered_map>
 
 class CTargaImage;
 
@@ -7,6 +8,8 @@ class TexturesManager
 {
 	boost::scoped_array<CTargaImage>	m_tex;
 	boost::scoped_array<unsigned int>	m_texObj;
+
+	//std::unordered_map<std::string,unsigned int> m_textures;
 
 	
 private:
@@ -41,6 +44,8 @@ enum
 	e_tex_timeout,
 	e_tex_Intro=e_tex_timeout,
 	e_tex_countdown,
+	e_tex_encrg_good,
+	e_tex_encrg_wow,
 
 	e_tex_nbrofTextures
 };

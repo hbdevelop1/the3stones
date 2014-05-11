@@ -40,7 +40,7 @@ void TimeCounter::Update()
 
 	if(s>=13)
 	{
-		//m_timeout=true;
+		m_timeout=true;
 	}
 	if(m>=1)
 	{

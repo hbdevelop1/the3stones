@@ -683,6 +683,15 @@ the big benefit of scoped_ptr is in not having to write the Encouragement destru
 improve design to derive all objects from Sprite
 have Sprite and AnimatedSprite
 
+313-
+encouragment holds one sprite
+
+314-
+use unordered_map's hash function for mem tracker.
+
+315-
+use unordered_map to map texture names to ids
+
 
 2Learn.1:
 STD::list

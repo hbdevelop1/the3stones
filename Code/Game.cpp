@@ -7,6 +7,7 @@
 #include "timecounter.h"
 #include "score.h"
 #include "Encouragement.h"
+#include "graphic\TexturesManager.h"
 
 #include <new>
 //#include "Mem/MemNew.h"
@@ -27,13 +28,13 @@ game::game()
 	score.reset( new Score );
 	timer.reset( new TimeCounter);
 	//encouragement_good.reset( new Encouragement(5) );
-	encouragement_wow.reset( new Encouragement("data/wow.xml") );
+	encouragement_wow.reset( new Encouragement("data/wow.xml",e_tex_encrg_wow) );
 
 	ObjectsManager::GetInstance().PushBack(board.get(),false);
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
 	ObjectsManager::GetInstance().PushBack(score.get(),false);
 	ObjectsManager::GetInstance().PushBack(timer.get(),false);
-	//ObjectsManager::GetInstance().PushBack(encouragement_wow.get(),false);
+	ObjectsManager::GetInstance().PushBack(encouragement_wow.get(),false);
 
 
 

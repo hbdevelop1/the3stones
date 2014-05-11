@@ -1,0 +1,30 @@
+<root>
+<number value="3" />
+
+  <animatedsprite
+    points="0 0 100 0 100 100 0 100"
+    texture="Encrg-W.tga"
+    animation="data/anim1.xml"
+  />
+
+  <animatedsprite
+    points="100 0   200 0    200 100    100 100"
+    texture="Encrg-O.tga"
+    animation="data/anim1.xml"
+  />
+
+  <animatedsprite
+    points="200 0   300 0    300 100    200 100"
+    texture="Encrg-W.tga"
+    animation="data/anim1.xml"
+  />
+
+  <actor type="HGraphicObj" name="moon01"
+	    position="0 0 0"
+	    orientation="0 0 0 1"
+		datafile="moon_tex"
+		animationfile="moon_anim.an8"
+		lightsource="0"
+		parent="earth01"/>
+		
+</root>
