@@ -10,10 +10,14 @@
 #include "classids.h"
 #include "graphic/TexturesManager.h"
 
+#include "settings.h"
+
 #include "Mem/MemNew.h"
 
-const unsigned int Tile::speedofswap=3;
 
+
+//const unsigned int Tile::SpeedOfSwapping=Settings::SpeedOfSwapping;   //rank 10
+//const unsigned int Tile::NbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
 
 Tile::type Tile::current_t=e_type1;
 Board * Tile::board=NULL;
@@ -192,6 +196,8 @@ void Tile::PrepareMoving()
 
 	pCurrentPosition = pFreePositionToMoveTo;
 	pCurrentPosition->tile = this;
+
+	paceoffall=Settings::SpeedOfFalling;
 }
 
 void Tile::Behavior_Moving()
@@ -204,7 +210,13 @@ void Tile::Behavior_Moving()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
+		if(--paceoffall>0)
+			return;
+
+		paceoffall=Settings::SpeedOfFalling;
+
 		r.b--; r.t--;
+		//r.b-=2; r.t-=2;
 		if(r.b == pCurrentPosition->r.b)//todo:see 12
 		{
 			hbassert(r==pCurrentPosition->r);
@@ -243,17 +255,19 @@ CONSTRUCT_BEHAVIOR_BEGIN
 	hbassert(delta.x==-1 || delta.x==1 || delta.x==0);
 	hbassert(delta.y==-1 || delta.y==1 || delta.y==0);
 	hbassert((delta.x && delta.y==0) || (delta.y && delta.x==0));
-	paceofswap=Tile::speedofswap;
+	paceofswap=Settings::SpeedOfSwapping;
 }
 CONSTRUCT_BEHAVIOR_END
 
 UPDATE_BEHAVIOR_BEGIN
 {
 	//if(pFreePositionToMoveTo!=NULL)//when a tile is in place, pFreePositionToMoveTo <- NULL
-	paceofswap--;
+	
+	paceofswap--; //tile moves each other Settings::SpeedOfSwapping frames.
+
 	if(paceofswap<=0)
 	{
-		paceofswap=Tile::speedofswap;
+		paceofswap=Settings::SpeedOfSwapping;
 
 		if(delta.x)
 		{
@@ -265,6 +279,7 @@ UPDATE_BEHAVIOR_BEGIN
 			r.b=r.b+delta.y;
 			r.t=r.t+delta.y;
 		}
+
 		if(r == pFreePositionToMoveTo->r)
 		{
 			pFreePositionToMoveTo->tile=this;
@@ -315,14 +330,14 @@ void Tile::Behavior_Destroying()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 		//visible=false;
-		iTimeBeforeDestruction=500;
+		nbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
 		todestroy=false;
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		if(iTimeBeforeDestruction>0)
-			iTimeBeforeDestruction--;
+		if(nbrOfFramesBeforeDestruction>0)
+			nbrOfFramesBeforeDestruction--;
 		else
 		{
 			pCurrentPosition->tile=NULL; //position is free. can be taken by another tile
@@ -342,7 +357,7 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		//all disappeared tiles have the same rectangle, waiting to get into the board
+		//all disappeared tiles in a column have the same rectangle, waiting to get into the board
 		r = Tile::board->positions[loc.x][Board::e_RowSize].r;
 		loc=Tile::board->positions[loc.x][Board::e_RowSize].point;
 		hbassert(loc==hb::Pointu8(loc.x,Board::e_RowSize));

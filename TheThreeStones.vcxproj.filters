@@ -40,6 +40,7 @@
     <ClCompile Include="Code\graphic\TexturesManager.cpp">
       <Filter>graphic</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ScoreT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -83,6 +84,8 @@
     <ClInclude Include="Code\graphic\TexturesManager.h">
       <Filter>graphic</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ScoreT.h" />
+    <ClInclude Include="code\settings.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

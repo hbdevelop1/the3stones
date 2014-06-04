@@ -692,6 +692,79 @@ use unordered_map's hash function for mem tracker.
 315-
 use unordered_map to map texture names to ids
 
+316-
+struct ConfirmEncouragement
+{
+#define max_size 4 
+	//const int max_size;
+	Text * a[max_size];
+
+isn't const int suffiscient ? compiler does not accept it.
+
+317-work is needed to improve the reverse_iterator loop and avoid using 
+rit!=m_scores.rend()
+in the condition loop
+and rather use 
+rit!=end. which currently crashes. why ? does the rend() changes ?!!! and end becomes invalid
+
+IndividualScore::~IndividualScore()
+{
+	hb::deque::reverse_iterator rit1,rit2;
+	Text a,b;
+//	for(hb::deque::reverse_iterator it=m_scores.rbegin(), end=m_scores.rend();it!=end; )
+	for(hb::deque::reverse_iterator rit=m_scores.rbegin();rit!=m_scores.rend(); )
+	{
+		rit1=m_scores.rend();
+		a= (*rit1);
+		hb::deque::iterator it=m_scores.erase((rit+1).base());
+		rit=std::reverse_iterator<hb::deque::iterator>(it);
+		if(rit==m_scores.rbegin())
+		{
+			int y=9;
+		}
+		rit2=m_scores.rend();
+		b= (*rit2);
+	}
+}
+
+318-work is needed to undersand why the code crashes at the line a= (*rit1);
+(may be read effective STL, http://stackoverflow.com/questions/1830158/how-to-call-erase-with-a-reverse-iterator, etc ...)
+IndividualScore::~IndividualScore()
+{
+	hb::deque::reverse_iterator rit1,rit2;
+	Text a,b;
+	for(hb::deque::reverse_iterator rit=m_scores.rbegin();rit!=m_scores.rend(); )
+	{
+		rit1=m_scores.rend();
+		a= (*rit1);
+		hb::deque::iterator it=m_scores.erase((rit+1).base());
+		rit=std::reverse_iterator<hb::deque::iterator>(it);
+		if(rit==m_scores.rbegin())
+		{
+			int y=9;
+		}
+		rit2=m_scores.rend();
+		b= (*rit2);
+	}
+}
+
+
+319-
+why is IndividualScore::m_scores a deque ? wouldn't it as a list be equally good ?
+
+320-todo:what is the difference between r and point ? isn't r redundant with point there ?
+void Tile::Behavior_WaitingToGoIntoBoard()
+{
+	CONSTRUCT_BEHAVIOR_BEGIN
+	{
+		//all disappeared tiles in a column have the same rectangle, waiting to get into the board
+		r = Tile::board->positions[loc.x][Board::e_RowSize].r;
+		loc=Tile::board->positions[loc.x][Board::e_RowSize].point;
+320-todo-response
+Tile::r represent the tile's location in pixels. this rectangle could be any where in the displaye area. not only in the board.
+Tile::point is the square information. using the point in a formula, r is gotten.
+
+
 
 2Learn.1:
 STD::list

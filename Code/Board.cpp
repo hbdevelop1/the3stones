@@ -7,7 +7,9 @@
 #include "objectsmanager.h"
 #include "objectsrectangles.h"
 
- 
+#include "settings.h"
+
+//const int Board::nbrOfFrames2WaitAfterSwap=5;  //rank 20
 
 
 #include "Mem/MemNew.h"
@@ -101,7 +103,7 @@ void Board::Reset()
 			{ Tile::e_type2, Tile::e_type4, Tile::e_type3, Tile::e_type1, Tile::e_type3, Tile::e_type2, Tile::e_type5, Tile::e_type3},
 			{ Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2},
 			{ Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1},
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type1, Tile::e_type2, Tile::e_type1},
+			{ Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3, Tile::e_type1, Tile::e_type1, Tile::e_type2, Tile::e_type1},
 			{ Tile::e_type3, Tile::e_type3, Tile::e_type4, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4},
 			{ Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3}
 		};
@@ -368,7 +370,7 @@ void Board::Behavior_Swapping()
 CONSTRUCT_BEHAVIOR_BEGIN
 {
 	Swap(positions[click.p.x][click.p.y].tile,positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile);
-	nbrofframes2waitafterswap=50;
+	nbrofframes2waitafterswap=Settings::NbrOfFramesToWaitToCheckMatchesAfterSwap;
 }
 CONSTRUCT_BEHAVIOR_END
 

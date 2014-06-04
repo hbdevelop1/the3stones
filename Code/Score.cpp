@@ -7,13 +7,24 @@
 #include "classids.h"
 #include "graphic/TexturesManager.h"
 #include "objectsrectangles.h"
+#include "Encouragement.h"
 
+#include "xml/xml.h"
+#include <string>
+using namespace std;
+
+//#define testing
 
 #pragma warning (disable:4996)
 
 uint32	Score::highestscore_i=0;
 
 #define _animateglobalscore_
+
+
+after match found, it takes some time before the +100 appears and starts traveling. why ?
+to answer this, i am making the time line in the doc
+
 
 
 ImplementCreator(Score)
@@ -97,9 +108,10 @@ float Text::stept=.05f;
 
 Text::Text()
 	:t(0)
-	,tm(clock())
+	,tmNcrg(tm=clock())
 	,end(false)
 	,m_gs(NULL)
+	,encouraged(false)
 {
 }
 
@@ -109,13 +121,17 @@ Text::Text(const char* s, hb::Pointu32 sp, GlobalScore & gs)
 	,controlPoint(sp.x,ObjectsRectangles[e_rect_window].t)
 	,landingPoint(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b)
 	,t(0)
-	,tm(clock())
+	,tmNcrg(tm=clock())
 	,end(false)
 	,m_gs(&gs)
+	,encouraged(false)
 {
 	strncpy(str,s,MAXSTRSZ-1);
 }
 
+Text::~Text()
+{
+}
 
 void Text::Reset(const char* s, hb::Pointu32 sp)
 {
@@ -124,8 +140,9 @@ void Text::Reset(const char* s, hb::Pointu32 sp)
 	controlPoint=hb::Pointu32(sp.x,ObjectsRectangles[e_rect_window].t);
 	landingPoint=hb::Pointu32(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b);
 	t=0;
-	tm=clock();
+	tmNcrg=tm=clock();
 	end=false;
+	encouraged=false;
 
 	strncpy(str,s,MAXSTRSZ-1);
 }
@@ -183,33 +200,206 @@ IndividualScore::IndividualScore(GlobalScore & gs):m_gs(gs)
 {
 	//assert(m_gs);
 	Reset();
+
+
 }
 
 IndividualScore::~IndividualScore()
 {
-	m_scores.clear();
+//	m_scores.clear();
+//	for(hb::deque::reverse_iterator it=m_scores.rbegin(), end=m_scores.rend();it!=end; )
+		for(hb::deque::reverse_iterator rit=m_scores.rbegin();rit!=m_scores.rend(); )
+	{
+		rit=std::reverse_iterator<hb::deque::iterator>(m_scores.erase((rit+1).base()));
+	}
+	
+/*
+	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end();)
+	{
+		it=m_scores.erase(it);
+	}
+	*/
 }
 
 void IndividualScore::Reset()
 {
 	m_scores.clear();
+
+
+#ifdef testing
+//	load xml data into individual score;
+
+	hb::Pointu32 ps;
+	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+
+	for(hb::deque::reverse_iterator it=m_scores.rbegin();it!=m_scores.rend(); ++it)
+	{
+		printf("it->tmNcrg==%d\n",it->tmNcrg);
+	}
+
+#endif //testing
 }
+
+struct ConfirmEncouragement
+{
+#define max_size 4 
+	//const int max_size;
+	Text * a[max_size];
+	bool confirm;
+	int currentsize;
+	
+	ConfirmEncouragement():confirm(false),currentsize(0)//,max_size(4)
+	{
+		a[0]=0;
+		a[1]=0;
+		a[2]=0;
+		a[3]=0;
+	}
+
+	~ConfirmEncouragement() 
+	{
+		if(confirm)
+		{
+			for(int i=0; i<currentsize; ++i)
+				a[i]->encouraged=true;
+		}
+	}
+
+	void Add(Text *p)
+	{
+		if(currentsize<max_size)
+		{
+			a[currentsize++]=p;
+		}
+	}
+};
+
+clock_t g_v;
+bool g=false;
 
 #if _bezierinscore_==1
 void IndividualScore::Update()
 {
-	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+
+#ifdef testing
+	//play the list and print whether to encourage or not;
+
+
+	auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement));
+	ConfirmEncouragement confirmNcrg;
+	int i=0;
+
+	for(hb::deque::reverse_iterator it=m_scores.rbegin();it!=m_scores.rend(); ++it,++i)
 	{
 		if(!it->end)
 		{
 			it->Update();
 		}
+		
+		if(encourg)
+		{
+#define threshold 3
+
+			if(i<=threshold)
+			{
+				confirmNcrg.Add( &(*it) );
+
+				if(!it->encouraged)
+					if(i==threshold)
+					{
+						printf("threshold hit\n");
+						clock_t t=clock();
+						if(g)
+						{
+							t=g_v;
+						}
+						
+						printf("t==%d   it->tmNcrg==%d\n",t,it->tmNcrg);
+
+						if(t-it->tmNcrg < 1500)
+						{
+							confirmNcrg.confirm=true;
+							encourg->Display();
+						}
+					}
+			}
+		}
 	}
+#else
+
+#if _encrg_version_==1
+	auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement));
+	ConfirmEncouragement confirmNcrg;
+	hb::deque::reverse_iterator it2;
+#endif _encrg_version_==1
+	int i=0;
+
+
+	for(hb::deque::reverse_iterator rit=m_scores.rbegin(); rit!=m_scores.rend(); ++i)
+	{
+//		hb::deque::iterator it1=rit.base();		it2=std::reverse_iterator<hb::deque::iterator>(it1);
+
+		if(!rit->end)
+		{
+			rit->Update();
+		}
+#if _encrg_version_==1	
+		
+		if(encourg)
+		{
+#define threshold 4
+
+			if(i<=(threshold-1))
+			{
+				confirmNcrg.Add( &(*rit) );
+
+				if(i==(threshold-1))
+				{
+					if(!rit->encouraged)
+					{
+						printf("threshold hit and not encouraged\n");
+						clock_t t=clock();
+						if(t-rit->tmNcrg < 1000)
+						{
+							printf("position = %d\n",i);
+							confirmNcrg.confirm=true;
+							encourg->Display();
+						}
+					}
+				}
+			}
+		}
+		
+		if(rit->end)
+		{
+			//int r = m_scores.size();
+			//printf("(%d) deleting it->tmNcrg=%d  corresponding to it.base()->tmNcrg=%d\n",r,it->tmNcrg,it.base()->tmNcrg);
+			//hb::deque::iterator it1=;
+			//r = m_scores.size();
+			rit=std::reverse_iterator<hb::deque::iterator>(m_scores.erase((rit+1).base()));
+			//printf("(%d) using it->tmNcrg=%d  corresponding to it1->tmNcrg=%d\n",r,it->tmNcrg,it1->tmNcrg);
+		}
+		else
+#endif //#if _encrg_version_==1	
+		{
+			++rit;
+		}
+	}
+#endif //testing
 }
 void IndividualScore::Add(hb::Pointu32 sp)
 {
-	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
 
+#ifdef testing
+	//move on to the next list; or wrap around;
+#else
+
+	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
+#if _encrg_version_!=1	
 	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
 	{
 		if(it->end)
@@ -223,12 +413,20 @@ void IndividualScore::Add(hb::Pointu32 sp)
 			return;
 		}
 	}
-	
+#endif //#if _encrg_version_!=1	
 	m_scores.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
+	printf("nbr of indiv. scores == %d\n",m_scores.size());
+
+#endif //testing
 
 }
 void IndividualScore::Draw()
 {
+
+#ifdef testing
+	//do nothing;
+#else
+
 	glColor3f(.0f,.0f,.0f);
 
 	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
@@ -240,6 +438,7 @@ void IndividualScore::Draw()
 			while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
 		}
 	}
+#endif //testing
 }
 
 #elif _bezierinscore_==0
@@ -291,8 +490,21 @@ void IndividualScore::Draw()
 #endif _bezierinscore_
 ////////////////
 
+#if _encrg_version_==2
+/*	get time, and store it;
+	check the third one from the end;
+	if  ! encrg and time diff is < 1000
+		encourg;
+		confirm; or remove;
+	if(beyond threshold) remove;
+	if(very old) remove;
+
+	at GlobalScore::~GlobalScore
+		free the list;
+		*/
+#endif //_encrg_version_==2
+
 GlobalScore::GlobalScore():m_r(ObjectsRectangles[e_rect_score])
-										
 {
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_score);
 
@@ -301,15 +513,50 @@ GlobalScore::GlobalScore():m_r(ObjectsRectangles[e_rect_score])
 
 GlobalScore::~GlobalScore()
 {
+	listOfScoresTime.clear();
 }
 
 void GlobalScore::Update()
 {
+#if _encrg_version_==2
+	if (auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement)))
+	{
+		int i=0;
+
+		for(std::list<clock_t,hb::allocator<clock_t> >::reverse_iterator rit=listOfScoresTime.rbegin(), end=listOfScoresTime.rend(); rit!=end; ++i,++rit)
+		{
+#define threshold 4
+			if(i==(threshold-1))
+			//if(std::distance(listOfScoresTime.rbegin(),rit)==(threshold-1)) TODO
+			{
+				clock_t diff=*listOfScoresTime.rbegin() - *rit;
+//TODO				//if( diff< 1050) sometimes this condition is true. other times it is not !!! how come the performance is not constant ?
+				if( diff< 1400)
+				{
+					encourg->Display();
+					listOfScoresTime.clear();
+					int t=listOfScoresTime.size();
+					break;
+				}
+				else
+				{
+					printf("time between the last and the 4th from end is : %d\n",diff);
+				}
+			}
+		}
+	}
+
+#endif //_encrg_version_==2
 }
 
 #ifdef _animateglobalscore_
+
 void GlobalScore::Increment()
 {
+#if _encrg_version_==2
+	listOfScoresTime.push_back(clock());
+#endif //_encrg_version_==2
+
 	m_score_i += IndividualScore::ms_score_i;
 	_itoa(m_score_i,m_score_str,10);
 }

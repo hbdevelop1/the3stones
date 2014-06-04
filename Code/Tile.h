@@ -32,14 +32,18 @@ struct Tile
 	PositionInBoard *pCurrentPosition;
 	PositionInBoard *pFreePositionToMoveTo;
 	hb::Points8	delta;
-	sint32	iTimeBeforeDestruction;
+	signed int nbrOfFramesBeforeDestruction;
 	bool	visible;
 	bool	active;
 	bool	selected;//to indicate if the tile is selected
 	bool	todestroy;
 	bool	toswap;
 	int		paceofswap;
-	static const unsigned int speedofswap;
+	int		paceoffall;
+
+
+	//static const unsigned int SpeedOfSwapping;
+	//static const unsigned int NbrOfFramesBeforeDestruction;
 
 	State 	m_state;
 	void (Tile::*m_currentbehavior)(void);

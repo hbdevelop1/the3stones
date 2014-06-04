@@ -11,9 +11,13 @@ using namespace std;
 
 Encouragement::~Encouragement()
 {
+	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
+
 }
-Encouragement::Encouragement(char * filename, int itex):m_displayEngouragement(false),m_lasttime_checkscore(clock())
+Encouragement::Encouragement(char * filename, int itex):m_displayEngouragement(false)
 {
+	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_Encouragement);
+
 	XmlParser xmlParser;
 	XmlNodeRef rootNode= xmlParser.parse(filename);
 
@@ -71,29 +75,24 @@ Encouragement::Encouragement(char * filename, int itex):m_displayEngouragement(f
 	*/
 }
 
+void Encouragement::Reset()
+{
+	m_displayEngouragement=false;
+}
+
 void Encouragement::Draw()
 {
-	if(m_displayEngouragement)
-	{
-		m_sprite->Draw();
-	}
+	if(!m_displayEngouragement)
+		return;
+
+	m_sprite->Draw();
 }
 
 void Encouragement::Update()
 {
-	long t=clock();
+	if(!m_displayEngouragement)
+		return;
 
-	if(t-m_lasttime_checkscore>1500)
-	{
-		Score *o = dynamic_cast<Score *>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score));
-		if(o->GetScore()-m_lastscoremade>200)
-		{
-			m_lastscoremade=o->GetScore();
-
-			m_displayEngouragement=true;
-			starttime4animation=clock();
-		}
-	}
 /*	each time, check the score;
 	if(score>400)
 		display encouragement;
@@ -102,12 +101,14 @@ void Encouragement::Update()
 	set anim to 0 before launching it;
 	*/
 
-	if(m_displayEngouragement)
-	{
-		if(clock()-starttime4animation>2000)
-			m_displayEngouragement=false;
-	}
+	if(clock()-starttime4animation>2000)
+		m_displayEngouragement=false;
 
-	if(m_displayEngouragement)
-		m_sprite->Update();
+	m_sprite->Update();
+}
+
+void Encouragement::Display()
+{
+	m_displayEngouragement=true;
+	starttime4animation=clock();
 }

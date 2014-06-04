@@ -101,6 +101,9 @@
     <ClCompile Include="code\ObjectsManager.cpp" />
     <ClCompile Include="code\Rectangle.cpp" />
     <ClCompile Include="code\Score.cpp" />
+    <ClCompile Include="Code\ScoreT.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
@@ -131,6 +134,10 @@
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
+    <ClInclude Include="Code\ScoreT.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="code\settings.h" />
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />

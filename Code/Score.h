@@ -8,6 +8,7 @@
 #include "Mem/allocator.h"
 
 #include <queue>
+#include <list>
 using namespace std;
 
 class Score;
@@ -15,6 +16,7 @@ struct GlobalScore;
 
 
 #define _bezierinscore_ 1
+#define _encrg_version_ 2
 
 
 
@@ -28,6 +30,7 @@ struct Text
 {
 	char str[MAXSTRSZ ];
 	bool			end;
+	bool			encouraged;
 	hb::Pointu32	initialPos;			//A factor in the function
 	hb::Pointu32	controlPoint;		//B factor in the function
 	hb::Pointu32	landingPoint;		//C factor in the function
@@ -36,9 +39,11 @@ struct Text
 	float			t; //goes from 0 to 1
 	static float	stept;
 	clock_t			tm;
+	clock_t			tmNcrg;
 	GlobalScore *	m_gs;
 
 	Text();
+	~Text();
 	Text(const char*, hb::Pointu32 sp,GlobalScore & gs);
 	void Update();
 	void Reset(const char* s, hb::Pointu32 sp);
@@ -97,6 +102,9 @@ struct GlobalScore
 		e_Width=128
 	};
 
+#if _encrg_version_==2
+	std::list<clock_t,hb::allocator<clock_t> > listOfScoresTime;
+#endif //_encrg_version_==2
 public:
 	GlobalScore();
 	~GlobalScore();

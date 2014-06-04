@@ -88,6 +88,7 @@ private:
 	hb::Pointu8	SelectedTilesPosition;
 
 	int nbrofframes2waitafterswap;
+	//static const int nbrOfFrames2WaitAfterSwap;
 
 private:
 	Board(const Board &);
