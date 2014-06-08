@@ -31,5 +31,15 @@ void DrawText(const char *txt, signed int x=-1, signed int y=-1);
 
 #include "Mem/MemTracker.h"
 
+extern unsigned int g_currentframe;
+
+enum
+{
+	e_ncrg_good,
+	e_ncrg_wow,
+
+	e_ncrg_MAX
+};
+
 
 #endif //_COMMON_

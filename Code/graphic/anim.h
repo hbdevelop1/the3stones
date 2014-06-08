@@ -51,11 +51,13 @@ struct stAnim2
 	clock_t				firstkeyframetime;
 	clock_t				lastkeyframetime;
 	clock_t				starttime;
-	const clock_t		animFrameRate;
+	//const clock_t		animFrameRate;
 
 	stAnim2(const char * animationfilename, hb::Points32 []);
 	~stAnim2();
 	void Update();
+	void Reset();
+
 	void Init();
 	void Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long );
 	void operator=(stAnim2* p);

@@ -90,13 +90,10 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="The3Stonesreadme.txt" />
-    <None Include="exe\data\wow.xml">
-      <Filter>data</Filter>
-    </None>
     <None Include="exe\data\anim1.xml">
       <Filter>data</Filter>
     </None>
-    <None Include="exe\data\wow1.xml">
+    <None Include="exe\data\goodNwow.xml">
       <Filter>data</Filter>
     </None>
   </ItemGroup>

@@ -286,6 +286,10 @@ UPDATE_BEHAVIOR_BEGIN
 			pCurrentPosition=pFreePositionToMoveTo;
 			pFreePositionToMoveTo=NULL;
 
+#ifdef _gettiming_
+			printf("Tile has finished swapping (0x%08X) at %d\n",this,g_currentframe);
+#endif //_gettiming_
+
 			CHANGE_BEHAVIOR(Tile,Behavior_Resting); //there is no danger that a click happens. because the board does not receive events
 		}
 	}

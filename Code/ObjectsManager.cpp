@@ -2,7 +2,7 @@
 #include "classids.h"
 #include "objectsmanager.h"
 
-
+unsigned int g_currentframe=0;
 
 typedef Object * (*ObjectsCreators)(void);
 

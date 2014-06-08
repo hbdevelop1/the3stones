@@ -701,6 +701,16 @@ struct ConfirmEncouragement
 
 isn't const int suffiscient ? compiler does not accept it.
 
+3171-why is destruction done in reverse order ? what's the benefit over the normal traversal ?
+IndividualScore::~IndividualScore()
+{
+//	m_texts.clear();
+//	for(hb::deque::reverse_iterator it=m_texts.rbegin(), end=m_texts.rend();it!=end; )
+		for(hb::deque::reverse_iterator rit=m_texts.rbegin();rit!=m_texts.rend(); )
+	{
+		rit=std::reverse_iterator<hb::deque::iterator>(m_texts.erase((rit+1).base()));
+	}
+
 317-work is needed to improve the reverse_iterator loop and avoid using 
 rit!=m_scores.rend()
 in the condition loop
@@ -764,6 +774,27 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 Tile::r represent the tile's location in pixels. this rectangle could be any where in the displaye area. not only in the board.
 Tile::point is the square information. using the point in a formula, r is gotten.
 
+321-todo-queue ? why is m_texts not a list/vector ?
+class IndividualScore
+{
+	hb::deque		m_texts; //watch out:no cc for Text
+
+322-
+  <animatedsprite
+    points="0 50 100 50 100 350 0 350"
+    texture="Encrg-W.tga"
+    animation="data/anim1.xml"
+  />
+Load the texture entry through TextureManager
+TextureManager will have functions that load a single texture.
+if more than one game element use the same texture, it is loaded by the first call and gets used by the second.
+
+323-
+improve TextureManager constructor.
+use exception or another loading error management instead of just returning false; and then a crash when textures are being loaded.(Tile)
+
+324-animation exercise
+rotate Wow instead of translating its vertices.
 
 
 2Learn.1:

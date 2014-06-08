@@ -6,6 +6,8 @@
 #include "../mem/MemNew.h"
 #include <stdio.h>
 
+#pragma warning (disable:4996)
+
 stKeyFrame::stKeyFrame()
 {
 	offset[0]=hb::Points32(0,0);
@@ -79,7 +81,7 @@ void stAnim::Update()
 	
 }
 */
-stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rparent),animFrameRate(100)
+stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rparent)//,animFrameRate(100)
 {
 	XmlParser xmlParser;
 	XmlNodeRef rootNode= xmlParser.parse(animationfilename);
@@ -88,13 +90,20 @@ stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rpa
 		assert(0);
 	}
 
+#define _keyframetimeSetInCode_
+//_keyframetimeSetInCode_ is to set key frame timing in the code, instead of reading a regular timing from the anim file.
+//advantage:quickly test many timing steps
+
+	clock_t lastt=0;
+	clock_t t;
+	clock_t timing_step=300;
 	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
 		XmlNodeRef child = rootNode->getChild(i);
 		if (child->isTag("keyframe"))
 		{
 			hb::Points32 offset[4];
-			clock_t t;
+			
 			String v = child->getAttribute("value");
 			sscanf(v.c_str(),"%d %d %d %d %d %d %d %d %d"
 				,&offset[0].x,&offset[0].y
@@ -103,9 +112,12 @@ stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rpa
 				,&offset[3].x,&offset[3].y
 				,&t);
 
-
-
+#ifdef _keyframetimeSetInCode_
+			keyframelist.push_back(stKeyFrame(offset,lastt));
+			lastt+=timing_step;
+#else
 			keyframelist.push_back(stKeyFrame(offset,t));
+#endif
 		}
 	}
 
@@ -132,13 +144,22 @@ void stAnim2::operator=(stAnim2* p)
 
 void stAnim2::Update()
 {
-	if(starttime==0)
-		starttime=clock();
+	long newframetime;
 
-	long t=clock();
-	if(t-starttime > animFrameRate)
+	if(starttime==0)
 	{
-		long newframetime=(t-starttime)%(lastkeyframetime-firstkeyframetime);  //it is modulos not division
+		starttime=clock();
+		newframetime=0;
+	}
+	else
+	{
+		long t=clock();
+		newframetime=(t-starttime)%(lastkeyframetime-firstkeyframetime);  //it is modulos not division
+	}
+
+
+	//if(t-starttime > animFrameRate)
+	{
 
 		//go through the list of keyframes to find the two keyframes that encompass the newframetime.
 	
@@ -185,4 +206,9 @@ void stAnim2::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
 	m_r[3].y=(1-t)*frame1.offset[3].y + t * frame2.offset[3].y;
 	
 	
+}
+
+void stAnim2::Reset()
+{
+	starttime=0;
 }

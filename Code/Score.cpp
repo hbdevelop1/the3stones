@@ -22,9 +22,6 @@ uint32	Score::highestscore_i=0;
 #define _animateglobalscore_
 
 
-after match found, it takes some time before the +100 appears and starts traveling. why ?
-to answer this, i am making the time line in the doc
-
 
 
 ImplementCreator(Score)
@@ -147,10 +144,19 @@ void Text::Reset(const char* s, hb::Pointu32 sp)
 	strncpy(str,s,MAXSTRSZ-1);
 }
 
+#ifdef _gettiming_
+int Text_timing=8;
+#endif //_gettiming_
+
 void Text::Update()
 {
 	if(clock()-tm >= 50)
 	{
+#ifdef _gettiming_
+		if(--Text_timing > 0)
+			printf("Text::Update() (0x%08X) at %d\n",this,g_currentframe);
+#endif //_gettiming_
+
 		tm=clock();
 
 		if(t>=1.f)
@@ -197,46 +203,52 @@ Text::Text(const char* s, hb::Pointu32 sp):initialPos(sp),life(MAXLIFE)
 #endif _bezierinscore_
 
 IndividualScore::IndividualScore(GlobalScore & gs):m_gs(gs)
+#ifdef _comparedifferentdrawing_
+	,m_is2(gs)
+#endif //_comparedifferentdrawing_
 {
 	//assert(m_gs);
 	Reset();
-
 
 }
 
 IndividualScore::~IndividualScore()
 {
-//	m_scores.clear();
-//	for(hb::deque::reverse_iterator it=m_scores.rbegin(), end=m_scores.rend();it!=end; )
-		for(hb::deque::reverse_iterator rit=m_scores.rbegin();rit!=m_scores.rend(); )
+//	m_texts.clear();
+//	for(hb::deque::reverse_iterator it=m_texts.rbegin(), end=m_texts.rend();it!=end; )
+		for(hb::deque::reverse_iterator rit=m_texts.rbegin();rit!=m_texts.rend(); )
 	{
-		rit=std::reverse_iterator<hb::deque::iterator>(m_scores.erase((rit+1).base()));
+		rit=std::reverse_iterator<hb::deque::iterator>(m_texts.erase((rit+1).base()));
 	}
 	
 /*
-	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end();)
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end();)
 	{
-		it=m_scores.erase(it);
+		it=m_texts.erase(it);
 	}
 	*/
 }
 
 void IndividualScore::Reset()
 {
-	m_scores.clear();
+#ifdef _comparedifferentdrawing_
+	m_is2.Reset();
+#endif
+
+	m_texts.clear();
 
 
 #ifdef testing
 //	load xml data into individual score;
 
 	hb::Pointu32 ps;
-	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
-	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
-	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
-	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
-	m_scores.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
 
-	for(hb::deque::reverse_iterator it=m_scores.rbegin();it!=m_scores.rend(); ++it)
+	for(hb::deque::reverse_iterator it=m_texts.rbegin();it!=m_texts.rend(); ++it)
 	{
 		printf("it->tmNcrg==%d\n",it->tmNcrg);
 	}
@@ -244,6 +256,7 @@ void IndividualScore::Reset()
 #endif //testing
 }
 
+#if _encrg_version_==1	
 struct ConfirmEncouragement
 {
 #define max_size 4 
@@ -277,13 +290,16 @@ struct ConfirmEncouragement
 		}
 	}
 };
-
+#endif //_encrg_version_==1	
 clock_t g_v;
 bool g=false;
 
 #if _bezierinscore_==1
 void IndividualScore::Update()
 {
+#ifdef _comparedifferentdrawing_
+	m_is2.Update();
+#endif
 
 #ifdef testing
 	//play the list and print whether to encourage or not;
@@ -293,7 +309,7 @@ void IndividualScore::Update()
 	ConfirmEncouragement confirmNcrg;
 	int i=0;
 
-	for(hb::deque::reverse_iterator it=m_scores.rbegin();it!=m_scores.rend(); ++it,++i)
+	for(hb::deque::reverse_iterator it=m_texts.rbegin();it!=m_texts.rend(); ++it,++i)
 	{
 		if(!it->end)
 		{
@@ -339,7 +355,7 @@ void IndividualScore::Update()
 	int i=0;
 
 
-	for(hb::deque::reverse_iterator rit=m_scores.rbegin(); rit!=m_scores.rend(); ++i)
+	for(hb::deque::reverse_iterator rit=m_texts.rbegin(); rit!=m_texts.rend(); ++i)
 	{
 //		hb::deque::iterator it1=rit.base();		it2=std::reverse_iterator<hb::deque::iterator>(it1);
 
@@ -376,11 +392,11 @@ void IndividualScore::Update()
 		
 		if(rit->end)
 		{
-			//int r = m_scores.size();
+			//int r = m_texts.size();
 			//printf("(%d) deleting it->tmNcrg=%d  corresponding to it.base()->tmNcrg=%d\n",r,it->tmNcrg,it.base()->tmNcrg);
 			//hb::deque::iterator it1=;
-			//r = m_scores.size();
-			rit=std::reverse_iterator<hb::deque::iterator>(m_scores.erase((rit+1).base()));
+			//r = m_texts.size();
+			rit=std::reverse_iterator<hb::deque::iterator>(m_texts.erase((rit+1).base()));
 			//printf("(%d) using it->tmNcrg=%d  corresponding to it1->tmNcrg=%d\n",r,it->tmNcrg,it1->tmNcrg);
 		}
 		else
@@ -393,6 +409,9 @@ void IndividualScore::Update()
 }
 void IndividualScore::Add(hb::Pointu32 sp)
 {
+#ifdef _comparedifferentdrawing_ 
+	m_is2.Add(sp);
+#endif
 
 #ifdef testing
 	//move on to the next list; or wrap around;
@@ -400,7 +419,7 @@ void IndividualScore::Add(hb::Pointu32 sp)
 
 	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
 #if _encrg_version_!=1	
-	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(it->end)
 		{
@@ -414,8 +433,8 @@ void IndividualScore::Add(hb::Pointu32 sp)
 		}
 	}
 #endif //#if _encrg_version_!=1	
-	m_scores.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
-	printf("nbr of indiv. scores == %d\n",m_scores.size());
+	m_texts.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
+	//printf("nbr of indiv. scores == %d\n",m_texts.size());
 
 #endif //testing
 
@@ -423,13 +442,17 @@ void IndividualScore::Add(hb::Pointu32 sp)
 void IndividualScore::Draw()
 {
 
+#ifdef _comparedifferentdrawing_ 
+	m_is2.Draw();
+#endif
+
 #ifdef testing
 	//do nothing;
 #else
 
 	glColor3f(.0f,.0f,.0f);
 
-	for(hb::deque::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(!it->end && it->t!=0 /*to avoid drawing a static text*/)
 		{
@@ -444,7 +467,7 @@ void IndividualScore::Draw()
 #elif _bezierinscore_==0
 void IndividualScore::Update()
 {
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(deque<Text>::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(it->life>=0)
 		{
@@ -458,7 +481,7 @@ void IndividualScore::Add(hb::Pointu32 sp)
 {
 	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
 
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(deque<Text>::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(it->life<=0)
 		{
@@ -469,7 +492,7 @@ void IndividualScore::Add(hb::Pointu32 sp)
 		}
 	}
 	int u=deque<Text>::_EEM_DS;
-	m_scores.push_back(Text(IndividualScore::score_str,sp));
+	m_texts.push_back(Text(IndividualScore::score_str,sp));
 
 }
 
@@ -477,7 +500,7 @@ void IndividualScore::Draw()
 {
 	glColor3f(.0f,.0f,.0f);
 
-	for(deque<Text>::iterator it=m_scores.begin();it!=m_scores.end(); ++it)
+	for(deque<Text>::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(it->life>=0)
 		{
@@ -513,34 +536,58 @@ GlobalScore::GlobalScore():m_r(ObjectsRectangles[e_rect_score])
 
 GlobalScore::~GlobalScore()
 {
-	listOfScoresTime.clear();
+	listOfTimesNcrgd.clear();
 }
+
 
 void GlobalScore::Update()
 {
 #if _encrg_version_==2
+
+	ConfirmEncouragement confirmNcrg;
+
 	if (auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement)))
 	{
 		int i=0;
+	/*
+algo:
+the following figures reprent times.
+020 100  110 : the last two times are < 11 and never encouraged -> good
+020 100  110  112 : the last four times are > 16 -> no wow
+					the last two times are < 11 but one was encouraged -> good
+020 100  110  112  114 :the last four times are > 16 -> wow + destruction
+						the last two times do not exist.
+*/
 
-		for(std::list<clock_t,hb::allocator<clock_t> >::reverse_iterator rit=listOfScoresTime.rbegin(), end=listOfScoresTime.rend(); rit!=end; ++i,++rit)
+		for(auto rit=listOfTimesNcrgd.rbegin(), end=listOfTimesNcrgd.rend(); rit!=end; ++i,++rit)
 		{
-#define threshold 4
-			if(i==(threshold-1))
-			//if(std::distance(listOfScoresTime.rbegin(),rit)==(threshold-1)) TODO
+#define threshold_wow 4
+#define threshold_good 2
+
+			if(i== threshold_wow-1)
+			//if(std::distance(listOfTimesNcrgd.rbegin(),rit)==(threshold-1)) TODO
 			{
-				clock_t diff=*listOfScoresTime.rbegin() - *rit;
-//TODO				//if( diff< 1050) sometimes this condition is true. other times it is not !!! how come the performance is not constant ?
+				clock_t diff=listOfTimesNcrgd.rbegin()->time - rit->time;
+//TODO				//if( diff< 1050) sometimes this condition is true. other times it is not !!! 
+				//how come the frame rate is not constant ?
 				if( diff< 1400)
 				{
-					encourg->Display();
-					listOfScoresTime.clear();
-					int t=listOfScoresTime.size();
+					encourg->Display(e_ncrg_wow);
+					listOfTimesNcrgd.clear();
 					break;
 				}
-				else
+			}
+			else if(i== threshold_good-1 && !rit->encouraged)
+			{
+				confirmNcrg.Add( &(*rit) );
+
+				clock_t diff=listOfTimesNcrgd.rbegin()->time - rit->time;
+				if( diff< 1000)
 				{
-					printf("time between the last and the 4th from end is : %d\n",diff);
+					encourg->Display(e_ncrg_good);
+					confirmNcrg.confirm=true;
+					//listOfTimesNcrgd.clear();
+					break;
 				}
 			}
 		}
@@ -554,7 +601,7 @@ void GlobalScore::Update()
 void GlobalScore::Increment()
 {
 #if _encrg_version_==2
-	listOfScoresTime.push_back(clock());
+	listOfTimesNcrgd.push_back(TimeNcrgd());
 #endif //_encrg_version_==2
 
 	m_score_i += IndividualScore::ms_score_i;
@@ -618,3 +665,164 @@ void GlobalScore::Reset()
 	m_score_str[1]=0;
 	m_score_i=0;
 }
+
+///////////////////////
+
+#ifdef _comparedifferentdrawing_
+
+IndividualScore2::IndividualScore2(GlobalScore & gs):m_gs(gs)
+{
+	//assert(m_gs);
+	Reset();
+
+
+}
+
+IndividualScore2::~IndividualScore2()
+{
+//	m_texts.clear();
+//	for(hb::deque::reverse_iterator it=m_texts.rbegin(), end=m_texts.rend();it!=end; )
+		for(hb::deque::reverse_iterator rit=m_texts.rbegin();rit!=m_texts.rend(); )
+	{
+		rit=std::reverse_iterator<hb::deque::iterator>(m_texts.erase((rit+1).base()));
+	}
+	
+/*
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end();)
+	{
+		it=m_texts.erase(it);
+	}
+	*/
+}
+
+void IndividualScore2::Reset()
+{
+	m_texts.clear();
+
+
+#ifdef testing
+//	load xml data into individual score;
+
+	hb::Pointu32 ps;
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+	m_texts.push_back(Text(IndividualScore::ms_score_str,ps,m_gs));
+
+	for(hb::deque::reverse_iterator it=m_texts.rbegin();it!=m_texts.rend(); ++it)
+	{
+		printf("it->tmNcrg==%d\n",it->tmNcrg);
+	}
+
+#endif //testing
+}
+
+
+void IndividualScore2::Update()
+{
+
+#ifdef testing
+	//play the list and print whether to encourage or not;
+
+
+	auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement));
+	ConfirmEncouragement confirmNcrg;
+	int i=0;
+
+	for(hb::deque::reverse_iterator it=m_texts.rbegin();it!=m_texts.rend(); ++it,++i)
+	{
+		if(!it->end)
+		{
+			it->Update();
+		}
+		
+		if(encourg)
+		{
+#define threshold 3
+
+			if(i<=threshold)
+			{
+				confirmNcrg.Add( &(*it) );
+
+				if(!it->encouraged)
+					if(i==threshold)
+					{
+						printf("threshold hit\n");
+						clock_t t=clock();
+						if(g)
+						{
+							t=g_v;
+						}
+						
+						printf("t==%d   it->tmNcrg==%d\n",t,it->tmNcrg);
+
+						if(t-it->tmNcrg < 1500)
+						{
+							confirmNcrg.confirm=true;
+							encourg->Display();
+						}
+					}
+			}
+		}
+	}
+#else
+
+	int i=0;
+
+
+	for(hb::deque::reverse_iterator rit=m_texts.rbegin(); rit!=m_texts.rend(); ++i)
+	{
+//		hb::deque::iterator it1=rit.base();		it2=std::reverse_iterator<hb::deque::iterator>(it1);
+
+		if(!rit->end)
+		{
+			rit->Update();
+		}
+		{
+			++rit;
+		}
+	}
+#endif //testing
+}
+void IndividualScore2::Add(hb::Pointu32 sp)
+{
+	sp=sp+hb::Pointu32((Square::e_Height>>2)+3,(Square::e_Height>>1)+3);
+
+#if _encrg_version_!=1	
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	{
+		if(it->end)
+		{
+			/*
+			Text *pUnused = &(*it);
+			new (pUnused) Text(IndividualScore::score_str,sp);
+			placement new spits an error in vs2010:it doesn't like a variable next to the new keyword but expects a data type.
+			*/
+			it->Reset(IndividualScore::ms_score_str,sp);
+			return;
+		}
+	}
+#endif //#if _encrg_version_!=1	
+	m_texts.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
+
+}
+void IndividualScore2::Draw()
+{
+
+
+	glColor3f(.0f,.0f,1.0f);
+
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	{
+		if(!it->end /*&& it->t!=0 *//*to avoid drawing a static text*/)
+		{
+			glRasterPos2f(it->currentPos.x, it->currentPos.y);
+			char* p = (char*) (*it).str;
+			while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
+		}
+	}
+
+}
+
+#endif //_comparedifferentdrawing_

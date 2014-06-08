@@ -22,7 +22,7 @@ Sprite::Sprite(stAnim2 * _a, hb::Points32  _r[]):m_anim(_a)
 }
 */
 //Sprite::Sprite(hb::Points32 _r[], const char * texname, const char * animationfilename)
-Sprite::Sprite(hb::Points32 _r[], const int itex,const char * animationfilename)
+Sprite::Sprite(hb::Points32 _r[], const char * animationfilename, const int itex)
 {
 	for(int i=0; i<4; ++i)
 		m_r[i]=_r[i];
@@ -77,3 +77,52 @@ void Sprite::Update()
 		m_anim->Update();
 }
 
+void Sprite::Reset()
+{
+	if(m_anim)
+		m_anim->Reset();
+}
+
+
+///////////////////////////////
+
+Sprite2::Sprite2(hb::Points32 _r[], const char * animationfilename, const int itex, const int itex2):
+	Sprite(_r, animationfilename,itex),
+	m_image(e_ncrg_good)
+{
+	m_texObj2=TexturesManager::GetInstance().GetTextureObj(itex2);
+}
+
+Sprite2::Sprite2(const Sprite2 &s)
+{
+	assert(0);
+}
+
+void Sprite2::Draw()
+{
+	glEnable(GL_TEXTURE_2D);
+
+	if(m_image==e_ncrg_wow)
+		glBindTexture(GL_TEXTURE_2D, m_texObj2);
+	else
+		glBindTexture(GL_TEXTURE_2D, m_texObj);
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
+
+	glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0); glVertex2f (m_r[0].x+m_offset[0].x, m_r[0].y+m_offset[0].y);
+        glTexCoord2f(1, 0); glVertex2f (m_r[1].x+m_offset[1].x, m_r[1].y+m_offset[1].y);
+        glTexCoord2f(1, 1); glVertex2f (m_r[2].x+m_offset[2].x, m_r[2].y+m_offset[2].y);
+        glTexCoord2f(0, 1); glVertex2f (m_r[3].x+m_offset[3].x, m_r[3].y+m_offset[3].y);
+    glEnd();
+	
+	
+	glDisable(GL_TEXTURE_2D);
+}
+
+void Sprite2::SetImage(int type)
+{
+	assert(type==e_ncrg_wow || type == e_ncrg_good);
+
+	m_image=type;
+}

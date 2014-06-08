@@ -16,17 +16,17 @@
 class Encouragement : public Object
 {//derives from Object so it can be pushed to the list of objects and updated and drawn by ObjectsManager
 
-	boost::scoped_ptr<Sprite>	m_sprite;
+	boost::scoped_ptr<Sprite2>	m_sprite;
 	bool						m_displayEngouragement;
 	clock_t						starttime4animation;
 
 public:
-	Encouragement(char * filename, int itex);
+	Encouragement(char * filename);
 	~Encouragement();
 	void Draw();
 	void Update();
 	void Reset();
-	void Display();
+	void Display(int type);
 };
 //
 //class Good : public Encouragement

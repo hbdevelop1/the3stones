@@ -17,6 +17,13 @@ struct GlobalScore;
 
 #define _bezierinscore_ 1
 #define _encrg_version_ 2
+//#define _comparedifferentdrawing_
+/*
+after match found, it takes some time before the +100 appears and starts traveling. why ?
+to answer this, i am making the time line in the doc
+to troubleshoot this I am using _comparedifferentdrawing_
+finally it was _gettiming_ that gave me the hint. which was to reduce NbrOfFramesToWaitToCheckMatchesAfterSwap.
+*/
 
 
 
@@ -68,10 +75,34 @@ namespace hb
 typedef std::deque<Text,hb::allocator<Text> > deque;
 }
 
+class IndividualScore2
+{
+	hb::deque		m_texts; //watch out:no cc for Text
+
+	GlobalScore &	m_gs;
+
+public:
+	static const char	ms_score_str[5];
+	static const int	ms_score_i;
+
+public:
+	IndividualScore2(GlobalScore &);
+	~IndividualScore2();
+
+	void Update();
+	void Draw();
+	void Add(hb::Pointu32 initialPos);
+	void Reset();
+
+};
 class IndividualScore
 {
-	hb::deque		m_scores; //watch out:no cc for Text
+	hb::deque		m_texts; //watch out:no cc for Text
 	GlobalScore &	m_gs;
+
+#ifdef _comparedifferentdrawing_ 
+	IndividualScore2		m_is2;
+#endif
 
 public:
 	static const char	ms_score_str[5];
@@ -103,7 +134,53 @@ struct GlobalScore
 	};
 
 #if _encrg_version_==2
-	std::list<clock_t,hb::allocator<clock_t> > listOfScoresTime;
+	struct TimeNcrgd
+	{
+		clock_t	time;
+		bool	encouraged;
+
+		TimeNcrgd():encouraged(false),time(clock())
+		{
+		}
+	};
+
+	std::list<TimeNcrgd,hb::allocator<TimeNcrgd> > listOfTimesNcrgd;
+	
+	struct ConfirmEncouragement
+	{
+	#define maxsizece 4 
+		//const int max_size;
+		TimeNcrgd * a[maxsizece];
+		bool confirm;
+		int currentsize;
+	
+		ConfirmEncouragement():confirm(false),currentsize(0)//,max_size(4)
+		{
+			a[0]=0;
+			a[1]=0;
+			a[2]=0;
+			a[3]=0;
+		}
+
+		~ConfirmEncouragement() 
+		{
+			if(confirm)
+			{
+				for(int i=0; i<currentsize; ++i)
+					a[i]->encouraged=true;
+			}
+		}
+
+		void Add(TimeNcrgd *p)
+		{
+			if(currentsize<maxsizece)
+			{
+				a[currentsize++]=p;
+			}
+		}
+		
+	};
+	
 #endif //_encrg_version_==2
 public:
 	GlobalScore();

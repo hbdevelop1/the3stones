@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_;DEBUGMODE;TESTING</PreprocessorDefinitions>
+      <PreprocessorDefinitions>;AADEBUGMODE;AATESTING;Q_showanimationallthetime_;_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessToFile>false</PreprocessToFile>
@@ -147,12 +147,9 @@
   <ItemGroup>
     <None Include="exe\data\anim1.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </None>
-    <None Include="exe\data\wow.xml">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <SubType>Designer</SubType>
     </None>
-    <None Include="exe\data\wow1.xml">
+    <None Include="exe\data\goodNwow.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="Readme.txt">
