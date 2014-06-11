@@ -9,6 +9,12 @@
 #include "Encouragement.h"
 #include "graphic\TexturesManager.h"
 
+#ifdef _testingthenewspriteobjectclass_
+#include "timecounter2.h"
+#include "TimeCounterAnim.h"
+
+#endif //_testingthenewspriteobjectclass_
+
 #include <new>
 //#include "Mem/MemNew.h"
 
@@ -28,6 +34,11 @@ game::game()
 	timer.reset( new TimeCounter);
 	//encouragement_good.reset( new Encouragement(5) );
 	encouragement.reset( new Encouragement("data/goodNwow.xml") );
+#ifdef _testingthenewspriteobjectclass_
+	timer2.reset( new TimeCounter2);
+	timeranim.reset( new TimeCounterAnim);
+#endif //_testingthenewspriteobjectclass_
+
 
 	ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
 	ObjectsManager::GetInstance().PushBack(board.get(),false);
@@ -37,6 +48,11 @@ game::game()
 #ifdef _showanimationallthetime_
 	encouragement_wow->Display();
 #endif
+#ifdef _testingthenewspriteobjectclass_
+	ObjectsManager::GetInstance().PushBack(timer2.get(),false);
+	ObjectsManager::GetInstance().PushBack(timeranim.get(),false);
+	
+#endif //_testingthenewspriteobjectclass_
 
 
 	START_BEHAVIOR(game, 

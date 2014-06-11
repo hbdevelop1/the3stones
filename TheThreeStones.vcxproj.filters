@@ -41,6 +41,8 @@
       <Filter>graphic</Filter>
     </ClCompile>
     <ClCompile Include="Code\ScoreT.cpp" />
+    <ClCompile Include="Code\TimeCounter2.cpp" />
+    <ClCompile Include="Code\TimeCounterAnim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -86,6 +88,8 @@
     </ClInclude>
     <ClInclude Include="Code\ScoreT.h" />
     <ClInclude Include="code\settings.h" />
+    <ClInclude Include="Code\TimeCounter2.h" />
+    <ClInclude Include="Code\TimeCounterAnim.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

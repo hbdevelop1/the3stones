@@ -23,6 +23,9 @@ enum
 	e_rect_timeout_quitgame,
 	e_rect_Intro,
 	e_rect_Intro_startbutton,
+#ifdef _testingthenewspriteobjectclass_
+	e_rect_timecounter2,
+#endif //_testingthenewspriteobjectclass_
 
 	e_rect_nbrofrectangles
 };
@@ -74,7 +77,34 @@ const hb::Rectangle ObjectsRectangles[]=
 		ObjectsRectangles[e_rect_Intro].r - (ObjectsRectangles[e_rect_Intro].r -ObjectsRectangles[e_rect_Intro].l)/2 +Intro::e_width/2,
 		ObjectsRectangles[e_rect_Intro].b+5+10+40),
 
+#ifdef _testingthenewspriteobjectclass_
+//e_rect_timecounter2,
+	hb::Rectangle(ObjectsRectangles[e_rect_timecounter].l, ObjectsRectangles[e_rect_timecounter].b-5-TimeCounter::e_Height,
+				ObjectsRectangles[e_rect_timecounter].l+TimeCounter::e_Width, ObjectsRectangles[e_rect_timecounter].b-5),
+#endif //_testingthenewspriteobjectclass_
+
 };
 
-
+struct stRectangle2
+{
+	hb::Points32 lb;
+	hb::Points32 rb;
+	hb::Points32 rt;
+	hb::Points32 lt;
+};
+const stRectangle2 ObjectsRectangle2[]=
+{
+	{
+		hb::Points32(ObjectsRectangles[e_rect_timecounter].l, ObjectsRectangles[e_rect_timecounter].b-5-TimeCounter::e_Height), 
+		hb::Points32(ObjectsRectangles[e_rect_timecounter].l+TimeCounter::e_Width,ObjectsRectangles[e_rect_timecounter].b-5-TimeCounter::e_Height), 
+		hb::Points32(ObjectsRectangles[e_rect_timecounter].l+TimeCounter::e_Width,ObjectsRectangles[e_rect_timecounter].b-5), 
+		hb::Points32(ObjectsRectangles[e_rect_timecounter].l, ObjectsRectangles[e_rect_timecounter].b-5)
+	},
+	{
+		hb::Points32(ObjectsRectangle2[0].lb.x, ObjectsRectangle2[0].lb.y-5-TimeCounter::e_Height),
+		hb::Points32(ObjectsRectangle2[0].rb.x, ObjectsRectangle2[0].lb.y-5-TimeCounter::e_Height),
+		hb::Points32(ObjectsRectangle2[0].rb.x, ObjectsRectangle2[0].lb.y-5),
+		hb::Points32(ObjectsRectangle2[0].lb.x, ObjectsRectangle2[0].lb.y-5),
+	},
+};
 #endif _OBJECTSRECTANGLES_

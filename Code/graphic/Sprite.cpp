@@ -126,3 +126,75 @@ void Sprite2::SetImage(int type)
 
 	m_image=type;
 }
+
+//////////////////////////////
+
+#include "..\ObjectsRectangles.h"
+
+Sprite3::Sprite3(const stRectangle2 *rect, int itex):
+	m_rect(rect),
+	m_texObj(TexturesManager::GetInstance().GetTextureObj(itex))
+{
+	
+}
+/*
+Sprite3::Sprite3(const Sprite3 &s):m_rect(s.m_rect),m_texObj(s.m_texObj)
+{
+}
+*/
+Sprite3::~Sprite3()
+{
+}
+
+void Sprite3::Draw()
+{
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, m_texObj);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
+
+	glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0); glVertex2f (m_rect->lb.x, m_rect->lb.y);
+        glTexCoord2f(1, 0); glVertex2f (m_rect->rb.x, m_rect->rb.y);
+        glTexCoord2f(1, 1); glVertex2f (m_rect->rt.x, m_rect->rt.y);
+        glTexCoord2f(0, 1); glVertex2f (m_rect->lt.x, m_rect->lt.y);
+    glEnd();
+	
+	
+	glDisable(GL_TEXTURE_2D);
+}
+//////////////////
+
+AnimatedSprite3::AnimatedSprite3(const stRectangle2 *rect, int itex, const char * animationfilename)
+	:Sprite3(rect, itex)
+{
+
+	for(int i=0; i<4; ++i)
+		m_offset[i]=hb::Points32(0,0);
+
+	m_anim.reset(new stAnim2(animationfilename, m_offset));
+}
+
+void AnimatedSprite3::Update()
+{
+	m_anim->Update();
+}
+
+void AnimatedSprite3::Draw()
+{
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, m_texObj);
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
+
+	glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0); glVertex2f (m_rect->lb.x+m_offset[0].x, m_rect->lb.y+m_offset[0].y);
+        glTexCoord2f(1, 0); glVertex2f (m_rect->rb.x+m_offset[1].x, m_rect->rb.y+m_offset[1].y);
+        glTexCoord2f(1, 1); glVertex2f (m_rect->rt.x+m_offset[2].x, m_rect->rt.y+m_offset[2].y);
+        glTexCoord2f(0, 1); glVertex2f (m_rect->lt.x+m_offset[3].x, m_rect->lt.y+m_offset[3].y);
+    glEnd();
+	
+	
+	glDisable(GL_TEXTURE_2D);
+}

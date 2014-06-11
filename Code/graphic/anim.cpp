@@ -177,6 +177,11 @@ void stAnim2::Update()
 		itframe1=itframe2=keyframelist.begin();
 		for(; itframe2!=keyframelist.end(); ++itframe2)
 		{
+			if(newframetime==0)
+			{
+				char r;
+				r=1;
+			}
 			if(newframetime<itframe2->time)
 			{
 				break;

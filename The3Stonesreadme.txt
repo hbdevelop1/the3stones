@@ -132,8 +132,8 @@ the board finds match
 
 17-
 a fine line between 
-	using the same behavior/function for many situation: this yields a long and complexe function
-	using many little functions for each little situation. a lot of duplications, a bug in many places
+	using the same behavior/function to be used in many situation: this yields a long and complexe function
+	using many little functions for each little situation. a lot of duplications, different bugs in similar codes
 17.2
 coding is a series of decisions: will timeout be a class or code part of game. 
 if it is a class will it have full access to game the inverse ?
@@ -327,10 +327,17 @@ I got to better understand the functions
 here I discovered that scoped_ptr::swap is what to use for copying and not scoped_ptr::reset
 
 19.6.3- 
-write the erroneous code in one function/bloc and see why it is erroneous.
-
+write the compiler-error-reported code in one function/bloc and see why it is erroneous.
 a list element seems to not have been ever allocated.
 
+19.7 -step by step to include big changes
+I had to derive all classes from Sprite3. which will encapsulate functionalities for graphics displays.
+instead of each class Board, TimeOut, ... having the code for graphics displays.
+classes would inheret from two classes Object and Sprite. and i had never done that 
+Created a TimeCounter2, which is based on TimeCounter, made sure it worked
+So created Sprite3, based on Sprite
+removed TimeCounter2 graphic capabilities and exlusively used those built in a member of it object of Sprite3 
+then derived TimeCounter2 from Sprite3 and removed the Sprite3 member.
 
 20-properties of the code
 extensible ?
@@ -795,6 +802,11 @@ use exception or another loading error management instead of just returning fals
 
 324-animation exercise
 rotate Wow instead of translating its vertices.
+
+Release
+-Derive from Sprite and Object
+-remove non copiable means in classes derived from Object
+
 
 
 2Learn.1:

@@ -1,4 +1,6 @@
 
+#ifndef _SPRITE_H_
+#define _SPRITE_H_
 
 #include "../common.h"
 #include <list>
@@ -49,3 +51,31 @@ public:
 	void SetImage(int type);
 };
 
+struct stRectangle2;
+class Sprite3
+{
+protected:
+	const stRectangle2	*m_rect;
+	//hb::Points32	(& m_r2)[4];
+	const unsigned int	m_texObj;
+
+public:
+	Sprite3(const stRectangle2 * rect, int itex);
+
+	virtual ~Sprite3();
+
+	void Draw();
+};
+
+class AnimatedSprite3: public Sprite3
+{
+	hb::Points32				m_offset[4];
+	boost::scoped_ptr<stAnim2>	m_anim;
+public:
+	AnimatedSprite3(const stRectangle2 *,int,const char *);
+
+	void Update();
+	void Draw();
+};
+
+#endif _SPRITE_H_
