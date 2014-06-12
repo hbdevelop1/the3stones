@@ -339,8 +339,14 @@ So created Sprite3, based on Sprite
 removed TimeCounter2 graphic capabilities and exlusively used those built in a member of it object of Sprite3 
 then derived TimeCounter2 from Sprite3 and removed the Sprite3 member.
 
+19.8 class AnimatedSpriteNcrg : public AnimatedSprite3
+AnimatedSpriteNcrg::Draw reusing AnimatedSprite3::Draw reduces errors:
+-different errors in similar functions
+-one function fixed for a bug and not the other.
+
+
 20-properties of the code
-extensible ?
+extensible ? called also scalable in "coding interviews"
 maintenable ?
 
 20.1
@@ -806,7 +812,7 @@ rotate Wow instead of translating its vertices.
 Release
 -Derive from Sprite and Object
 -remove non copiable means in classes derived from Object
-
+-what is void stAnim2::operator=(stAnim2* p) for ? it is not used !!!!
 
 
 2Learn.1:

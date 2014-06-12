@@ -41,11 +41,11 @@ struct stAnim
 struct stAnim2
 {
 	std::vector<stKeyFrame,hb::allocator<stKeyFrame> > keyframelist;
-	clock_t				lastframetime; //this is to decide whether to interpolate the next frame.
-	unsigned char		nbrofkeyframes;//nbr of frames in the anim including the first and last resting positions
-	unsigned char		currentkeyframe;//needed to know the next key frame to go to
-	bool				loop;
-	bool				ended;	//if !loop, ended=true when currentkeyframe==nbrofkeyframes-1
+//	clock_t				lastframetime; //this is to decide whether to interpolate the next frame.
+//	unsigned char		nbrofkeyframes;//nbr of frames in the anim including the first and last resting positions
+	//unsigned char		currentkeyframe;//needed to know the next key frame to go to
+	//bool				loop;
+	//bool				ended;	//if !loop, ended=true when currentkeyframe==nbrofkeyframes-1
 	hb::Points32		*m_r;
 
 	clock_t				firstkeyframetime;

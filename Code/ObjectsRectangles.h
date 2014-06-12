@@ -85,14 +85,7 @@ const hb::Rectangle ObjectsRectangles[]=
 
 };
 
-struct stRectangle2
-{
-	hb::Points32 lb;
-	hb::Points32 rb;
-	hb::Points32 rt;
-	hb::Points32 lt;
-};
-const stRectangle2 ObjectsRectangle2[]=
+const hb::stRectangle2 ObjectsRectangle2[]=
 {
 	{
 		hb::Points32(ObjectsRectangles[e_rect_timecounter].l, ObjectsRectangles[e_rect_timecounter].b-5-TimeCounter::e_Height), 

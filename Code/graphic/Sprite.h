@@ -55,12 +55,13 @@ struct stRectangle2;
 class Sprite3
 {
 protected:
-	const stRectangle2	*m_rect;
+	const hb::stRectangle2	m_rect;
 	//hb::Points32	(& m_r2)[4];
-	const unsigned int	m_texObj;
+	//const 
+		unsigned int	m_texObj; //can not be const as it is modifiable in derived class
 
 public:
-	Sprite3(const stRectangle2 * rect, int itex);
+	Sprite3(const hb::stRectangle2 * rect, int itex);
 
 	virtual ~Sprite3();
 
@@ -72,9 +73,20 @@ class AnimatedSprite3: public Sprite3
 	hb::Points32				m_offset[4];
 	boost::scoped_ptr<stAnim2>	m_anim;
 public:
-	AnimatedSprite3(const stRectangle2 *,int,const char *);
+	AnimatedSprite3(const hb::stRectangle2 *,int,const char *);
 
 	void Update();
+	void Draw();
+};
+
+class AnimatedSpriteNcrg: public AnimatedSprite3
+{
+	const unsigned int	m_texObj1;
+	const unsigned int	m_texObj2;
+	int					m_image;
+public:
+	AnimatedSpriteNcrg(const hb::stRectangle2 *,int,int,const char *);
+	void SetImage(int type);
 	void Draw();
 };
 

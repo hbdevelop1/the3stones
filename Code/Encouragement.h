@@ -46,3 +46,19 @@ public:
 //	{
 //	}
 //};
+
+class Encouragement2 : public Object
+{//derives from Object so it can be pushed to the list of objects and updated and drawn by ObjectsManager
+
+	boost::scoped_ptr<AnimatedSpriteNcrg>	m_sprite;
+	bool									m_displayEngouragement;
+	clock_t									starttime4animation;
+
+public:
+	Encouragement2(char * filename);
+	~Encouragement2();
+	void Draw();
+	void Update();
+	void Reset();
+	void Display(int type);
+};

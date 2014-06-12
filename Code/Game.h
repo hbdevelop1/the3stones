@@ -11,6 +11,7 @@ class Board;
 class TimeCounter;
 class Score;
 class  Encouragement;
+class Encouragement2;
 
 #ifdef _testingthenewspriteobjectclass_
 class TimeCounter2;
@@ -24,6 +25,8 @@ class game : public Object
 	boost::scoped_ptr<TimeCounter>		timer;
 	boost::scoped_ptr<Score>			score;
 	boost::scoped_ptr<Encouragement>	encouragement;
+	boost::scoped_ptr<Encouragement2>	encouragement2;
+
 
 #ifdef _testingthenewspriteobjectclass_
 	boost::scoped_ptr<TimeCounter2>		timer2;
