@@ -11,11 +11,13 @@ struct PositionInBoard;
 class Board;
 class CTargaImage;
 
-struct Tile
+class Tile
 {
 	hb::Rectangle r;
+	unsigned int m_texObj;
 	static Board * board;
 
+public:
 	enum type
 	{
 		e_type1,
@@ -25,6 +27,7 @@ struct Tile
 		e_type5,
 		e_typeMax
 	};
+private:
 
 	static type	current_t;	//type for tiles going back into the board
 	type	t;	//type for color/type
@@ -69,8 +72,8 @@ public:
 //	void Set(type _t, Pointi p);
 
 	virtual ~Tile();
-	virtual void Draw()=0;
-	virtual void SetType(type t);
+	void Draw();
+	void SetType(type t);
 
 	void Reset(type _t);
 	void Update();
@@ -85,34 +88,6 @@ public:
 	friend void Destroy(Tile*, Tile*, Tile*);
 	friend class Board;
 };
-
-struct TileColored : public Tile
-{
-	Color	color;
-public:
-	TileColored ();
-	TileColored (type _t,hb::Pointu8 p);
-
-	~TileColored ();
-	void Draw();
-	void SetType(type t);
-	//void Set(PositionInBoard * p, type t);
-};
-
-struct TileTex : public Tile
-{
-	unsigned int m_texObj;
-
-public:
-	TileTex ();
-	TileTex (type _t,hb::Pointu8 p);
-
-	~TileTex ();
-	void Draw();
-	void SetType(type t);
-	//void Set(PositionInBoard * p, type t);
-};
-
 //}
 
 

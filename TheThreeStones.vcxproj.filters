@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="code\Board.cpp" />
-    <ClCompile Include="code\Bboardtest.cpp" />
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
     <ClCompile Include="code\Game.cpp" />
@@ -14,12 +13,8 @@
     <ClCompile Include="code\Tile.cpp" />
     <ClCompile Include="code\TimeCounter.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
-    <ClCompile Include="Code\Vector.cpp" />
     <ClCompile Include="Code\Encouragement.cpp" />
     <ClCompile Include="Code\xml\xml.cpp">
-      <Filter>xml</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\xml\xmlmain.cpp">
       <Filter>xml</Filter>
     </ClCompile>
     <ClCompile Include="Code\Mem\memtest.cpp">
@@ -40,11 +35,6 @@
     <ClCompile Include="Code\graphic\TexturesManager.cpp">
       <Filter>graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ScoreT.cpp" />
-    <ClCompile Include="Code\TimeCounter2.cpp" />
-    <ClCompile Include="Code\TimeCounterAnim.cpp" />
-    <ClCompile Include="Code\Board2.cpp" />
-    <ClCompile Include="Code\Tile2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -62,7 +52,6 @@
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />
-    <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\Encouragement.h" />
     <ClInclude Include="Code\xml\xml.h">
       <Filter>xml</Filter>
@@ -88,12 +77,7 @@
     <ClInclude Include="Code\graphic\TexturesManager.h">
       <Filter>graphic</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ScoreT.h" />
     <ClInclude Include="code\settings.h" />
-    <ClInclude Include="Code\TimeCounter2.h" />
-    <ClInclude Include="Code\TimeCounterAnim.h" />
-    <ClInclude Include="Code\Board2.h" />
-    <ClInclude Include="Code\Tile2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

@@ -17,10 +17,11 @@
 #endif _bezier_ > 0
 
 
-struct Tile;
+class Tile;
+#ifndef _use_sprite_
 struct TileColored;
 struct TileTex;
-
+#endif //_use_sprite_
 //namespace hb{
 
 struct Event
@@ -65,7 +66,7 @@ private:
 	PositionInBoard positions[e_ColumnSize][e_RowSize+1];
 	//TileColored 
 
-	boost::scoped_array<TileTex> tiles;
+	boost::scoped_array<Tile> tiles;
 
 #if _bezier_ == 1
 	hb::Pointu32	m_bzP[4];
@@ -124,7 +125,7 @@ public:
 
 	void test();
 
-	friend struct Tile;
+	friend class Tile;
 };
 
 //}//namespace hb

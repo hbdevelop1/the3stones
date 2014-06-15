@@ -41,7 +41,7 @@ Board::Board():m_rect(&ObjectsRectangles2[e_rect_board]),
 	click.notprocessed=false;
 
 
-	tiles.reset(new TileTex [e_RowSize*e_ColumnSize]);
+	tiles.reset(new Tile [e_RowSize*e_ColumnSize]);
 
 	
 

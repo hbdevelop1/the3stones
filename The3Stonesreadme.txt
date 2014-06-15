@@ -813,6 +813,11 @@ Release
 -Derive from Sprite and Object
 -remove non copiable means in classes derived from Object
 -what is void stAnim2::operator=(stAnim2* p) for ? it is not used !!!!
+-how much memory does the game use ?
+-review score,tile, board,
+-review memtracker 
+-documentation
+-review variable naming conventions
 
 
 2Learn.1:

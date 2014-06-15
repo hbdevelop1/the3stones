@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>Q_showanimationallthetime_;Q_testingthenewspriteobjectclass_;AADEBUGMODE;AATESTING;Q_showanimationallthetime_;_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_use_sprite_;Q_showanimationallthetime_;Q_testingthenewspriteobjectclass_;AADEBUGMODE;AATESTING;Q_showanimationallthetime_;_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessToFile>false</PreprocessToFile>
@@ -85,12 +85,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code\Board.cpp" />
-    <ClCompile Include="code\Bboardtest.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Code\Board2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Code\Encouragement.cpp" />
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
@@ -106,28 +100,13 @@
     <ClCompile Include="code\ObjectsManager.cpp" />
     <ClCompile Include="code\Rectangle.cpp" />
     <ClCompile Include="code\Score.cpp" />
-    <ClCompile Include="Code\ScoreT.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="code\Tile.cpp" />
-    <ClCompile Include="Code\Tile2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="code\TimeCounter.cpp" />
-    <ClCompile Include="Code\TimeCounter2.cpp" />
-    <ClCompile Include="Code\TimeCounterAnim.cpp" />
     <ClCompile Include="code\TimeOut.cpp" />
-    <ClCompile Include="Code\Vector.cpp" />
     <ClCompile Include="Code\xml\xml.cpp" />
-    <ClCompile Include="Code\xml\xmlmain.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\Board.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Code\Board2.h" />
+    <ClInclude Include="code\Board.h" />
     <ClInclude Include="code\Classids.h" />
     <ClInclude Include="code\Common.h" />
     <ClInclude Include="code\CountDown.h" />
@@ -147,17 +126,10 @@
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
-    <ClInclude Include="Code\ScoreT.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="code\settings.h" />
     <ClInclude Include="code\Tile.h" />
-    <ClInclude Include="Code\Tile2.h" />
     <ClInclude Include="code\TimeCounter.h" />
-    <ClInclude Include="Code\TimeCounter2.h" />
-    <ClInclude Include="Code\TimeCounterAnim.h" />
     <ClInclude Include="code\TimeOut.h" />
-    <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\xml\xml.h" />
   </ItemGroup>
   <ItemGroup>

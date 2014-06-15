@@ -62,6 +62,7 @@ void Tile::SetType(type _t)
 {
 	hbassert(e_type1<=_t && _t<=e_type5);
 	t=_t;
+	m_texObj=TexturesManager::GetInstance().GetTextureObj(_t);
 }
 
 void Tile::Set(PositionInBoard * p, type t)
@@ -91,13 +92,29 @@ Tile::~Tile()
 
 void Tile::Draw()
 {
+	if(!visible || !active)
+		return;
+
+
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	if(selected)
+	{
+		glRotatef(180,0.f,0.f,1.f);
+	}
+	glMatrixMode(GL_MODELVIEW);
+
+	glBindTexture(GL_TEXTURE_2D, m_texObj);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
+
 	glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
+        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
+        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
+        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
+        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
     glEnd();
 }
+
 
 void Tile::Update()
 {
@@ -450,119 +467,3 @@ bool Tile::CheckMatches()
 	
 	return false;
 }
-
-
-TileColored::TileColored()
-{
-}
-
-TileColored::TileColored(type _t,hb::Pointu8 p):Tile(_t,p)
-{
-	SetType(t);	
-}
-
-TileColored::~TileColored()
-{
-}
-
-void TileColored::Draw()
-{
-	if(!visible || !active)
-		return;
-
-	if(selected)
-		glColor3f (color.r-.2f, color.g-.2f, color.b-.2f);
-	else
-		glColor3f (color.r, color.g, color.b);
-
-	Tile::Draw();
-}
-
-void TileColored::SetType(type _t)
-{
-	Tile::SetType(_t);
-
-	if (t==e_type1)
-	{
-		color.r=1.f;
-		color.g=1.f;
-		color.b=0.f;
-	}
-	else if (t==e_type2)
-	{
-		color.r=0.f;
-		color.g=0.f;
-		color.b=1.f;
-	}
-	else if (t==e_type3)
-	{
-		color.r=0.f;
-		color.g=1.f;
-		color.b=0.f;
-	}
-	else if (t==e_type4)
-	{
-		color.r=1.f;
-		color.g=0.f;
-		color.b=0.f;
-	}
-	else if (t==e_type5)
-	{
-		color.r=0.f;
-		color.g=1.f;
-		color.b=1.f;
-	}
-	else
-		hbassert(0);
-}
-
-
-
-
-
-TileTex::TileTex()
-{
-}
-
-TileTex::TileTex(type _t,hb::Pointu8 p):Tile(_t,p)
-{
-	SetType(t);	
-}
-
-TileTex::~TileTex()
-{
-}
-
-void TileTex::Draw()
-{
-	if(!visible || !active)
-		return;
-
-
-	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	if(selected)
-	{
-		glRotatef(180,0.f,0.f,1.f);
-	}
-	glMatrixMode(GL_MODELVIEW);
-
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
-    glEnd();
-}
-
-void TileTex::SetType(type _t)
-{
-	Tile::SetType(_t);
-
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(_t);
-
-}
-
