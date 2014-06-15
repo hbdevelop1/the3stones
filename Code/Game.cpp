@@ -32,17 +32,15 @@ game::game()
 	board.reset(new Board );
 	score.reset( new Score );
 	timer.reset( new TimeCounter);
-	////encouragement_good.reset( new Encouragement(5) );
-	//encouragement.reset( new Encouragement("data/goodNwow.xml") );
-	encouragement2.reset( new Encouragement2("data/goodNwow.xml") );
+
+	encouragement.reset( new Encouragement("data/goodNwow.xml") );
 #ifdef _testingthenewspriteobjectclass_
 	timer2.reset( new TimeCounter2);
 	timeranim.reset( new TimeCounterAnim);
 #endif //_testingthenewspriteobjectclass_
 
 
-	//ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
-	ObjectsManager::GetInstance().PushBack(encouragement2.get(),false);
+	ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
 	ObjectsManager::GetInstance().PushBack(board.get(),false);
 	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
 	ObjectsManager::GetInstance().PushBack(score.get(),false);
@@ -203,7 +201,7 @@ void game::Behavior_timeout()
 	DESTRUCT_BEHAVIOR_END
 }
 
-void game::OnClick(uint32 x, uint32 y)
+void game::OnClick(int x, int y)
 {
 	if(m_currentbehavior == &game::Behavior_playing)
 		board->OnClick(x,y);

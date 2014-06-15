@@ -3,16 +3,15 @@
 #include <stdio.h>
 #include "objectsmanager.h"
 #include "graphic/TexturesManager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "common.h"
 
 #include "Mem/MemNew.h"
 
 #pragma warning (disable:4996)
 
-TimeCounter::TimeCounter():m_timeout(true),r(ObjectsRectangles[e_rect_timecounter])
+TimeCounter::TimeCounter():m_timeout(true),Sprite(& ObjectsRectangles2[e_rect_timecounter], e_tex_timecounter)
 {
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_timecounter);
 }
 
 TimeCounter::~TimeCounter()
@@ -40,7 +39,7 @@ void TimeCounter::Update()
 
 	if(s>=13)
 	{
-		//m_timeout=true;
+		m_timeout=true;
 	}
 	if(m>=1)
 	{
@@ -50,23 +49,11 @@ void TimeCounter::Update()
 
 void TimeCounter::Draw()
 {
-	glEnable(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
-    glEnd();
-	
-	
-	glDisable(GL_TEXTURE_2D);
+	Sprite::Draw();
 
 	glColor3f (1.0, 1.0, 0.0);
-	glRasterPos2f(r.r-80, r.t-50);
+
+	glRasterPos2f(m_rect->lt.x +30, m_rect->lt.y-50);
 
 	char* p = (char*) time_str;
 	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);

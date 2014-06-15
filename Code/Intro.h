@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "rectangle.h"
 #include "object.h"
+#include "graphic\sprite.h"
 
 #define _anim_ 0
 
@@ -68,19 +69,19 @@ public:
 #endif _anim_==1
 
 
-class Intro : public Object
+class Intro : public Object, public Sprite
 {
 #if _anim_>0
 	hb::Points32 r[4];
 #else
-	const hb::Rectangle & r;
+	//const hb::Rectangle & r;
 #endif
 
-	hb::Rectangle rplay;
+	const hb::stRectangle2 *rplay;
 #if _anim_>0
 	stAnim anim;
 #endif
-	unsigned int m_texObj;
+	//unsigned int m_texObj;
 
 	enum
 	{
@@ -106,7 +107,7 @@ public:
 	void Update();
 	void Draw();
 
-	void OnClick(uint32 x,uint32 y);
+	void OnClick(int x,int y);
 };
 
 #endif //_Intro_

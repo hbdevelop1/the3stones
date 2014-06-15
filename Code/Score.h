@@ -6,6 +6,7 @@
 #include "rectangle.h"
 #include "object.h"
 #include "Mem/allocator.h"
+#include "graphic\sprite.h"
 
 #include <queue>
 #include <list>
@@ -119,11 +120,8 @@ public:
 
 };
 
-struct GlobalScore
+struct GlobalScore : public Sprite
 {
-	const hb::Rectangle	& m_r;
-	unsigned int m_texObj;
-
 	uint32			m_score_i;
 	char			m_score_str[10];
 

@@ -331,16 +331,16 @@ write the compiler-error-reported code in one function/bloc and see why it is er
 a list element seems to not have been ever allocated.
 
 19.7 -step by step to include big changes
-I had to derive all classes from Sprite3. which will encapsulate functionalities for graphics displays.
+I had to derive all classes from Sprite. which will encapsulate functionalities for graphics displays.
 instead of each class Board, TimeOut, ... having the code for graphics displays.
 classes would inheret from two classes Object and Sprite. and i had never done that 
 Created a TimeCounter2, which is based on TimeCounter, made sure it worked
-So created Sprite3, based on Sprite
-removed TimeCounter2 graphic capabilities and exlusively used those built in a member of it object of Sprite3 
-then derived TimeCounter2 from Sprite3 and removed the Sprite3 member.
+So created Sprite, based on Sprite
+removed TimeCounter2 graphic capabilities and exlusively used those built in a member of it object of Sprite 
+then derived TimeCounter2 from Sprite and removed the Sprite member.
 
-19.8 class AnimatedSpriteNcrg : public AnimatedSprite3
-AnimatedSpriteNcrg::Draw reusing AnimatedSprite3::Draw reduces errors:
+19.8 class AnimatedSpriteNcrg : public AnimatedSprite
+AnimatedSpriteNcrg::Draw reusing AnimatedSprite::Draw reduces errors:
 -different errors in similar functions
 -one function fixed for a bug and not the other.
 

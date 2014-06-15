@@ -6,7 +6,7 @@
 #include "ObjectsManager.h"
 #include "classids.h"
 #include "graphic/TexturesManager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "Encouragement.h"
 
 #include "xml/xml.h"
@@ -527,10 +527,8 @@ void IndividualScore::Draw()
 		*/
 #endif //_encrg_version_==2
 
-GlobalScore::GlobalScore():m_r(ObjectsRectangles[e_rect_score])
+GlobalScore::GlobalScore():Sprite(& ObjectsRectangles2[e_rect_score], e_tex_score)
 {
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_score);
-
 	Reset();
 }
 
@@ -617,23 +615,11 @@ void GlobalScore::Add()
 
 void GlobalScore::Draw()
 {
-	glEnable(GL_TEXTURE_2D);
+	Sprite::Draw();
 
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_r.l, m_r.b);
-        glTexCoord2f(1, 0); glVertex2f (m_r.r, m_r.b);
-        glTexCoord2f(1, 1); glVertex2f (m_r.r, m_r.t);
-        glTexCoord2f(0, 1); glVertex2f (m_r.l, m_r.t);
-    glEnd();
-	
-	
-	glDisable(GL_TEXTURE_2D);
 
 	glColor3f (1.0, 1.0, 0.0);
-	glRasterPos2f(m_r.l+30, m_r.t-50);
+	glRasterPos2f(m_rect->lt.x+30, m_rect->lt.y-50);
 
 	char* p = (char*) m_score_str;
 	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);

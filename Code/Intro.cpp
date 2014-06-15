@@ -2,7 +2,7 @@
 #include "Intro.h"
 #include "objectsmanager.h"
 #include "classids.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "graphic/TexturesManager.h"
 #include "common.h"
 
@@ -24,13 +24,14 @@ const char *Introtextmsgs[]=
 #if _anim_==1
 Intro::Intro():rplay(ObjectsRectangles[e_rect_Intro_startbutton])
 #else
-Intro::Intro():r(ObjectsRectangles[e_rect_Intro]),
-					rplay(ObjectsRectangles[e_rect_Intro_startbutton])
+Intro::Intro()://r(ObjectsRectangles[e_rect_Intro]),
+	Sprite(& ObjectsRectangles2[e_rect_Intro], e_tex_Intro)
+	//,rplay(ObjectsRectangles[e_rect_Intro_startbutton])
+	,rplay(& ObjectsRectangles2[e_rect_Intro_startbutton])
 #endif
 {
 	SetFlag(e_FLAG_MASTER);
 
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_Intro);
 
 #if _anim_==1
 	const hb::Rectangle & r0=ObjectsRectangles[e_rect_Intro];
@@ -98,28 +99,7 @@ void Intro::Draw()
 
 	glDisable(GL_BLEND); 
 
-
-	glEnable(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-#if _anim_==1
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r[0].x, r[0].y);
-        glTexCoord2f(1, 0); glVertex2f (r[1].x, r[1].y);
-        glTexCoord2f(1, 1); glVertex2f (r[2].x, r[2].y);
-        glTexCoord2f(0, 1); glVertex2f (r[3].x, r[3].y);
-    glEnd();
-#else
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
-    glEnd();
-#endif
-	
-	glDisable(GL_TEXTURE_2D);
+	Sprite::Draw();
 
 	glColor3f (0.0, 0.0, 1.0);
 
@@ -131,8 +111,8 @@ void Intro::Draw()
 	line=r0.t-30;
 	column_left=r0.l+25;
 #else 
-	line=r.t-30;
-	column_left=r.l+25;
+	line=m_rect->lt.y-30;
+	column_left=m_rect->lt.x+25;
 #endif _anim_==1
 
 	int i=e_msg_rules;
@@ -155,24 +135,23 @@ void Intro::Draw()
     glColor3f (1.0, 1.0, 0.2);
 
     glBegin(GL_POLYGON);
-        glVertex2f (rplay.l, rplay.b);
-        glVertex2f (rplay.r, rplay.b);
-        glVertex2f (rplay.r, rplay.t);
-        glVertex2f (rplay.l, rplay.t);
+        glVertex2f (rplay->lb.x, rplay->lb.y);
+        glVertex2f (rplay->rb.x, rplay->lb.y);
+        glVertex2f (rplay->rb.x, rplay->rt.y);
+        glVertex2f (rplay->lt.x, rplay->rt.y);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("Start",rplay.l+10, rplay.b+(rplay.t-rplay.b)/2);
+	hb::DrawText("Start",rplay->lb.x+10, rplay->lb.y+(rplay->lt.y-rplay->lb.y)/2);
 
 
 
 }
 
-void Intro::OnClick(uint32 x,uint32 y)
+void Intro::OnClick(int x,int y)
 {
-	if(rplay.l<=x && x<=rplay.r && rplay.b<=y && y<=rplay.t)
+	if(rplay->lb.x<=x && x<=rplay->rb.x && rplay->rb.y<=y && y<=rplay->rt.y)
 	{
 		ObjectsManager::GetInstance().Pop(this,false);
 	}
-
 }

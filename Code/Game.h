@@ -10,8 +10,7 @@
 class Board;
 class TimeCounter;
 class Score;
-class  Encouragement;
-class Encouragement2;
+class Encouragement;
 
 #ifdef _testingthenewspriteobjectclass_
 class TimeCounter2;
@@ -25,7 +24,6 @@ class game : public Object
 	boost::scoped_ptr<TimeCounter>		timer;
 	boost::scoped_ptr<Score>			score;
 	boost::scoped_ptr<Encouragement>	encouragement;
-	boost::scoped_ptr<Encouragement2>	encouragement2;
 
 
 #ifdef _testingthenewspriteobjectclass_
@@ -55,7 +53,7 @@ public:
 	void WhenPushed();
 
 	//Board * GetBoard() {return board;}
-	void OnClick(uint32 x, uint32 y);
+	void OnClick(int x, int y);
 
 
 

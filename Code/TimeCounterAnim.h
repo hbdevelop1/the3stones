@@ -11,9 +11,9 @@
 
 #include <time.h>
 
-class TimeCounterAnim : public Object//, public Sprite3
+class TimeCounterAnim : public Object//, public Sprite
 {
-	boost::scoped_ptr<AnimatedSprite3>	m_animsprite;
+	boost::scoped_ptr<AnimatedSprite>	m_animsprite;
 
 	bool	m_timeout;
 	time_t	starttime;

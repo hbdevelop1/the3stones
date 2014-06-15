@@ -43,6 +43,8 @@
     <ClCompile Include="Code\ScoreT.cpp" />
     <ClCompile Include="Code\TimeCounter2.cpp" />
     <ClCompile Include="Code\TimeCounterAnim.cpp" />
+    <ClCompile Include="Code\Board2.cpp" />
+    <ClCompile Include="Code\Tile2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Board.h" />
@@ -90,6 +92,8 @@
     <ClInclude Include="code\settings.h" />
     <ClInclude Include="Code\TimeCounter2.h" />
     <ClInclude Include="Code\TimeCounterAnim.h" />
+    <ClInclude Include="Code\Board2.h" />
+    <ClInclude Include="Code\Tile2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

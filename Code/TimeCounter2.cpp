@@ -4,17 +4,17 @@
 #include <stdio.h>
 #include "objectsmanager.h"
 #include "graphic/TexturesManager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "common.h"
 
 #include "Mem/MemNew.h"
 
 #pragma warning (disable:4996)
 
-//TimeCounter2::TimeCounter2():m_sprite(& ObjectsRectangle2[0], e_tex_timecounter)
-TimeCounter2::TimeCounter2():Sprite3(& ObjectsRectangle2[0], e_tex_timecounter)
+//TimeCounter2::TimeCounter2():m_sprite(& ObjectsRectangles2[0], e_tex_timecounter)
+TimeCounter2::TimeCounter2():Sprite(& ObjectsRectangles2[0], e_tex_timecounter)
 {
-	Sprite3 s(*this);
+	Sprite s(*this);
 }
 
 TimeCounter2::~TimeCounter2()
@@ -24,12 +24,12 @@ TimeCounter2::~TimeCounter2()
 void TimeCounter2::Update()
 {
 
-	//Sprite3::Draw();
+	//Sprite::Draw();
 }
 
 void TimeCounter2::Draw()
 {
-	Sprite3::Draw();
+	Sprite::Draw();
 	//m_sprite.Draw();
 
 #if 0

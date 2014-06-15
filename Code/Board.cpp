@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "objectsmanager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 
 #include "settings.h"
 
@@ -27,13 +27,13 @@ PositionInBoard::~PositionInBoard()
 
 bool PositionInBoard::operator==(PositionInBoard  b)
 {
-	return r==b.r;
+	return rect==b.rect;
 }
 
 
 //#define _testingclick_ 2
 
-Board::Board():r(ObjectsRectangles[e_rect_board]),
+Board::Board():m_rect(&ObjectsRectangles2[e_rect_board]),
 				SelectedTilesPosition(hb::Pointu8::Invalid)
 {
 
@@ -52,8 +52,8 @@ Board::Board():r(ObjectsRectangles[e_rect_board]),
 		for(uint8 j=0; j<e_RowSize+1; ++j)
 		{
 			positions[i][j].point=hb::Pointu8(i,j);
-			positions[i][j].r=hb::Rectangle(r.l+i*Square::e_Width,		r.b+j*Square::e_Height,
-											r.l+(i+1)*Square::e_Width,	r.b+(j+1)*Square::e_Height);
+			positions[i][j].rect=hb::Rectangle(m_rect->lb.x+i*Square::e_Width,		m_rect->lb.y+j*Square::e_Height,
+											m_rect->lb.x+(i+1)*Square::e_Width,	m_rect->lb.y+(j+1)*Square::e_Height);
 		}
 	}
 
@@ -172,13 +172,13 @@ hb::Pointu32 sPoint,ePoint;
 
 void Board::Draw()
 {
-    glColor3f (0.0, 0.0, 0.0);
+    glColor3f (0.8, 0.6, 1.0);
 
     glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
+        glVertex2f (m_rect->lb.x, m_rect->lb.y);
+        glVertex2f (m_rect->rb.x, m_rect->lb.y);
+        glVertex2f (m_rect->rb.x, m_rect->rt.y);
+        glVertex2f (m_rect->lb.x, m_rect->rt.y);
     glEnd();
 #if (_testingmove_==1)
 			tiles[0].Draw();
@@ -304,18 +304,18 @@ PositionInBoard * Board::GetFreePositionBelow(hb::Pointu8 l)
 }
 
 
-void Board::OnClick(uint32 x, uint32 y)
+void Board::OnClick(int x, int y)
 {
 	hb::Pointu8 p(hb::Pointu8::Invalid);
 
 	if(m_currentbehavior == &Board::Behavior_Stable && m_state != e_Ending)
 	{
-		if(r.l<=x && x<=r.r && r.b<=y && y<=r.t)
+		if(m_rect->lb.x<=x && x<=m_rect->rb.x && m_rect->lb.y<=y && y<=m_rect->lt.y)
 		{
 			//determine if it's a tile the 
 			click.notprocessed = true;
-			click.p.x=(x-r.l)/Square::e_Width;
-			click.p.y=(y-r.b)/Square::e_Height;
+			click.p.x=(x-m_rect->lb.x)/Square::e_Width;
+			click.p.y=(y-m_rect->lb.y)/Square::e_Height;
 		}
 	}
 }

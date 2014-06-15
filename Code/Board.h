@@ -10,7 +10,7 @@
 
 #include <boost/smart_ptr/scoped_array.hpp>
 
-#define _bezier_ 1
+#define _bezier_ 0
 
 #if _bezier_ > 0
 #include "time.h"
@@ -40,9 +40,9 @@ namespace Square
 
 struct PositionInBoard
 {
-	hb::Pointu8	point;
-	Tile		*tile;
-	hb::Rectangle r;
+	hb::Pointu8		point;
+	Tile			*tile;
+	hb::Rectangle rect;
 
 public:
 	PositionInBoard();
@@ -83,7 +83,7 @@ private:
 	clock_t		m_tm;
 #endif _bezier_ == 1
 
-	const hb::Rectangle & r;
+	const hb::stRectangle2 * m_rect;
 	Event		click;
 	hb::Pointu8	SelectedTilesPosition;
 
@@ -115,11 +115,11 @@ public:
 	Board();
 	~Board();
 
-	hb::Rectangle GetRectangle() {return r;}
+	const hb::Rectangle GetRectangle() {return hb::Rectangle(m_rect->lb.x, m_rect->lb.y, m_rect->rt.x, m_rect->rt.y);}
 	void Draw();
 	void Update();
 	PositionInBoard * GetFreePositionBelow(hb::Pointu8 l);
-	void OnClick(uint32 x, uint32 y);
+	void OnClick(int x, int y);
 	void Reset();
 
 	void test();

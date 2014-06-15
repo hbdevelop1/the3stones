@@ -217,9 +217,9 @@ void Tile::Behavior_Moving()
 
 		r.b--; r.t--;
 		//r.b-=2; r.t-=2;
-		if(r.b == pCurrentPosition->r.b)//todo:see 12
+		if(r.b == pCurrentPosition->rect.b)//todo:see 12
 		{
-			hbassert(r==pCurrentPosition->r);
+			hbassert(r==pCurrentPosition->rect);
 			hbassert(loc.x==pCurrentPosition->point.x);
 
 			loc.y=pCurrentPosition->point.y;
@@ -280,7 +280,7 @@ UPDATE_BEHAVIOR_BEGIN
 			r.t=r.t+delta.y;
 		}
 
-		if(r == pFreePositionToMoveTo->r)
+		if(r == pFreePositionToMoveTo->rect)
 		{
 			pFreePositionToMoveTo->tile=this;
 			pCurrentPosition=pFreePositionToMoveTo;
@@ -362,7 +362,7 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		//all disappeared tiles in a column have the same rectangle, waiting to get into the board
-		r = Tile::board->positions[loc.x][Board::e_RowSize].r;
+		r = Tile::board->positions[loc.x][Board::e_RowSize].rect;
 		loc=Tile::board->positions[loc.x][Board::e_RowSize].point;
 		hbassert(loc==hb::Pointu8(loc.x,Board::e_RowSize));
 		SetType(++Tile::current_t);

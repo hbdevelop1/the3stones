@@ -5,16 +5,14 @@
 
 #include "rectangle.h"
 #include "object.h"
+#include "graphic\sprite.h"
 
 
-
-class TimeOut : public Object
+class TimeOut : public Object, public Sprite
 {
-	const hb::Rectangle & r;
-	hb::Rectangle rplay;
-	hb::Rectangle rquit;
+	const hb::stRectangle2 * rplay;
+	const hb::stRectangle2 * rquit;
 
-	unsigned int m_texObj;
 
 	enum
 	{
@@ -52,7 +50,7 @@ public:
 	void Update();
 	void Draw();
 
-	void OnClick(uint32 x,uint32 y);
+	void OnClick(int x,int y);
 };
 
 #endif //_TIMEOUT_

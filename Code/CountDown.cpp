@@ -109,7 +109,7 @@ void CountDown::Update()
 
 void CountDown::Draw()
 {
-	const hb::Rectangle & rDim(ObjectsRectangles[e_rect_board]);
+	const hb::stRectangle2 & rDim(ObjectsRectangles2[e_rect_board]);
 	
 	glEnable(GL_BLEND); 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -117,10 +117,10 @@ void CountDown::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2f (rDim.lb.x, rDim.lb.y);
+        glVertex2f (rDim.rt.x, rDim.lb.y);
+        glVertex2f (rDim.rt.x, rDim.rt.y);
+        glVertex2f (rDim.lb.x, rDim.rt.y);
     glEnd();
 
 	glDisable(GL_BLEND); 

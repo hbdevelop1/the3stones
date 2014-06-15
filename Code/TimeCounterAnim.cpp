@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "objectsmanager.h"
 #include "graphic/TexturesManager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "common.h"
 
 #include "Mem/MemNew.h"
@@ -13,7 +13,7 @@
 
 TimeCounterAnim::TimeCounterAnim()
 {
-	m_animsprite.reset(new AnimatedSprite3(& ObjectsRectangle2[1], e_tex_timecounter, "data/anim1.xml"));
+	m_animsprite.reset(new AnimatedSprite(& ObjectsRectangles2[1], e_tex_timecounter, "data/anim1.xml"));
 }
 
 TimeCounterAnim::~TimeCounterAnim()

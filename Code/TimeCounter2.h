@@ -11,9 +11,9 @@
 
 #include <time.h>
 
-class TimeCounter2 : public Object, public Sprite3
+class TimeCounter2 : public Object, public Sprite
 {
-	//Sprite3	m_sprite;
+	//Sprite	m_sprite;
 
 	bool	m_timeout;
 	time_t	starttime;

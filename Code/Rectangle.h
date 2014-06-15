@@ -112,8 +112,12 @@ struct stRectangle2
 	hb::Points32 rb;
 	hb::Points32 rt;
 	hb::Points32 lt;
+/*
+	stRectangle2(_lb,_rb,_rt,_lt):lb(_lb),rb(_rb),rt(_rt),lt(_lt)
+	{
+	}
+*/
 };
-
 
 }
 

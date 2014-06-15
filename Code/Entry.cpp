@@ -8,7 +8,7 @@
 #include "board.h"
 #include "classids.h"
 #include "objectsmanager.h"
-#include "objectsrectangles.h"
+#include "ObjectsRectangles.h"
 #include "common.h"
 
 #include "Mem/MemNew.h"
@@ -30,8 +30,6 @@ void AtExit()
 
 void game_init()
 {
-
-
 	if(atexit (AtExit))
 		exit(1);
 
@@ -48,8 +46,7 @@ void onMouse( int button, int state, int x, int y)
 	{
 		if(state==GLUT_DOWN)
 		{
-				ObjectsManager::GetInstance().GetMaster()->
-					OnClick(static_cast<uint32>(x),static_cast<uint32>(ObjectsRectangles[e_rect_window].t - y));
+				ObjectsManager::GetInstance().GetMaster()->OnClick(x,ObjectsRectangles[e_rect_window].t - y);
 		}
 	}
 }
