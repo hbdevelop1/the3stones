@@ -23,9 +23,6 @@
     <ClCompile Include="Code\Mem\MemTracker.cpp">
       <Filter>mem</Filter>
     </ClCompile>
-    <ClCompile Include="Code\graphic\anim.cpp">
-      <Filter>graphic</Filter>
-    </ClCompile>
     <ClCompile Include="Code\graphic\CTargaImage.cpp">
       <Filter>graphic</Filter>
     </ClCompile>
@@ -33,6 +30,9 @@
       <Filter>graphic</Filter>
     </ClCompile>
     <ClCompile Include="Code\graphic\TexturesManager.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\graphic\Anim.cpp">
       <Filter>graphic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,9 +65,6 @@
     <ClInclude Include="Code\Mem\MemTracker.h">
       <Filter>mem</Filter>
     </ClInclude>
-    <ClInclude Include="Code\graphic\anim.h">
-      <Filter>graphic</Filter>
-    </ClInclude>
     <ClInclude Include="Code\graphic\CTargaImage.h">
       <Filter>graphic</Filter>
     </ClInclude>
@@ -77,7 +74,10 @@
     <ClInclude Include="Code\graphic\TexturesManager.h">
       <Filter>graphic</Filter>
     </ClInclude>
-    <ClInclude Include="code\settings.h" />
+    <ClInclude Include="code\Settings.h" />
+    <ClInclude Include="Code\graphic\Anim.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

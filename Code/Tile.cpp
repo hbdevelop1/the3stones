@@ -19,8 +19,8 @@
 //const unsigned int Tile::SpeedOfSwapping=Settings::SpeedOfSwapping;   //rank 10
 //const unsigned int Tile::NbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
 
-Tile::type Tile::current_t=e_type1;
-Board * Tile::board=NULL;
+Tile::type Tile::m_currentType=e_type1;
+Board * Tile::m_board=NULL;
 
 Tile::type & operator++(Tile::type & a)
 {
@@ -30,28 +30,28 @@ Tile::type & operator++(Tile::type & a)
 	return a;
 }
 
-Tile::Tile():pFreePositionToMoveTo(NULL),selected(false),visible(false),active(false)
+Tile::Tile():m_freePositionToMoveTo(NULL),m_selected(false),m_visible(false),m_active(false)
 	//,m_previousbehavior(NULL)
-	,todestroy(false),toswap(false)
+	,m_toDestroy(false),m_toSwap(false)
 {
 	Reset(e_type1);
 }
-Tile::Tile(type _t,hb::Pointu8 p):t(_t),loc(p),pFreePositionToMoveTo(NULL),selected(false),visible(false) //visible should be set explicitly to true to indicate the tile is correctly initialized.
-	,active(false)
+Tile::Tile(type _t,hb::Pointu8 p):m_type(_t),m_loc(p),m_freePositionToMoveTo(NULL),m_selected(false),m_visible(false) //m_visible should be set explicitly to true to indicate the tile is correctly initialized.
+	,m_active(false)
 	//,m_previousbehavior(NULL)
-	,todestroy(false),toswap(false)
+	,m_toDestroy(false),m_toSwap(false)
 {
 	Reset(_t);
 }
 
 void Tile::Reset(type _t)
 {
-	selected=false;
-	visible=true;
-	active=true;
-	todestroy=false;
-	toswap=false;
-	pFreePositionToMoveTo=NULL;
+	m_selected=false;
+	m_visible=true;
+	m_active=true;
+	m_toDestroy=false;
+	m_toSwap=false;
+	m_freePositionToMoveTo=NULL;
 
 	SetType(_t);
 	START_BEHAVIOR(Tile,Behavior_Resting);
@@ -60,26 +60,26 @@ void Tile::Reset(type _t)
 
 void Tile::SetType(type _t)
 {
-	hbassert(e_type1<=_t && _t<=e_type5);
-	t=_t;
+	assert(e_type1<=_t && _t<=e_type5);
+	m_type=_t;
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(_t);
 }
 
 void Tile::Set(PositionInBoard * p, type t)
 {
-	hbassert(p);
-	pCurrentPosition=p;
-	loc=pCurrentPosition->point;
+	assert(p);
+	m_currentPosition=p;
+	m_loc=m_currentPosition->point;
 
 	
-	hb::Rectangle rb=
+	const hb::Rectangle *rb=
 		//dynamic_cast<game*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game))->GetBoard().GetRectangle();
-		Tile::board->GetRectangle();
-	r=hb::Rectangle(rb.l+loc.x*Square::e_Width,		rb.b+loc.y*Square::e_Height,
-					rb.l+(loc.x+1)*Square::e_Width, rb.b+(loc.y+1)*Square::e_Height);
+		Tile::m_board->GetRectangle();
+	m_rect=hb::Rectangle(rb->l+m_loc.x*Square::e_Width,		rb->b+m_loc.y*Square::e_Height,
+					rb->l+(m_loc.x+1)*Square::e_Width, rb->b+(m_loc.y+1)*Square::e_Height);
 
-	visible=true;
-	active=true;
+	m_visible=true;
+	m_active=true;
 	SetType(t);
 	//todo:Set SetType are virtual. it this necessary ?
 }
@@ -92,13 +92,13 @@ Tile::~Tile()
 
 void Tile::Draw()
 {
-	if(!visible || !active)
+	if(!m_visible || !m_active)
 		return;
 
 
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
-	if(selected)
+	if(m_selected)
 	{
 		glRotatef(180,0.f,0.f,1.f);
 	}
@@ -108,17 +108,17 @@ void Tile::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
+        glTexCoord2f(0, 0); glVertex2f (m_rect.l, m_rect.b);
+        glTexCoord2f(1, 0); glVertex2f (m_rect.r, m_rect.b);
+        glTexCoord2f(1, 1); glVertex2f (m_rect.r, m_rect.t);
+        glTexCoord2f(0, 1); glVertex2f (m_rect.l, m_rect.t);
     glEnd();
 }
 
 
 void Tile::Update()
 {
-	if(!active)
+	if(!m_active)
 		return;
 	
 	(this->*m_currentbehavior)();
@@ -127,11 +127,11 @@ void Tile::Update()
 
 bool Tile::SetSelected(bool s)
 {
-	selected=false; //this will unselect the tile if it is.
+	m_selected=false; //this will unselect the tile if it is.
 	//but selecting it will depend on its current behavior
-	if(m_currentbehavior==&Tile::Behavior_Resting) //a tile can be selected only when in Behavior_Resting
+	if(m_currentbehavior==&Tile::Behavior_Resting) //a tile can be m_selected only when in Behavior_Resting
 	{
-		selected=s;
+		m_selected=s;
 		return true;
 	}
 	return false;
@@ -139,24 +139,24 @@ bool Tile::SetSelected(bool s)
 
 void Destroy(Tile* a, Tile* b, Tile* c)
 {
-	hbassert(a->todestroy==false && b->todestroy==false && c->todestroy==false);
+	assert(a->m_toDestroy==false && b->m_toDestroy==false && c->m_toDestroy==false);
 
-	a->todestroy=true;
-	b->todestroy=true;
-	c->todestroy=true;
+	a->m_toDestroy=true;
+	b->m_toDestroy=true;
+	c->m_toDestroy=true;
 
-	dynamic_cast<Score*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score))->Add(hb::Pointu32(b->r.l,b->r.b));
+	dynamic_cast<Score*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score))->Add(hb::Pointu32(b->m_rect.l,b->m_rect.b));
 }
 
 void Swap(Tile* a, Tile* b)
 {
-	a->toswap=true;
-	a->pFreePositionToMoveTo=b->pCurrentPosition;
-	a->loc=a->pFreePositionToMoveTo->point;
+	a->m_toSwap=true;
+	a->m_freePositionToMoveTo=b->m_currentPosition;
+	a->m_loc=a->m_freePositionToMoveTo->point;
 
-	b->toswap=true;
-	b->pFreePositionToMoveTo=a->pCurrentPosition;
-	b->loc=b->pFreePositionToMoveTo->point;
+	b->m_toSwap=true;
+	b->m_freePositionToMoveTo=a->m_currentPosition;
+	b->m_loc=b->m_freePositionToMoveTo->point;
 
 
 
@@ -168,27 +168,27 @@ void Swap(Tile* a, Tile* b)
 void Tile::Behavior_Resting()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
-		toswap=false;
-		todestroy=false;
+		m_toSwap=false;
+		m_toDestroy=false;
 	CONSTRUCT_BEHAVIOR_END
 	UPDATE_BEHAVIOR_BEGIN
 		
-		if(todestroy)
+		if(m_toDestroy)
 		{
-			todestroy=false;
+			m_toDestroy=false;
 			CHANGE_BEHAVIOR(Tile,Behavior_Destroying);
 		}
-		else if(toswap)
+		else if(m_toSwap)
 		{
-			toswap=false;
-			hbassert(pFreePositionToMoveTo!=pCurrentPosition);
+			m_toSwap=false;
+			assert(m_freePositionToMoveTo!=m_currentPosition);
 			CHANGE_BEHAVIOR(Tile,Behavior_Swapping);
 			//no code should run after calling CHANGE_BEHAVIOR
 		}
 		else
 		{
-			pFreePositionToMoveTo=Tile::board->GetFreePositionBelow(loc);
-			if (pFreePositionToMoveTo)//check if next position is free. if yes move to it.
+			m_freePositionToMoveTo=Tile::m_board->GetFreePositionBelow(m_loc);
+			if (m_freePositionToMoveTo)//check if next position is free. if yes move to it.
 			{
 				CHANGE_BEHAVIOR(Tile,Behavior_Moving);
 			}
@@ -203,18 +203,18 @@ void Tile::Behavior_Resting()
 
 void Tile::PrepareMoving()
 {
-	if(pCurrentPosition)
-		pCurrentPosition->tile = NULL;	//position is free. another tile can take it. 
+	if(m_currentPosition)
+		m_currentPosition->tile = NULL;	//position is free. another tile can take it. 
 										//freeing a position early in the moving out process lets 
 										//a tile above start moving immediately. otherwise, it will 
 										//start moving only when the first tile has arived to its final position.
-	hbassert(pFreePositionToMoveTo);
-	hbassert(loc.y > pFreePositionToMoveTo->point.y);
+	assert(m_freePositionToMoveTo);
+	assert(m_loc.y > m_freePositionToMoveTo->point.y);
 
-	pCurrentPosition = pFreePositionToMoveTo;
-	pCurrentPosition->tile = this;
+	m_currentPosition = m_freePositionToMoveTo;
+	m_currentPosition->tile = this;
 
-	paceoffall=Settings::SpeedOfFalling;
+	m_paceOfFall=Settings::SpeedOfFalling;
 }
 
 void Tile::Behavior_Moving()
@@ -227,29 +227,29 @@ void Tile::Behavior_Moving()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		if(--paceoffall>0)
+		if(--m_paceOfFall>0)
 			return;
 
-		paceoffall=Settings::SpeedOfFalling;
+		m_paceOfFall=Settings::SpeedOfFalling;
 
-		r.b--; r.t--;
-		//r.b-=2; r.t-=2;
-		if(r.b == pCurrentPosition->rect.b)//todo:see 12
+		m_rect.b--; m_rect.t--;
+		//m_rect.b-=2; m_rect.t-=2;
+		if(m_rect.b == m_currentPosition->rect.b)//todo:see 12
 		{
-			hbassert(r==pCurrentPosition->rect);
-			hbassert(loc.x==pCurrentPosition->point.x);
+			assert(m_rect==m_currentPosition->rect);
+			assert(m_loc.x==m_currentPosition->point.x);
 
-			loc.y=pCurrentPosition->point.y;
+			m_loc.y=m_currentPosition->point.y;
 
-			pFreePositionToMoveTo=Tile::board->GetFreePositionBelow(loc);
-			if (pFreePositionToMoveTo)
+			m_freePositionToMoveTo=Tile::m_board->GetFreePositionBelow(m_loc);
+			if (m_freePositionToMoveTo)
 			{
 				//stay in this behavior
 				PrepareMoving();
 			}
 			else
 			{
-					//pFreePositionToMoveTo is set to NULL at the call to b.GetFreePositionBelow
+					//m_freePositionToMoveTo is set to NULL at the call to b.GetFreePositionBelow
 					CHANGE_BEHAVIOR(Tile,Behavior_Resting);
 			}
 		}
@@ -268,40 +268,40 @@ void Tile::Behavior_Swapping() //when a tile is in this behavior, board is not r
 
 CONSTRUCT_BEHAVIOR_BEGIN
 {
-	delta = pFreePositionToMoveTo->point - pCurrentPosition->point; //test this
-	hbassert(delta.x==-1 || delta.x==1 || delta.x==0);
-	hbassert(delta.y==-1 || delta.y==1 || delta.y==0);
-	hbassert((delta.x && delta.y==0) || (delta.y && delta.x==0));
-	paceofswap=Settings::SpeedOfSwapping;
+	m_delta = m_freePositionToMoveTo->point - m_currentPosition->point; //test this
+	assert(m_delta.x==-1 || m_delta.x==1 || m_delta.x==0);
+	assert(m_delta.y==-1 || m_delta.y==1 || m_delta.y==0);
+	assert((m_delta.x && m_delta.y==0) || (m_delta.y && m_delta.x==0));
+	m_paceOfSwap=Settings::SpeedOfSwapping;
 }
 CONSTRUCT_BEHAVIOR_END
 
 UPDATE_BEHAVIOR_BEGIN
 {
-	//if(pFreePositionToMoveTo!=NULL)//when a tile is in place, pFreePositionToMoveTo <- NULL
+	//if(m_freePositionToMoveTo!=NULL)//when a tile is in place, m_freePositionToMoveTo <- NULL
 	
-	paceofswap--; //tile moves each other Settings::SpeedOfSwapping frames.
+	m_paceOfSwap--; //tile moves each other Settings::SpeedOfSwapping frames.
 
-	if(paceofswap<=0)
+	if(m_paceOfSwap<=0)
 	{
-		paceofswap=Settings::SpeedOfSwapping;
+		m_paceOfSwap=Settings::SpeedOfSwapping;
 
-		if(delta.x)
+		if(m_delta.x)
 		{
-			r.r=r.r+delta.x;
-			r.l=r.l+delta.x;
+			m_rect.r=m_rect.r+m_delta.x;
+			m_rect.l=m_rect.l+m_delta.x;
 		}
 		else
 		{
-			r.b=r.b+delta.y;
-			r.t=r.t+delta.y;
+			m_rect.b=m_rect.b+m_delta.y;
+			m_rect.t=m_rect.t+m_delta.y;
 		}
 
-		if(r == pFreePositionToMoveTo->rect)
+		if(m_rect == m_freePositionToMoveTo->rect)
 		{
-			pFreePositionToMoveTo->tile=this;
-			pCurrentPosition=pFreePositionToMoveTo;
-			pFreePositionToMoveTo=NULL;
+			m_freePositionToMoveTo->tile=this;
+			m_currentPosition=m_freePositionToMoveTo;
+			m_freePositionToMoveTo=NULL;
 
 #ifdef _gettiming_
 			printf("Tile has finished swapping (0x%08X) at %d\n",this,g_currentframe);
@@ -316,8 +316,8 @@ UPDATE_BEHAVIOR_END
 DESTRUCT_BEHAVIOR_BEGIN
 {
 	//m_previousbehavior=&Tile::Behavior_Swapping;
-	delta = hb::Points8(0,0);
-	paceofswap=0;
+	m_delta = hb::Points8(0,0);
+	m_paceOfSwap=0;
 }
 DESTRUCT_BEHAVIOR_END
 
@@ -332,8 +332,8 @@ void Tile::Behavior_WaitForMatchDecision()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		if(pFreePositionToMoveTo!=NULL) //when a tile is in place, pFreePositionToMoveTo <- NULL
-										//pFreePositionToMoveTo <- NOT NULL if Swap was called
+		if(m_freePositionToMoveTo!=NULL) //when a tile is in place, m_freePositionToMoveTo <- NULL
+										//m_freePositionToMoveTo <- NOT NULL if Swap was called
 		{
 			CHANGE_BEHAVIOR(Tile,Behavior_Swapping);
 		}
@@ -350,20 +350,20 @@ void Tile::Behavior_WaitForMatchDecision()
 void Tile::Behavior_Destroying()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
-		//visible=false;
-		nbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
-		todestroy=false;
+		//m_visible=false;
+		m_nbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
+		m_toDestroy=false;
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		if(nbrOfFramesBeforeDestruction>0)
-			nbrOfFramesBeforeDestruction--;
+		if(m_nbrOfFramesBeforeDestruction>0)
+			m_nbrOfFramesBeforeDestruction--;
 		else
 		{
-			pCurrentPosition->tile=NULL; //position is free. can be taken by another tile
-			pCurrentPosition=NULL;
-			//visible=false; //not visible but active
+			m_currentPosition->tile=NULL; //position is free. can be taken by another tile
+			m_currentPosition=NULL;
+			//m_visible=false; //not m_visible but m_active
 
 			CHANGE_BEHAVIOR(Tile,Behavior_WaitingToGoIntoBoard);
 		}
@@ -379,20 +379,20 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		//all disappeared tiles in a column have the same rectangle, waiting to get into the board
-		r = Tile::board->positions[loc.x][Board::e_RowSize].rect;
-		loc=Tile::board->positions[loc.x][Board::e_RowSize].point;
-		hbassert(loc==hb::Pointu8(loc.x,Board::e_RowSize));
-		SetType(++Tile::current_t);
+		m_rect = Tile::m_board->positions[m_loc.x][Board::e_RowSize].rect;
+		m_loc=Tile::m_board->positions[m_loc.x][Board::e_RowSize].point;
+		assert(m_loc==hb::Pointu8(m_loc.x,Board::e_RowSize));
+		SetType(++Tile::m_currentType);
 	}
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		pFreePositionToMoveTo=Tile::board->GetFreePositionBelow(loc);
-		if (pFreePositionToMoveTo)
+		m_freePositionToMoveTo=Tile::m_board->GetFreePositionBelow(m_loc);
+		if (m_freePositionToMoveTo)
 		{
-			visible=true;
-			CHANGE_BEHAVIOR(Tile,Behavior_Moving); //pCurrentPosition and pCurrentPosition->tile = this are done now. this prevents another tile from taking it.
+			m_visible=true;
+			CHANGE_BEHAVIOR(Tile,Behavior_Moving); //m_currentPosition and m_currentPosition->tile = this are done now. this prevents another tile from taking it.
 		}
 
 	}
@@ -406,59 +406,59 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 
 bool Tile::CheckMatches()
 {
-	if(todestroy)
+	if(m_toDestroy)
 		return false;
 	//no already to destroy tiles are to be involved in a match
 
-	sint32 x=static_cast<sint32>(loc.x);
-	sint32 y=static_cast<sint32>(loc.y);
+	sint32 x=static_cast<sint32>(m_loc.x);
+	sint32 y=static_cast<sint32>(m_loc.y);
 
-	Board * b=Tile::board;
+	Board * b=Tile::m_board;
 
 //	Tile::type t=b.positions[x][y].tile->t;
 
-	if(y-1>=0 && b->positions[x][y-1].tile->t==t && b->positions[x][y-1].tile->todestroy==false)
+	if(y-1>=0 && b->positions[x][y-1].tile->m_type==m_type && b->positions[x][y-1].tile->m_toDestroy==false)
 	{
-		if(y-2>=0 && b->positions[x][y-2].tile->t==t && b->positions[x][y-2].tile->todestroy==false)
+		if(y-2>=0 && b->positions[x][y-2].tile->m_type==m_type && b->positions[x][y-2].tile->m_toDestroy==false)
 		{
 			Destroy(b->positions[x][y-2].tile, b->positions[x][y-1].tile, b->positions[x][y].tile);
 			return true;
 		}
-		if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->t==t && b->positions[x][y+1].tile->todestroy==false)
+		if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->m_type==m_type && b->positions[x][y+1].tile->m_toDestroy==false)
 		{//2067
 			Destroy(b->positions[x][y-1].tile, b->positions[x][y].tile, b->positions[x][y+1].tile);
 			return true;
 		}
 	}
 
-	if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->t==t && b->positions[x][y+1].tile->todestroy==false) //todo:possibility to optimize out this test, by reusing the result in the previous test
+	if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->m_type==m_type && b->positions[x][y+1].tile->m_toDestroy==false) //todo:possibility to optimize out this test, by reusing the result in the previous test
 	{
 
-		if(y+2<=Board::e_RowSize-1 && b->positions[x][y+2].tile->t==t && b->positions[x][y+2].tile->todestroy==false)
+		if(y+2<=Board::e_RowSize-1 && b->positions[x][y+2].tile->m_type==m_type && b->positions[x][y+2].tile->m_toDestroy==false)
 		{
 			Destroy(b->positions[x][y].tile, b->positions[x][y+1].tile, b->positions[x][y+2].tile);
 			return true;
 		}
 	}
 
-	if(x-1>=0 && b->positions[x-1][y].tile->t==t && b->positions[x-1][y].tile->todestroy==false)
+	if(x-1>=0 && b->positions[x-1][y].tile->m_type==m_type && b->positions[x-1][y].tile->m_toDestroy==false)
 	{
-		if(x-2>=0 && b->positions[x-2][y].tile->t==t && b->positions[x-2][y].tile->todestroy==false)
+		if(x-2>=0 && b->positions[x-2][y].tile->m_type==m_type && b->positions[x-2][y].tile->m_toDestroy==false)
 		{
 			Destroy(b->positions[x-2][y].tile, b->positions[x-1][y].tile, b->positions[x][y].tile);
 			return true;
 		}
-		if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->t==t && b->positions[x+1][y].tile->todestroy==false)
+		if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->m_type==m_type && b->positions[x+1][y].tile->m_toDestroy==false)
 		{//2066
 			Destroy(b->positions[x-1][y].tile, b->positions[x][y].tile, b->positions[x+1][y].tile);
 			return true;
 		}
 	}
 
-	if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->t==t && b->positions[x+1][y].tile->todestroy==false)
+	if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->m_type==m_type && b->positions[x+1][y].tile->m_toDestroy==false)
 	{
 
-		if(x+2<=Board::e_RowSize-1 && b->positions[x+2][y].tile->t==t && b->positions[x+2][y].tile->todestroy==false)
+		if(x+2<=Board::e_RowSize-1 && b->positions[x+2][y].tile->m_type==m_type && b->positions[x+2][y].tile->m_toDestroy==false)
 		{
 			Destroy(b->positions[x][y].tile, b->positions[x+1][y].tile, b->positions[x+2][y].tile);
 			return true;

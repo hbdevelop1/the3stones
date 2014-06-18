@@ -27,9 +27,9 @@ const char highestscorewas[]=	"The highest score was........ ";
 const char congratulation[]=	"Congratulation ! The highest score was........ ";
 */
 
-TimeOut::TimeOut():Sprite(&ObjectsRectangles2[e_rect_timeout],e_tex_timeout),
-					rplay(&ObjectsRectangles2[e_rect_timeout_playagain]),
-					rquit(&ObjectsRectangles2[e_rect_timeout_quitgame])
+TimeOut::TimeOut():Sprite(&ObjectsRectangles[e_rect_timeout],e_tex_timeout),
+					rplay(&ObjectsRectangles[e_rect_timeout_playagain]),
+					rquit(&ObjectsRectangles[e_rect_timeout_quitgame])
 {
 	SetFlag(e_FLAG_MASTER);
 
@@ -77,9 +77,9 @@ void TimeOut::Draw()
 	
 	unsigned int line,column_left,column_right;
 
-	line=m_rect->lt.y-30;
-	column_left=m_rect->lt.x+40;
-	column_right=m_rect->rt.x-70;
+	line=m_rect->t-30;
+	column_left=m_rect->l+40;
+	column_right=m_rect->r-70;
 	
 	if(s<=hs)
 	{
@@ -116,73 +116,42 @@ void TimeOut::Draw()
     glColor3f (1.0, 1.0, 0.2);
 
     glBegin(GL_POLYGON);
-        glVertex2f (rplay->lb.x, rplay->lb.y);
-        glVertex2f (rplay->rt.x, rplay->lb.y);
-        glVertex2f (rplay->rt.x, rplay->rt.y);
-        glVertex2f (rplay->lb.x, rplay->rt.y);
+        glVertex2f (rplay->l, rplay->b);
+        glVertex2f (rplay->r, rplay->b);
+        glVertex2f (rplay->r, rplay->t);
+        glVertex2f (rplay->l, rplay->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("play again",rplay->lb.x+10, rplay->lb.y+(rplay->rt.y-rplay->rb.y)/2);
+	hb::DrawText("play again",rplay->l+10, rplay->b+(rplay->t-rplay->b)/2);
 
 
     glColor3f (1.0, 1.0, 0.2);
 
     glBegin(GL_POLYGON);
-        glVertex2f (rquit->lb.x, rquit->lb.y);
-        glVertex2f (rquit->rt.x, rquit->lb.y);
-        glVertex2f (rquit->rt.x, rquit->rt.y);
-        glVertex2f (rquit->lb.x, rquit->rt.y);
+        glVertex2f (rquit->l, rquit->b);
+        glVertex2f (rquit->r, rquit->b);
+        glVertex2f (rquit->r, rquit->t);
+        glVertex2f (rquit->l, rquit->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("quit game",rquit->lb.x+10, rquit->lb.y+(rquit->rt.y-rquit->rb.y)/2);
+	hb::DrawText("quit game",rquit->l+10, rquit->b+(rquit->t-rquit->b)/2);
 
 
 }
 
 
-/*	
-void TimeOut::Draw()
+void TimeOut::OnClick(unsigned int x,unsigned int y)
 {
-    glColor3f (1.0, 0.0, 0.0);
-
-    glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
-    glEnd();
-
-    glColor3f (0.0, 0.0, 1.0);
-	char* p;
-
-	glRasterPos2f(r.l+10, r.t-10);
-	p= (char*) textmsgs[e_msg_yourscore];
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-
-	glRasterPos2f(r.l+10, r.t-30);
-	p= (char*) textmsgs[e_msg_highestscoreis];
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-}
-*/
-void TimeOut::OnClick(int x,int y)
-{
-	if(rplay->lb.x<=x && x<=rplay->rb.x && rplay->rb.y<=y && y<=rplay->rt.y)
+	if(rplay->l<=x && x<=rplay->r && rplay->b<=y && y<=rplay->t)
 	{
 		dynamic_cast<Score*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score))->UpdateHighestScore();
 
-	//	game->reset();
 		ObjectsManager::GetInstance().Pop(this,false);
 	}
-	else if(rquit->lb.x<=x && x<=rquit->rb.x && rquit->rb.y<=y && y<=rquit->rt.y)
+	else if(rquit->l<=x && x<=rquit->r && rquit->b<=y && y<=rquit->t)
 	{
-//		game *g=dynamic_cast<game*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game));
-	//	game->reset();
-		//ObjectsManager::GetInstance().Pop(this);
-		
-		//ObjectsManager::GetInstance().Pop(this,true); will be popped and removed by ObjectsManager::Clear()
-		//just like Intro, CountDown are popped and removed
 		exit ( 0 );
 	}
 

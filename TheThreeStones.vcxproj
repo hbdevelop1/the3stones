@@ -89,7 +89,7 @@
     <ClCompile Include="code\Entry.cpp" />
     <ClCompile Include="code\CountDown.cpp" />
     <ClCompile Include="code\Game.cpp" />
-    <ClCompile Include="Code\graphic\anim.cpp" />
+    <ClCompile Include="Code\graphic\Anim.cpp" />
     <ClCompile Include="Code\graphic\CTargaImage.cpp" />
     <ClCompile Include="Code\graphic\Sprite.cpp" />
     <ClCompile Include="Code\graphic\TexturesManager.cpp" />
@@ -113,7 +113,7 @@
     <ClInclude Include="Code\Encouragement.h" />
     <ClInclude Include="code\fsm.h" />
     <ClInclude Include="code\Game.h" />
-    <ClInclude Include="Code\graphic\anim.h" />
+    <ClInclude Include="Code\graphic\Anim.h" />
     <ClInclude Include="Code\graphic\CTargaImage.h" />
     <ClInclude Include="Code\graphic\Sprite.h" />
     <ClInclude Include="Code\graphic\TexturesManager.h" />
@@ -126,7 +126,7 @@
     <ClInclude Include="code\ObjectsRectangles.h" />
     <ClInclude Include="code\Rectangle.h" />
     <ClInclude Include="code\Score.h" />
-    <ClInclude Include="code\settings.h" />
+    <ClInclude Include="code\Settings.h" />
     <ClInclude Include="code\Tile.h" />
     <ClInclude Include="code\TimeCounter.h" />
     <ClInclude Include="code\TimeOut.h" />

@@ -9,7 +9,7 @@
 #else
 #include <stdlib.h>
 #endif
-#include "../common.h" //for hbassert
+#include "../common.h" //for assert
 
 #pragma warning (disable:4996)
 
@@ -122,7 +122,7 @@ void AddTrack(long addr, long asize, char *filename, int line)
 	}
 	else
 	{
-		hbassert(0);
+		assert(0);
 	}
 
 };
@@ -157,7 +157,7 @@ bool RemoveTrack(long addr)
 	{
 		//Deque uses the standard global operator new, no the overloaded one. so it does not get registered.
 		//but at deletion, the overload global operator delete is used. which leads to this assert
-		hbassert( bFound ); 
+		assert( bFound ); 
 	}
 
 	
@@ -248,7 +248,7 @@ bool RemoveTrack(long addr)
 			break;
 		}
 	}
-	hbassert( bFound );
+	assert( bFound );
 
 	return bFound;
 };
@@ -370,7 +370,7 @@ template<class T> void deleteo2(T *p)
 		delete p;
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 template<class T> void deletea2(T *p)
@@ -380,7 +380,7 @@ template<class T> void deletea2(T *p)
 		delete [] p;
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 struct O11

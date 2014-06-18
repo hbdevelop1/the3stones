@@ -19,7 +19,7 @@ class Encouragement : public Object
 	boost::scoped_ptr<AnimatedSpriteNcrg>	m_sprite;
 	bool									m_displayEngouragement;
 	clock_t									m_animationStartTime;
-	boost::scoped_ptr<hb::stRectangle2>		m_rect; //the loaded rect. Sprite expects a pointer to rect
+	boost::scoped_ptr<hb::Rectangle>		m_rect; //the loaded rect. Sprite expects a pointer to rect
 
 public:
 	Encouragement(char * filename);

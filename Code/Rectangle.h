@@ -51,30 +51,20 @@ template <typename T1,  typename T2> Point<T1,T2> Point<T1, T2>::operator+(const
 }
 
 
-//typedef Point<float> Pointf;
 typedef Point<uint8,sint8> Pointu8;
-//extern Pointi Pointi_Invalid;
 Pointu8 Pointu8::Invalid(0xFF,0xFF);
 typedef Point<sint8> Points8;
 typedef Point<uint32,sint32> Pointu32;
 typedef Point<sint32,sint32> Points32;
 
 
-/*
-struct Point
-{
-	float x,y;
-public:
-	Point(float x,float y);
-};
-*/
 
 template<class T> struct stRectangle
 {
 	T l;
 	T b;
 	T r;
-	T t; //optim:members are defined in the order of the access
+	T t; //optim:members are defined in the order of access
 public:
 	stRectangle();
 	stRectangle(T _l, T _b, T _r, T _t);
@@ -112,11 +102,6 @@ struct stRectangle2
 	hb::Points32 rb;
 	hb::Points32 rt;
 	hb::Points32 lt;
-/*
-	stRectangle2(_lb,_rb,_rt,_lt):lb(_lb),rb(_rb),rt(_rt),lt(_lt)
-	{
-	}
-*/
 };
 
 }

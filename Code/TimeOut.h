@@ -10,8 +10,8 @@
 
 class TimeOut : public Object, public Sprite
 {
-	const hb::stRectangle2 * rplay;
-	const hb::stRectangle2 * rquit;
+	const hb::Rectangle * rplay;
+	const hb::Rectangle * rquit;
 
 
 	enum
@@ -50,7 +50,7 @@ public:
 	void Update();
 	void Draw();
 
-	void OnClick(int x,int y);
+	void OnClick(unsigned int x,unsigned int y);
 };
 
 #endif //_TIMEOUT_

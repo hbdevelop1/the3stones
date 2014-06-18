@@ -14,74 +14,15 @@ stKeyFrame::stKeyFrame()
 	offset[1]=hb::Points32(0,0);
 	offset[2]=hb::Points32(0,0);
 	offset[3]=hb::Points32(0,0);
-}
+} 
 
 stKeyFrame::stKeyFrame(hb::Points32 p[], clock_t t):time(t)
 {
 	for(int i=0; i<4; ++i)
 		offset[i]=p[i];
 }
-/*
-stAnim::stAnim():durationbetweenframes(200)
-{
-	stKeyFrame k;
-	
-	//load animation
 
-	k.offset[2]=hb::Points32(0,0);
-	keyframelist.push_back(k);
-	k.offset[2]=hb::Points32(5,5);
-	keyframelist.push_back(k);
-	k.offset[2]=hb::Points32(15,15);
-	keyframelist.push_back(k);
-	k.offset[2]=hb::Points32(9,5);
-	keyframelist.push_back(k);
-	k.offset[2]=hb::Points32(0,0);
-	keyframelist.push_back(k);
-
-	nbrofkeyframes=keyframelist.size();
-	assert(nbrofkeyframes>1); //otherwise an issue at "if(!anim.loop && ++anim.currentKeyFrame==anim.nbrofkeyframes-1)"
-	lastframetime=clock();
-	currentkeyframe=0;
-	loop = true;
-	ended=false;
-
-}
-
-void stAnim::Update()
-{
-	
-	const hb::Rectangle & r0=ObjectsRectangles[e_rect_Intro];
-	
-	hb::Points32 * offset=anim.keyframelist[anim.currentkeyframe].offset;
-
-	r[0]=hb::Points32(r0.l + offset[0].x, r0.b + offset[0].y);
-	r[1]=hb::Points32(r0.r + offset[1].x, r0.b + offset[1].y);
-	r[2]=hb::Points32(r0.r + offset[2].x, r0.t + offset[2].y);
-	r[3]=hb::Points32(r0.l + offset[3].x, r0.t + offset[3].y);
-	
-	if(anim.ended == false)
-	{
-		 if(clock()-anim.lastframetime>=anim.durationbetweenframes)
-		 {
-			anim.lastframetime=clock();
-			anim.currentkeyframe++;// 1, 2, 3,4, ...
-			if(!anim.loop)
-			{
-				if(anim.currentkeyframe==anim.nbrofkeyframes-1)
-					anim.ended=true;
-			}
-			else
-			{
-				if(anim.currentkeyframe>anim.nbrofkeyframes-1)
-					anim.currentkeyframe=0;
-			}
-		 }
-	}
-	
-}
-*/
-stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rparent)//,animFrameRate(100)
+Anim::Anim(const char * animationfilename, hb::Points32 rparent[]):m_r(rparent)
 {
 	XmlParser xmlParser;
 	XmlNodeRef rootNode= xmlParser.parse(animationfilename);
@@ -90,12 +31,7 @@ stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rpa
 		assert(0);
 	}
 
-#define _keyframetimeSetInCode_
-//_keyframetimeSetInCode_ is to set key frame timing in the code, instead of reading a regular timing from the anim file.
-//advantage:quickly test many timing steps
-
 	clock_t lastt=0;
-	clock_t t;
 	clock_t timing_step=300;
 	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
@@ -105,99 +41,69 @@ stAnim2::stAnim2(const char * animationfilename, hb::Points32 rparent[]):m_r(rpa
 			hb::Points32 offset[4];
 			
 			String v = child->getAttribute("value");
-			sscanf(v.c_str(),"%d %d %d %d %d %d %d %d %d"
+			sscanf(v.c_str(),"%d %d %d %d %d %d %d %d"
 				,&offset[0].x,&offset[0].y
 				,&offset[1].x,&offset[1].y
 				,&offset[2].x,&offset[2].y
-				,&offset[3].x,&offset[3].y
-				,&t);
+				,&offset[3].x,&offset[3].y);
 
-#ifdef _keyframetimeSetInCode_
-			keyframelist.push_back(stKeyFrame(offset,lastt));
+			m_keyFrameList.push_back(stKeyFrame(offset,lastt));
 			lastt+=timing_step;
-#else
-			keyframelist.push_back(stKeyFrame(offset,t));
-#endif
 		}
 	}
 
-	firstkeyframetime = keyframelist.begin()->time;
-	assert(firstkeyframetime==0);
-	lastkeyframetime = keyframelist.rbegin()->time;
-	assert(lastkeyframetime>0);
+	m_firstKeyFrameTime = m_keyFrameList.begin()->time;
+	assert(m_firstKeyFrameTime==0);
+	m_lastKeyFrameTime = m_keyFrameList.rbegin()->time;
+	assert(m_lastKeyFrameTime>0);
 
-	starttime=0;
+	m_startTime=0;
 }
 
-stAnim2::~stAnim2()
+Anim::~Anim()
 {
 }
 
-void stAnim2::operator=(stAnim2* p)
-{
-	hb::Points32 *	t;
-
-	t=p->m_r;
-	p->m_r=this->m_r;
-	this->m_r=t;
-}
-
-void stAnim2::Update()
+void Anim::Update()
 {
 	long newframetime;
 
-	if(starttime==0)
+	if(m_startTime==0)
 	{
-		starttime=clock();
+		m_startTime=clock();
 		newframetime=0;
 	}
 	else
 	{
 		long t=clock();
-		newframetime=(t-starttime)%(lastkeyframetime-firstkeyframetime);  //it is modulos not division
+		newframetime=(t-m_startTime)%(m_lastKeyFrameTime-m_firstKeyFrameTime);  //it is modulos not division
 	}
 
 
-	//if(t-starttime > animFrameRate)
+	std::vector<stKeyFrame,hb::allocator<stKeyFrame> >::iterator itframe1, itframe2;
+	itframe1=itframe2=m_keyFrameList.begin();
+	for(; itframe2!=m_keyFrameList.end(); ++itframe2)
 	{
-
-		//go through the list of keyframes to find the two keyframes that encompass the newframetime.
-	
-	
-		/*
-		1-best solution :the search can be improved. binary search tree maybe
-		if(newframetime<next key frame time)
+		if(newframetime==0)
 		{
+			char r;
+			r=1;
 		}
-	
-		2-second better solution : use find(begin, end, functor())
-		*/
-
-		std::vector<stKeyFrame,hb::allocator<stKeyFrame> >::iterator itframe1, itframe2;
-		itframe1=itframe2=keyframelist.begin();
-		for(; itframe2!=keyframelist.end(); ++itframe2)
+		if(newframetime<itframe2->time)
 		{
-			if(newframetime==0)
-			{
-				char r;
-				r=1;
-			}
-			if(newframetime<itframe2->time)
-			{
-				break;
-			}
-			else
-			{
-				itframe1=itframe2;
-			}
+			break;
 		}
-		assert(itframe2!=keyframelist.end());
-	
-		Lerp(*itframe1,*itframe2,newframetime);
+		else
+		{
+			itframe1=itframe2;
+		}
 	}
+	assert(itframe2!=m_keyFrameList.end());
+	
+	Lerp(*itframe1,*itframe2,newframetime);
 }
 
-void stAnim2::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
+void Anim::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
 {
 	float t=((float)newframetime-frame1.time)/(frame2.time-frame1.time);
 
@@ -213,7 +119,7 @@ void stAnim2::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
 	
 }
 
-void stAnim2::Reset()
+void Anim::Reset()
 {
-	starttime=0;
+	m_startTime=0;
 }

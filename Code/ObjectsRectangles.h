@@ -84,8 +84,8 @@ const hb::Rectangle ObjectsRectangles[]=
 #endif //_testingthenewspriteobjectclass_
 
 };
-
-const hb::stRectangle2 ObjectsRectangles2[]=
+#if 0
+const hb::stRectangle2 ObjectsRectangles23[]=
 {
 	/*
 	{
@@ -95,10 +95,10 @@ const hb::stRectangle2 ObjectsRectangles2[]=
 		hb::Points32(ObjectsRectangles[e_rect_timecounter].l, ObjectsRectangles[e_rect_timecounter].b-5)
 	},
 	{
-		hb::Points32(ObjectsRectangles2[0].lb.x, ObjectsRectangles2[0].lb.y-5-TimeCounter::e_Height),
-		hb::Points32(ObjectsRectangles2[0].rb.x, ObjectsRectangles2[0].lb.y-5-TimeCounter::e_Height),
-		hb::Points32(ObjectsRectangles2[0].rb.x, ObjectsRectangles2[0].lb.y-5),
-		hb::Points32(ObjectsRectangles2[0].lb.x, ObjectsRectangles2[0].lb.y-5),
+		hb::Points32(ObjectsRectangles23[0].lb.x, ObjectsRectangles23[0].lb.y-5-TimeCounter::e_Height),
+		hb::Points32(ObjectsRectangles23[0].rb.x, ObjectsRectangles23[0].lb.y-5-TimeCounter::e_Height),
+		hb::Points32(ObjectsRectangles23[0].rb.x, ObjectsRectangles23[0].lb.y-5),
+		hb::Points32(ObjectsRectangles23[0].lb.x, ObjectsRectangles23[0].lb.y-5),
 	},*/
 
 	//windowRectangle
@@ -110,71 +110,126 @@ const hb::stRectangle2 ObjectsRectangles2[]=
 	},
 //board
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_window].rb.x-Board::e_ColumnSize*Square::e_Width-5, ObjectsRectangles2[e_rect_window].lt.y-Board::e_RowSize*Square::e_Height-5), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].rb.x-5,ObjectsRectangles2[e_rect_window].lt.y-Board::e_RowSize*Square::e_Height-5), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].rb.x-5,ObjectsRectangles2[e_rect_window].rt.y-5), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].rb.x-Board::e_ColumnSize*Square::e_Width-5,ObjectsRectangles2[e_rect_window].rt.y-5)
+		hb::Points32(ObjectsRectangles23[e_rect_window].rb.x-Board::e_ColumnSize*Square::e_Width-5, ObjectsRectangles23[e_rect_window].lt.y-Board::e_RowSize*Square::e_Height-5), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].rb.x-5,ObjectsRectangles23[e_rect_window].lt.y-Board::e_RowSize*Square::e_Height-5), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].rb.x-5,ObjectsRectangles23[e_rect_window].rt.y-5), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].rb.x-Board::e_ColumnSize*Square::e_Width-5,ObjectsRectangles23[e_rect_window].rt.y-5)
 	},
 //e_rect_score,
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_window].lb.x+5, ObjectsRectangles2[e_rect_window].lt.y-5-GlobalScore::e_Height), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].lb.x+5+GlobalScore::e_Width,ObjectsRectangles2[e_rect_window].lt.y-5-GlobalScore::e_Height), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].lb.x+5+GlobalScore::e_Width,ObjectsRectangles2[e_rect_window].lt.y-5), 
-		hb::Points32(ObjectsRectangles2[e_rect_window].lb.x+5,ObjectsRectangles2[e_rect_window].lt.y-5)
+		hb::Points32(ObjectsRectangles23[e_rect_window].lb.x+5, ObjectsRectangles23[e_rect_window].lt.y-5-GlobalScore::e_Height), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].lb.x+5+GlobalScore::e_Width,ObjectsRectangles23[e_rect_window].lt.y-5-GlobalScore::e_Height), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].lb.x+5+GlobalScore::e_Width,ObjectsRectangles23[e_rect_window].lt.y-5), 
+		hb::Points32(ObjectsRectangles23[e_rect_window].lb.x+5,ObjectsRectangles23[e_rect_window].lt.y-5)
 	},
 
 //e_rect_timecounter,
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_score].lb.x,ObjectsRectangles2[e_rect_score].lb.y-5-TimeCounter::e_Height), 
-		hb::Points32(ObjectsRectangles2[e_rect_score].lb.x+TimeCounter::e_Width,ObjectsRectangles2[e_rect_score].lb.y-5-TimeCounter::e_Height), 
-		hb::Points32(ObjectsRectangles2[e_rect_score].lb.x+TimeCounter::e_Width,ObjectsRectangles2[e_rect_score].lb.y-5), 
-		hb::Points32(ObjectsRectangles2[e_rect_score].lb.x,ObjectsRectangles2[e_rect_score].lb.y-5)
+		hb::Points32(ObjectsRectangles23[e_rect_score].lb.x,ObjectsRectangles23[e_rect_score].lb.y-5-TimeCounter::e_Height), 
+		hb::Points32(ObjectsRectangles23[e_rect_score].lb.x+TimeCounter::e_Width,ObjectsRectangles23[e_rect_score].lb.y-5-TimeCounter::e_Height), 
+		hb::Points32(ObjectsRectangles23[e_rect_score].lb.x+TimeCounter::e_Width,ObjectsRectangles23[e_rect_score].lb.y-5), 
+		hb::Points32(ObjectsRectangles23[e_rect_score].lb.x,ObjectsRectangles23[e_rect_score].lb.y-5)
 	},
 
 
 //countdown
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x+90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-CountDown::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x-90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-CountDown::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x-90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+CountDown::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x+90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+CountDown::e_Height/2)
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x+90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-CountDown::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x-90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-CountDown::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x-90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+CountDown::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x+90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+CountDown::e_Height/2)
 	},
 
 //e_rect_timeout
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x+90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].rb.x-90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].rb.x-90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x+90,ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+TimeOut::e_Height/2)
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x+90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].rb.x-90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].rb.x-90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x+90,ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+TimeOut::e_Height/2)
 	},
 //e_rect_timeout_playagain
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_timeout].lb.x+20,ObjectsRectangles2[e_rect_timeout].lb.y+10), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout].lb.x+20+128,ObjectsRectangles2[e_rect_timeout].lb.y+10), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout].lb.x+20+128,ObjectsRectangles2[e_rect_timeout].lb.y+55), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout].lb.x+20,ObjectsRectangles2[e_rect_timeout].lb.y+55) 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout].lb.x+20,ObjectsRectangles23[e_rect_timeout].lb.y+10), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout].lb.x+20+128,ObjectsRectangles23[e_rect_timeout].lb.y+10), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout].lb.x+20+128,ObjectsRectangles23[e_rect_timeout].lb.y+55), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout].lb.x+20,ObjectsRectangles23[e_rect_timeout].lb.y+55) 
 	},
 //e_rect_timeout_quitgame
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_timeout_playagain].lb.x+20+128,	ObjectsRectangles2[e_rect_timeout_playagain].lb.y), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout_playagain].rb.x+20+128,	ObjectsRectangles2[e_rect_timeout_playagain].lb.y), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout_playagain].rb.x+20+128,	ObjectsRectangles2[e_rect_timeout_playagain].rt.y), 
-		hb::Points32(ObjectsRectangles2[e_rect_timeout_playagain].lb.x+20+128,	ObjectsRectangles2[e_rect_timeout_playagain].rt.y) 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout_playagain].lb.x+20+128,	ObjectsRectangles23[e_rect_timeout_playagain].lb.y), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout_playagain].rb.x+20+128,	ObjectsRectangles23[e_rect_timeout_playagain].lb.y), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout_playagain].rb.x+20+128,	ObjectsRectangles23[e_rect_timeout_playagain].rt.y), 
+		hb::Points32(ObjectsRectangles23[e_rect_timeout_playagain].lb.x+20+128,	ObjectsRectangles23[e_rect_timeout_playagain].rt.y) 
 	},
 //e_rect_Intro
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x-20,	ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].rb.x-10,	ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].rb.x-10,	ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+TimeOut::e_Height/2), 
-		hb::Points32(ObjectsRectangles2[e_rect_board].lb.x-20,	ObjectsRectangles2[e_rect_board].lb.y+(ObjectsRectangles2[e_rect_board].rt.y-ObjectsRectangles2[e_rect_board].rb.y)/2+TimeOut::e_Height/2)
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x-20,	ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].rb.x-10,	ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2-TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].rb.x-10,	ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+TimeOut::e_Height/2), 
+		hb::Points32(ObjectsRectangles23[e_rect_board].lb.x-20,	ObjectsRectangles23[e_rect_board].lb.y+(ObjectsRectangles23[e_rect_board].rt.y-ObjectsRectangles23[e_rect_board].rb.y)/2+TimeOut::e_Height/2)
 	},
 //e_rect_Intro_startbutton
 	{
-		hb::Points32(ObjectsRectangles2[e_rect_Intro].lb.x+(ObjectsRectangles2[e_rect_Intro].rb.x-ObjectsRectangles2[e_rect_Intro].lb.x)/2-Intro::e_width/2, ObjectsRectangles2[e_rect_Intro].lb.y+10), 
-		hb::Points32(ObjectsRectangles2[e_rect_Intro].rb.x-(ObjectsRectangles2[e_rect_Intro].rb.x-ObjectsRectangles2[e_rect_Intro].lb.x)/2+Intro::e_width/2, ObjectsRectangles2[e_rect_Intro].lb.y+10),
-		hb::Points32(ObjectsRectangles2[e_rect_Intro].rb.x-(ObjectsRectangles2[e_rect_Intro].rb.x-ObjectsRectangles2[e_rect_Intro].lb.x)/2+Intro::e_width/2, ObjectsRectangles2[e_rect_Intro].lb.y+55),
-		hb::Points32(ObjectsRectangles2[e_rect_Intro].lb.x+(ObjectsRectangles2[e_rect_Intro].rb.x-ObjectsRectangles2[e_rect_Intro].lb.x)/2-Intro::e_width/2, ObjectsRectangles2[e_rect_Intro].lb.y+55)
+		hb::Points32(ObjectsRectangles23[e_rect_Intro].lb.x+(ObjectsRectangles23[e_rect_Intro].rb.x-ObjectsRectangles23[e_rect_Intro].lb.x)/2-Intro::e_width/2, ObjectsRectangles23[e_rect_Intro].lb.y+10), 
+		hb::Points32(ObjectsRectangles23[e_rect_Intro].rb.x-(ObjectsRectangles23[e_rect_Intro].rb.x-ObjectsRectangles23[e_rect_Intro].lb.x)/2+Intro::e_width/2, ObjectsRectangles23[e_rect_Intro].lb.y+10),
+		hb::Points32(ObjectsRectangles23[e_rect_Intro].rb.x-(ObjectsRectangles23[e_rect_Intro].rb.x-ObjectsRectangles23[e_rect_Intro].lb.x)/2+Intro::e_width/2, ObjectsRectangles23[e_rect_Intro].lb.y+55),
+		hb::Points32(ObjectsRectangles23[e_rect_Intro].lb.x+(ObjectsRectangles23[e_rect_Intro].rb.x-ObjectsRectangles23[e_rect_Intro].lb.x)/2-Intro::e_width/2, ObjectsRectangles23[e_rect_Intro].lb.y+55)
 	},
 
 };
+
+
+const hb::signedRectangle ObjectsRectangles3[]=
+{
+
+	//windowRectangle
+	hb::signedRectangle(0.0, 0.0, 
+					Board::e_ColumnSize*Square::e_Width+140, Board::e_RowSize*Square::e_Height+10),
+//board
+	hb::signedRectangle(ObjectsRectangles3[e_rect_window].r-Board::e_ColumnSize*Square::e_Width-5,
+				ObjectsRectangles3[e_rect_window].t-Board::e_RowSize*Square::e_Height-5,
+				ObjectsRectangles3[e_rect_window].r-5,
+				ObjectsRectangles3[e_rect_window].t-5),
+//e_rect_score,
+	hb::signedRectangle(ObjectsRectangles3[e_rect_window].l+5,ObjectsRectangles3[e_rect_window].t-GlobalScore::e_Height-5,
+				ObjectsRectangles3[e_rect_window].l+GlobalScore::e_Width+5,ObjectsRectangles3[e_rect_window].t-5),
+//e_rect_timecounter,
+	hb::signedRectangle(ObjectsRectangles3[e_rect_score].l, ObjectsRectangles3[e_rect_score].b-5-TimeCounter::e_Height,
+				ObjectsRectangles3[e_rect_score].l+TimeCounter::e_Width, ObjectsRectangles3[e_rect_score].b-5),
+//countdown
+	hb::signedRectangle(ObjectsRectangles3[e_rect_board].l+90, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2-CountDown::e_Height/2,
+				  ObjectsRectangles3[e_rect_board].r-90, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2+CountDown::e_Height/2),
+
+//e_rect_timeout
+	hb::signedRectangle(ObjectsRectangles3[e_rect_board].l+90, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2-TimeOut::e_Height/2,
+				  ObjectsRectangles3[e_rect_board].r-90, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2+TimeOut::e_Height/2),
+//e_rect_timeout_playagain
+	hb::signedRectangle(ObjectsRectangles3[e_rect_timeout].l+20, ObjectsRectangles3[e_rect_timeout].b+10, 
+				ObjectsRectangles3[e_rect_timeout].l+20+128, ObjectsRectangles3[e_rect_timeout].b+5+10+40),
+//e_rect_timeout_quitgame
+	hb::signedRectangle(ObjectsRectangles3[e_rect_timeout_playagain]+hb::signedRectangle(128+20,0,128+20,0)),
+//e_rect_Intro
+	hb::signedRectangle(ObjectsRectangles3[e_rect_board].l-20, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2-TimeOut::e_Height/2,
+				  ObjectsRectangles3[e_rect_board].r-10, 
+			ObjectsRectangles3[e_rect_board].b+(ObjectsRectangles3[e_rect_board].t-ObjectsRectangles3[e_rect_board].b)/2+TimeOut::e_Height/2),
+//e_rect_Intro_startbutton
+	hb::signedRectangle( 
+		ObjectsRectangles3[e_rect_Intro].l + (ObjectsRectangles3[e_rect_Intro].r -ObjectsRectangles3[e_rect_Intro].l)/2 -Intro::e_width/2,
+		ObjectsRectangles3[e_rect_Intro].b+10, 
+		ObjectsRectangles3[e_rect_Intro].r - (ObjectsRectangles3[e_rect_Intro].r -ObjectsRectangles3[e_rect_Intro].l)/2 +Intro::e_width/2,
+		ObjectsRectangles3[e_rect_Intro].b+5+10+40),
+
+#ifdef _testingthenewspriteobjectclass_
+//e_rect_timecounter2,
+	hb::signedRectangle(ObjectsRectangles3[e_rect_timecounter].l, ObjectsRectangles3[e_rect_timecounter].b-5-TimeCounter::e_Height,
+				ObjectsRectangles3[e_rect_timecounter].l+TimeCounter::e_Width, ObjectsRectangles3[e_rect_timecounter].b-5),
+#endif //_testingthenewspriteobjectclass_
+
+};
+#endif
 #endif _OBJECTSRECTANGLES_

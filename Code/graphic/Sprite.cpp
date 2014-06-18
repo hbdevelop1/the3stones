@@ -9,7 +9,7 @@ using namespace std;
 
 #include "..\ObjectsRectangles.h"
 
-Sprite::Sprite(const hb::stRectangle2 *rect, int itex):
+Sprite::Sprite(const hb::Rectangle *rect, int itex):
 	m_rect(rect),
 	m_texObj(TexturesManager::GetInstance().GetTextureObj(itex))
 {
@@ -32,10 +32,10 @@ void Sprite::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_rect->lb.x, m_rect->lb.y);
-        glTexCoord2f(1, 0); glVertex2f (m_rect->rb.x, m_rect->rb.y);
-        glTexCoord2f(1, 1); glVertex2f (m_rect->rt.x, m_rect->rt.y);
-        glTexCoord2f(0, 1); glVertex2f (m_rect->lt.x, m_rect->lt.y);
+        glTexCoord2f(0, 0); glVertex2f (m_rect->l, m_rect->b);
+        glTexCoord2f(1, 0); glVertex2f (m_rect->r, m_rect->b);
+        glTexCoord2f(1, 1); glVertex2f (m_rect->r, m_rect->t);
+        glTexCoord2f(0, 1); glVertex2f (m_rect->l, m_rect->t);
     glEnd();
 	
 	
@@ -43,14 +43,14 @@ void Sprite::Draw()
 }
 //////////////////
 
-AnimatedSprite::AnimatedSprite(const hb::stRectangle2 *rect, int itex, const char * animationfilename)
+AnimatedSprite::AnimatedSprite(const hb::Rectangle *rect, int itex, const char * animationfilename)
 	:Sprite(rect, itex)
 {
 
 	for(int i=0; i<4; ++i)
 		m_offset[i]=hb::Points32(0,0);
 
-	m_anim.reset(new stAnim2(animationfilename, m_offset));
+	m_anim.reset(new Anim(animationfilename, m_offset));
 }
 
 void AnimatedSprite::Update()
@@ -66,18 +66,20 @@ void AnimatedSprite::Draw()
 
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
+	const hb::signedRectangle *rect = reinterpret_cast<const hb::signedRectangle *>(m_rect);
+
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_rect->lb.x+m_offset[0].x, m_rect->lb.y+m_offset[0].y);
-        glTexCoord2f(1, 0); glVertex2f (m_rect->rb.x+m_offset[1].x, m_rect->rb.y+m_offset[1].y);
-        glTexCoord2f(1, 1); glVertex2f (m_rect->rt.x+m_offset[2].x, m_rect->rt.y+m_offset[2].y);
-        glTexCoord2f(0, 1); glVertex2f (m_rect->lt.x+m_offset[3].x, m_rect->lt.y+m_offset[3].y);
-    glEnd();
-	
-	
+        glTexCoord2f(0, 0); glVertex2f (rect->l+m_offset[0].x, rect->b+m_offset[0].y);
+        glTexCoord2f(1, 0); glVertex2f (rect->r+m_offset[1].x, rect->b+m_offset[1].y);
+        glTexCoord2f(1, 1); glVertex2f (rect->r+m_offset[2].x, rect->t+m_offset[2].y);
+        glTexCoord2f(0, 1); glVertex2f (rect->l+m_offset[3].x, rect->t+m_offset[3].y);
+    glEnd();	
+
+
 	glDisable(GL_TEXTURE_2D);
 }
 ///////////////////////////
-AnimatedSpriteNcrg::AnimatedSpriteNcrg(const hb::stRectangle2 *rect, int itex1,int itex2, const char * animationfilename)
+AnimatedSpriteNcrg::AnimatedSpriteNcrg(const hb::Rectangle *rect, int itex1,int itex2, const char * animationfilename)
 	:AnimatedSprite(rect, itex1,animationfilename)
 	,m_image( e_ncrg_good)
 	,m_texObj1(m_texObj)

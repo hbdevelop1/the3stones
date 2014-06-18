@@ -9,17 +9,17 @@
 #include "anim.h"
 
 
-struct stRectangle2;
 class Sprite
 {
 protected:
-	const hb::stRectangle2	*m_rect;
+	//const hb::stRectangle2	*m_rect;
+	const hb::Rectangle	*m_rect;
 	//hb::Points32	(& m_r2)[4];
 	//const 
 		unsigned int	m_texObj; //can not be const as it is modifiable in derived class
 
 public:
-	Sprite(const hb::stRectangle2 * rect, int itex);
+	Sprite(const hb::Rectangle * rect, int itex);
 
 	virtual ~Sprite();
 
@@ -29,9 +29,9 @@ public:
 class AnimatedSprite: public Sprite
 {
 	hb::Points32				m_offset[4];
-	boost::scoped_ptr<stAnim2>	m_anim;
+	boost::scoped_ptr<Anim>	m_anim;
 public:
-	AnimatedSprite(const hb::stRectangle2 *,int,const char *);
+	AnimatedSprite(const hb::Rectangle *,int,const char *);
 
 	void Update();
 	void Draw();
@@ -43,7 +43,7 @@ class AnimatedSpriteNcrg: public AnimatedSprite
 	const unsigned int	m_texObj2;
 	int					m_image;
 public:
-	AnimatedSpriteNcrg(const hb::stRectangle2 *,int,int,const char *);
+	AnimatedSpriteNcrg(const hb::Rectangle *,int,int,const char *);
 	void SetImage(int type);
 	void Draw();
 };

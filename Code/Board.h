@@ -84,7 +84,7 @@ private:
 	clock_t		m_tm;
 #endif _bezier_ == 1
 
-	const hb::stRectangle2 * m_rect;
+	const hb::Rectangle * m_rect;
 	Event		click;
 	hb::Pointu8	SelectedTilesPosition;
 
@@ -116,11 +116,11 @@ public:
 	Board();
 	~Board();
 
-	const hb::Rectangle GetRectangle() {return hb::Rectangle(m_rect->lb.x, m_rect->lb.y, m_rect->rt.x, m_rect->rt.y);}
+	const hb::Rectangle * GetRectangle() {return m_rect;}
 	void Draw();
 	void Update();
 	PositionInBoard * GetFreePositionBelow(hb::Pointu8 l);
-	void OnClick(int x, int y);
+	void OnClick(unsigned int x, unsigned int y);
 	void Reset();
 
 	void test();

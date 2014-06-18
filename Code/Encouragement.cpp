@@ -18,7 +18,7 @@ Encouragement::~Encouragement()
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
 
 }
-Encouragement::Encouragement(char * filename):m_displayEngouragement(true)
+Encouragement::Encouragement(char * filename):m_displayEngouragement(false)
 {
 	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_Encouragement);
 
@@ -39,20 +39,20 @@ Encouragement::Encouragement(char * filename):m_displayEngouragement(true)
 
 		if (child->isTag("animatedsprite"))
 		{
-			hb::stRectangle2 rect;
+			hb::Rectangle rect;
 
 			String pointstring = child->getAttribute("points");
 
 			sscanf(pointstring.c_str(),"%d %d %d %d %d %d %d %d"
-				,&rect.lb.x,&rect.lb.y
-				,&rect.rb.x,&rect.rb.y
-				,&rect.rt.x,&rect.rt.y
-				,&rect.lt.x,&rect.lt.y);
+				,&rect.l,&rect.b
+				,&rect.r,&rect.b
+				,&rect.r,&rect.t
+				,&rect.l,&rect.t);
 
 			//String texturename = child->getAttribute("texture");
 			String animationfile = child->getAttribute("animation");
 
-			m_rect.reset(new hb::stRectangle2(rect));
+			m_rect.reset(new hb::Rectangle(rect));
 
 			assert(m_sprite.get()==NULL);  //no more than one object.
 

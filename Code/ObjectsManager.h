@@ -45,7 +45,7 @@ struct DelayedFunctionInfo
 	void RegisterFunction(O *o, FunctionType f, Arg1 arg1, Arg2 arg2)
 	{
 		arrayoffi[nbroffi++]=new FunctionInfo2<O,FunctionType,Arg1,Arg2>(o,f,arg1,arg2);
-		hbassert(nbroffi<=e_NumberOfDelayedFunctionsToRun);
+		assert(nbroffi<=e_NumberOfDelayedFunctionsToRun);
 	}
 
 	void execute()

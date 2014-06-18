@@ -16,27 +16,14 @@ class Score;
 struct GlobalScore;
 
 
-#define _bezierinscore_ 1
-#define _encrg_version_ 2
-//#define _comparedifferentdrawing_
-/*
-after match found, it takes some time before the +100 appears and starts traveling. why ?
-to answer this, i am making the time line in the doc
-to troubleshoot this I am using _comparedifferentdrawing_
-finally it was _gettiming_ that gave me the hint. which was to reduce NbrOfFramesToWaitToCheckMatchesAfterSwap.
-*/
-
-
 
 #define MAXSTRSZ 20
-
-#if _bezierinscore_==1
 
 #include "time.h"
 
 struct Text
 {
-	char str[MAXSTRSZ ];
+	char			str[MAXSTRSZ ];
 	bool			end;
 	bool			encouraged;
 	hb::Pointu32	initialPos;			//A factor in the function
@@ -48,7 +35,7 @@ struct Text
 	static float	stept;
 	clock_t			tm;
 	clock_t			tmNcrg;
-	GlobalScore *	m_gs;
+	GlobalScore *	gs;
 
 	Text();
 	~Text();
@@ -58,44 +45,12 @@ struct Text
 
 	//watch out:no cc for Text
 };
-#else 
-struct Text
-{
-	char str[MAXSTRSZ ];
-	sint32	life;
-	hb::Pointu32	currentPos;
-
-	Text(const char*, hb::Pointu32 sp);
-
-	//watch out:no cc for Text
-};
-#endif
 
 namespace hb
 {
 typedef std::deque<Text,hb::allocator<Text> > deque;
 }
 
-class IndividualScore2
-{
-	hb::deque		m_texts; //watch out:no cc for Text
-
-	GlobalScore &	m_gs;
-
-public:
-	static const char	ms_score_str[5];
-	static const int	ms_score_i;
-
-public:
-	IndividualScore2(GlobalScore &);
-	~IndividualScore2();
-
-	void Update();
-	void Draw();
-	void Add(hb::Pointu32 initialPos);
-	void Reset();
-
-};
 class IndividualScore
 {
 	hb::deque		m_texts; //watch out:no cc for Text
@@ -131,7 +86,6 @@ struct GlobalScore : public Sprite
 		e_Width=128
 	};
 
-#if _encrg_version_==2
 	struct TimeNcrgd
 	{
 		clock_t	time;
@@ -179,7 +133,6 @@ struct GlobalScore : public Sprite
 		
 	};
 	
-#endif //_encrg_version_==2
 public:
 	GlobalScore();
 	~GlobalScore();

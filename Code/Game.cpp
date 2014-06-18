@@ -8,15 +8,7 @@
 #include "score.h"
 #include "Encouragement.h"
 #include "graphic\TexturesManager.h"
-
-#ifdef _testingthenewspriteobjectclass_
-#include "timecounter2.h"
-#include "TimeCounterAnim.h"
-
-#endif //_testingthenewspriteobjectclass_
-
 #include <new>
-//#include "Mem/MemNew.h"
 
 
 ImplementCreator(game)
@@ -26,7 +18,6 @@ game::game()
 
 	SetFlag(e_FLAG_MASTER);
 
-//	ObjectsManager::GetInstance().PushBack(this); supposed to be done in game_init
 	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_game);
 
 	board.reset(new Board );
@@ -34,40 +25,21 @@ game::game()
 	timer.reset( new TimeCounter);
 
 	encouragement.reset( new Encouragement("data/goodNwow.xml") );
-#ifdef _testingthenewspriteobjectclass_
-	timer2.reset( new TimeCounter2);
-	timeranim.reset( new TimeCounterAnim);
-#endif //_testingthenewspriteobjectclass_
 
-
-	ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
 	ObjectsManager::GetInstance().PushBack(board.get(),false);
-	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
 	ObjectsManager::GetInstance().PushBack(score.get(),false);
 	ObjectsManager::GetInstance().PushBack(timer.get(),false);
-
-#ifdef _testingthenewspriteobjectclass_
-	ObjectsManager::GetInstance().PushBack(timer2.get(),false);
-	ObjectsManager::GetInstance().PushBack(timeranim.get(),false);
-	
-#endif //_testingthenewspriteobjectclass_
+	ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
 
 
-	START_BEHAVIOR(game, 
-		Behavior_intro
-		//Behavior_countdown
-		//Behavior_timeout
-		);
+	START_BEHAVIOR(game, Behavior_intro);
 }
 
 game::~game()
 {
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
-/*	deleteo<Board>(board);
- 	deleteo<Score>(score);
- 	deleteo<TimeCounter>(timer);
- 	*/
 }
+
 /*
 void game::WhenPushed()
 {
@@ -78,49 +50,35 @@ void game::WhenPushed()
 */
 void game::Update()
 {
-	/*
-	board.Update();
-	score.Update();
-	timer.Update();
-	*/
-
 	(this->*m_currentbehavior)();
-
 }
 
 void game::Draw()
 {
-/*
-	drawing depends on the behavior
-
-	board.Draw();
-	score.Draw();
-	timer.Draw();
-	*/
 }
 
 void game::Behavior_intro()
 {
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-		timer->Reset();
-		board->Reset();
-		score->Reset();
+	CONSTRUCT_BEHAVIOR_BEGIN
+	{
+			timer->Reset();
+			board->Reset();
+			score->Reset();
 
-	ObjectsManager::GetInstance().PushBack(CLASSID_Intro,false);
-}
-CONSTRUCT_BEHAVIOR_END
+		ObjectsManager::GetInstance().PushBack(CLASSID_Intro,false);
+	}
+	CONSTRUCT_BEHAVIOR_END
 
-UPDATE_BEHAVIOR_BEGIN
-{
-	CHANGE_BEHAVIOR(game,Behavior_countdown);
-}
-UPDATE_BEHAVIOR_END
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		CHANGE_BEHAVIOR(game,Behavior_countdown);
+	}
+	UPDATE_BEHAVIOR_END
 
-DESTRUCT_BEHAVIOR_BEGIN
-{
-}
-DESTRUCT_BEHAVIOR_END
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
 
 }
 void game::Behavior_countdown()
@@ -201,13 +159,8 @@ void game::Behavior_timeout()
 	DESTRUCT_BEHAVIOR_END
 }
 
-void game::OnClick(int x, int y)
+void game::OnClick(unsigned int x, unsigned int y)
 {
 	if(m_currentbehavior == &game::Behavior_playing)
 		board->OnClick(x,y);
-/*
-	if(m_currentbehavior == &game::Behavior_timeout)
-		//dynamic_cast<TimeOut*>(
-		ObjectsManager::GetInstance().GetGlobalObject(CLASSID_TimeOut)->OnClick(x,y);
-		*/
 }

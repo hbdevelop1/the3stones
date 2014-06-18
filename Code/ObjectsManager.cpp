@@ -56,8 +56,8 @@ void ObjectsManager::FastInsertBefore(Object * newobj, Object * before)
 }
 void ObjectsManager::PushBack(int classid, bool immediate)
 {
-	hbassert(classid);
-	hbassert(objectscreators[classid]);
+	assert(classid);
+	assert(objectscreators[classid]);
 
 	if(!immediate )
 	{
@@ -77,7 +77,7 @@ void ObjectsManager::PushBack(Object * obj, bool immediate)
 {
 //sanity check:what if i push an object already pushed ?
 //#if DEBUGMODE
-	hbassert(obj);
+	assert(obj);
 
 	Object *o;
 	for(o=activeobjectstail.next;o!=&activeobjectstail;o=o->next)
@@ -85,7 +85,7 @@ void ObjectsManager::PushBack(Object * obj, bool immediate)
 		if(o==obj)
 			break;
 	}
-	hbassert(o!=obj);
+	assert(o!=obj);
 //#endif //DEBUGMODE
 
 	if(!immediate )
@@ -110,15 +110,13 @@ void ObjectsManager::PushBack(Object * obj, bool immediate)
 		activeobjects.prev=activeobjectstail.prev;
 		activeobjectstail.prev->next=&activeobjects;
 		activeobjectstail.prev=&activeobjects;
-		//activeobjectstail.next;
-
 	}
 
 	FastInsertBefore(obj,&activeobjectstail);
 
 //	obj->WhenPushed();
 
-	hbassert(activeobjects.next->GetFlag() & Object::e_FLAG_MASTER);
+	assert(activeobjects.next->GetFlag() & Object::e_FLAG_MASTER);
 }
 
 void ObjectsManager::Update()
@@ -166,9 +164,9 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 {
 	Object *o;
 
-//sanity check:make sure the object is really in the list. otherwise i'll have infinite looping
+//sanity check:make sure the object is really in the list. otherwise i'll have an infinite loop
 //#if DEBUGMODE
-	hbassert(obj);
+	assert(obj);
 
 	if(!immediate )
 	{
@@ -182,7 +180,7 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 		if(o==obj)
 			break;
 	}
-	hbassert(o==obj);
+	assert(o==obj);
 //#endif //_DEBUG_
 
 	if(obj->GetFlag() & Object::e_FLAG_MASTER)
@@ -212,7 +210,7 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 
 			if(o==&activeobjectstail)
 			{
-				hbassert(activeobjects.prev==&activeobjectstail); 
+				assert(activeobjects.prev==&activeobjectstail); 
 			}
 		}
 		else
@@ -254,21 +252,21 @@ Object * ObjectsManager::GetMaster()
 
 Object * ObjectsManager::GetGlobalObject(int classid)
 {
-	hbassert(classid<CLASSIDS);
+	assert(classid<CLASSIDS);
 	
 	return globalobjects[classid];
 }
 
 void ObjectsManager::RegisterGlobalObject(Object * obj, int classid)
 {
-	hbassert(classid<CLASSIDS);
+	assert(classid<CLASSIDS);
 	
 	globalobjects[classid]=obj;
 }
 
 void ObjectsManager::UnRegisterGlobalObject(Object * obj)
 {
-	hbassert(obj);
+	assert(obj);
 
 	for(int i=0; i<CLASSIDS; ++i)
 		if(globalobjects[i]==obj)
@@ -277,7 +275,7 @@ void ObjectsManager::UnRegisterGlobalObject(Object * obj)
 			return;
 		}
 	
-	hbassert(0);
+	assert(0);
 }
 
 

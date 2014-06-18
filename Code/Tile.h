@@ -13,9 +13,9 @@ class CTargaImage;
 
 class Tile
 {
-	hb::Rectangle r;
-	unsigned int m_texObj;
-	static Board * board;
+	hb::Rectangle	m_rect;
+	unsigned int	m_texObj;
+	static Board *	m_board;
 
 public:
 	enum type
@@ -29,26 +29,26 @@ public:
 	};
 private:
 
-	static type	current_t;	//type for tiles going back into the board
-	type	t;	//type for color/type
-	hb::Pointu8	loc; //position in the board. loc.x can be in the range [0, e_ColumnSize-1] with the step of 1, and loc.y can be in the range [0, e_RowSize-1] with the step of 1
-	PositionInBoard *pCurrentPosition;
-	PositionInBoard *pFreePositionToMoveTo;
-	hb::Points8	delta;
-	signed int nbrOfFramesBeforeDestruction;
-	bool	visible;
-	bool	active;
-	bool	selected;//to indicate if the tile is selected
-	bool	todestroy;
-	bool	toswap;
-	int		paceofswap;
-	int		paceoffall;
+	static type		m_currentType;	//type for tiles going back into the board
+	type			m_type;	//type for color/type
+	hb::Pointu8		m_loc; //position in the board. loc.x can be in the range [0, e_ColumnSize-1] with the step of 1, and loc.y can be in the range [0, e_RowSize-1] with the step of 1
+	PositionInBoard *m_currentPosition;
+	PositionInBoard *m_freePositionToMoveTo;
+	hb::Points8		m_delta;
+	signed int		m_nbrOfFramesBeforeDestruction;
+	bool			m_visible;
+	bool			m_active;
+	bool			m_selected;//to indicate if the tile is selected
+	bool			m_toDestroy;
+	bool			m_toSwap;
+	int				m_paceOfSwap;
+	int				m_paceOfFall;
 
 
 	//static const unsigned int SpeedOfSwapping;
 	//static const unsigned int NbrOfFramesBeforeDestruction;
 
-	State 	m_state;
+	State 			m_state;
 	void (Tile::*m_currentbehavior)(void);
 
 //	void (Tile::*m_previousbehavior)(void);
@@ -69,7 +69,6 @@ private:
 public:
 	Tile();
 	Tile(type _t, hb::Pointu8);
-//	void Set(type _t, Pointi p);
 
 	virtual ~Tile();
 	void Draw();
@@ -81,8 +80,6 @@ public:
 	bool SetSelected(bool s);
 
 	bool CheckMatches();
-	//static void SetBoard(Board *);
-
 
 	friend void Swap(Tile*, Tile*);
 	friend void Destroy(Tile*, Tile*, Tile*);

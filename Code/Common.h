@@ -21,7 +21,7 @@ struct Color
 	float b;
 };
 
-#define hbassert(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), static_cast<unsigned int>(__LINE__)), 0) )
+//#define assert(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), static_cast<unsigned int>(__LINE__)), 0) )
 
 namespace hb
 {

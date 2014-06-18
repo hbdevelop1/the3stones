@@ -119,6 +119,6 @@ void TexturesManager::TexUninit()
 
 unsigned int TexturesManager::GetTextureObj(unsigned int i)
 {
-	hbassert(0<=i && i<e_tex_nbrofTextures);
+	assert(0<=i && i<e_tex_nbrofTextures);
 	return m_texObj[i];
 }

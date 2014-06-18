@@ -18,7 +18,7 @@ void AtExit()
 	ObjectsManager::GetInstance().Clear();
 
 	/*freeing memory this way is not efficient as it doesn't remove Intro, TimeOut and Countdown if they are running on. 
-	use ObjectsManager::GetInstance().Clear()
+	use ObjectsManager::GetInstance().Clear() instead
 
 	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	
 	ObjectsManager::GetInstance().Pop(o,true);
@@ -46,7 +46,9 @@ void onMouse( int button, int state, int x, int y)
 	{
 		if(state==GLUT_DOWN)
 		{
-				ObjectsManager::GetInstance().GetMaster()->OnClick(x,ObjectsRectangles[e_rect_window].t - y);
+			ObjectsManager::GetInstance().GetMaster()->OnClick(
+				static_cast<unsigned int>(x),
+				static_cast<unsigned int>(ObjectsRectangles[e_rect_window].t - y));
 		}
 	}
 }

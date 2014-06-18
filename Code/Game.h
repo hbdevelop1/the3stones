@@ -12,11 +12,6 @@ class TimeCounter;
 class Score;
 class Encouragement;
 
-#ifdef _testingthenewspriteobjectclass_
-class TimeCounter2;
-class TimeCounterAnim;
-#endif //_testingthenewspriteobjectclass_
-
 class game : public Object
 {
 	
@@ -25,15 +20,6 @@ class game : public Object
 	boost::scoped_ptr<Score>			score;
 	boost::scoped_ptr<Encouragement>	encouragement;
 
-
-#ifdef _testingthenewspriteobjectclass_
-	boost::scoped_ptr<TimeCounter2>		timer2;
-	boost::scoped_ptr<TimeCounterAnim>	timeranim;
-#endif //_testingthenewspriteobjectclass_
-
-private:
-	game(const game &);
-	game & operator=(const game&);
 
 private:
 	State 	m_state;
@@ -50,10 +36,9 @@ public:
 
 	void Draw();
 	void Update();
-	void WhenPushed();
+//	void WhenPushed();
 
-	//Board * GetBoard() {return board;}
-	void OnClick(int x, int y);
+	void OnClick(unsigned int x, unsigned int y);
 
 
 

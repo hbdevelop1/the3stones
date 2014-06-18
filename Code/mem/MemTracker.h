@@ -31,7 +31,7 @@ template<class T> void deleteo(T *p)
 		delete p;
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 template<class T> void deletea(T *p)
@@ -45,7 +45,7 @@ template<class T> void deletea(T *p)
 		delete [] p;
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 template<class T> void deleteo4boost(T *p) //boost uses boost::checked_delete, so i should use it
@@ -59,7 +59,7 @@ template<class T> void deleteo4boost(T *p) //boost uses boost::checked_delete, s
 		boost::checked_delete( p );
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 template<class T> void deletea4boost(T *p) //boost uses boost::checked_delete, so i should use it
@@ -73,7 +73,7 @@ template<class T> void deletea4boost(T *p) //boost uses boost::checked_delete, s
 		boost::checked_array_delete( p );
 	}
 	else
-		hbassert(0);
+		assert(0);
 };
 
 #endif //0

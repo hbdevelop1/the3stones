@@ -572,9 +572,9 @@ is destructed:
 boost::scoped_ptr<std::list<Sprite> >				m_listofsprites;  !!!!!!!
 m_listofsprites.reset(new std::list<Sprite> );  !!!!!
 or
-boost::scoped_ptr<std::vector<stKeyFrame,hb::allocator<stKeyFrame> > > keyframelist;  !!!!!!
-keyframelist.reset(new std::vector<stKeyFrame,hb::allocator<stKeyFrame> > ); !!!!
-keyframelist->push_back(stKeyFrame(offset)); !!!
+boost::scoped_ptr<std::vector<stKeyFrame,hb::allocator<stKeyFrame> > > m_keyFrameList;  !!!!!!
+m_keyFrameList.reset(new std::vector<stKeyFrame,hb::allocator<stKeyFrame> > ); !!!!
+m_keyFrameList->push_back(stKeyFrame(offset)); !!!
 
 
 30.11
@@ -617,7 +617,7 @@ error:contains errors i did
 
 
 300-todo: 
-301-remove hbassert
+301-remove assert
 302-common.h to include MemNew.h
 303-
 use smart ptr in this macro
@@ -809,10 +809,59 @@ use exception or another loading error management instead of just returning fals
 324-animation exercise
 rotate Wow instead of translating its vertices.
 
+325-placement new spits an error in vs2010:it doesn't like a variable next to the new keyword but expects a data type.
+void IndividualScore::Add(hb::Pointu32 sp)
+{
+	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
+
+	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	{
+		if(it->end)
+		{
+			/*
+			Text *pUnused = &(*it);
+			new (pUnused) Text(IndividualScore::score_str,sp);
+			placement new spits an error in vs2010:it doesn't like a variable next to the new keyword but expects a data type.
+			*/
+			it->Reset(IndividualScore::ms_score_str,sp);
+			return;
+		}
+	}
+
+	m_texts.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
+	//printf("nbr of indiv. scores == %d\n",m_texts.size());
+}
+
+326-
+void GlobalScore::Update()
+{
+	ConfirmEncouragement confirmNcrg;
+
+	if (auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement)))
+	{
+		int i=0;
+
+		for(auto rit=listOfTimesNcrgd.rbegin(), end=listOfTimesNcrgd.rend(); rit!=end; ++i,++rit)
+		{
+#define threshold_wow 4
+#define threshold_good 2
+
+			if(i== threshold_wow-1)
+			//if(std::distance(listOfTimesNcrgd.rbegin(),rit)==(threshold-1)) TODO
+			{
+				clock_t diff=listOfTimesNcrgd.rbegin()->time - rit->time;
+//TODO				//if( diff< 1050) sometimes this condition is true. other times it is not !!! 
+				//how come the frame rate is not constant ?
+				if( diff< 1400)
+
+
+
+
 Release
 -Derive from Sprite and Object
 -remove non copiable means in classes derived from Object
--what is void stAnim2::operator=(stAnim2* p) for ? it is not used !!!!
+-remove ObjectsRectangles and only keep ObjectsRectangles2
+-what is void Anim::operator=(Anim* p) for ? it is not used !!!!
 -how much memory does the game use ?
 -review score,tile, board,
 -review memtracker 
