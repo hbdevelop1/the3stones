@@ -522,7 +522,7 @@ void * operator new[](size_t size, char *filename, int line)
 		::operator new[](size);
 
 	AddTrack((long)ptr, size,filename, line);
-	hbhash::AddTrack((long)ptr, size,filename, line);
+	hb::AddTrack((long)ptr, size,filename, line);
 	return(ptr);
 };
  

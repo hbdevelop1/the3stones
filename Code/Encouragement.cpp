@@ -25,13 +25,7 @@ Encouragement::Encouragement(char * filename):m_displayEngouragement(false)
 	XmlParser xmlParser;
 	XmlNodeRef rootNode= xmlParser.parse(filename);
 
-	
-	if (!rootNode) 
-	{
-		//todo : endprocess(); roll back allocation and end game
-//		MessageBox(NULL,"Problème de données.\nRépertoire \"data\" ou fichier \"map.xml\" introuvable.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
-		assert(0);
-	}
+	assert(rootNode);
 
 	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
@@ -63,7 +57,7 @@ Encouragement::Encouragement(char * filename):m_displayEngouragement(false)
 
 void Encouragement::Reset()
 {
-	//m_displayEngouragement=false;
+	m_displayEngouragement=false;
 }
 
 void Encouragement::Draw()
@@ -73,11 +67,8 @@ void Encouragement::Draw()
 
 	m_sprite->Draw();
 
-#ifdef _showanimationallthetime_
-#else
 	if(clock()-m_animationStartTime>1500)
 		m_displayEngouragement=false;
-#endif
 }
 
 void Encouragement::Update()

@@ -9,7 +9,7 @@
 
 class Intro : public Object, public Sprite
 {
-	const hb::Rectangle *rplay;
+	const hb::Rectangle *m_rplay;
 
 	enum
 	{

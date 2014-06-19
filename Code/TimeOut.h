@@ -10,18 +10,16 @@
 
 class TimeOut : public Object, public Sprite
 {
-	const hb::Rectangle * rplay;
-	const hb::Rectangle * rquit;
+	const hb::Rectangle * m_rplay;
+	const hb::Rectangle * m_rquit;
 
 
 	enum
 	{
-		e_max_chars=10, //highest score is 6000 points -> char[5] is enough to hold the scores.
+		e_max_chars=5, //highest score is 6000 points -> char[5] is enough to hold the scores.
 	};
-	char	scoretxt[e_max_chars];
-	char	hscoretxt[e_max_chars];
-
-	bool clicked;
+	char	m_scoretxt[e_max_chars];
+	char	m_hscoretxt[e_max_chars];
 
 	
 	enum

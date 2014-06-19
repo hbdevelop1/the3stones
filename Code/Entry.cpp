@@ -17,14 +17,8 @@ void AtExit()
 {
 	ObjectsManager::GetInstance().Clear();
 
-	/*freeing memory this way is not efficient as it doesn't remove Intro, TimeOut and Countdown if they are running on. 
-	use ObjectsManager::GetInstance().Clear() instead
-
-	Object * o =ObjectsManager::GetInstance().GetGlobalObject(CLASSID_game);	
-	ObjectsManager::GetInstance().Pop(o,true);
-	*/
 #ifdef _use_my_mem_tracker_
-	hbhash::DumpUnfreed();
+	hb::DumpUnfreed();
 #endif
 }
 

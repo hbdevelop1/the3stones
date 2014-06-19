@@ -23,7 +23,7 @@ const char *Introtextmsgs[]=
 
 Intro::Intro():
 	Sprite(& ObjectsRectangles[e_rect_Intro], e_tex_Intro)
-	,rplay(& ObjectsRectangles[e_rect_Intro_startbutton])
+	,m_rplay(& ObjectsRectangles[e_rect_Intro_startbutton])
 {
 	SetFlag(e_FLAG_MASTER);
 }
@@ -87,14 +87,14 @@ void Intro::Draw()
     glColor3f (1.0, 1.0, 0.2);
 
     glBegin(GL_POLYGON);
-        glVertex2f (rplay->l, rplay->b);
-        glVertex2f (rplay->r, rplay->b);
-        glVertex2f (rplay->r, rplay->t);
-        glVertex2f (rplay->l, rplay->t);
+        glVertex2f (m_rplay->l, m_rplay->b);
+        glVertex2f (m_rplay->r, m_rplay->b);
+        glVertex2f (m_rplay->r, m_rplay->t);
+        glVertex2f (m_rplay->l, m_rplay->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("Start",rplay->l+10, rplay->b+(rplay->t-rplay->b)/2);
+	hb::DrawText("Start",m_rplay->l+10, m_rplay->b+(m_rplay->t-m_rplay->b)/2);
 
 
 
@@ -102,7 +102,7 @@ void Intro::Draw()
 
 void Intro::OnClick( unsigned int x, unsigned int y)
 {
-	if(rplay->l<=x && x<=rplay->r && rplay->b<=y && y<=rplay->t)
+	if(m_rplay->l<=x && x<=m_rplay->r && m_rplay->b<=y && y<=m_rplay->t)
 	{
 		ObjectsManager::GetInstance().Pop(this,false);
 	}

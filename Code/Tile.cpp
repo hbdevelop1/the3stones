@@ -158,11 +158,6 @@ void Swap(Tile* a, Tile* b)
 	b->m_freePositionToMoveTo=a->m_currentPosition;
 	b->m_loc=b->m_freePositionToMoveTo->point;
 
-
-
-
-
-
 }
 
 void Tile::Behavior_Resting()
@@ -302,10 +297,6 @@ UPDATE_BEHAVIOR_BEGIN
 			m_freePositionToMoveTo->tile=this;
 			m_currentPosition=m_freePositionToMoveTo;
 			m_freePositionToMoveTo=NULL;
-
-#ifdef _gettiming_
-			printf("Tile has finished swapping (0x%08X) at %d\n",this,g_currentframe);
-#endif //_gettiming_
 
 			CHANGE_BEHAVIOR(Tile,Behavior_Resting); //there is no danger that a click happens. because the board does not receive events
 		}

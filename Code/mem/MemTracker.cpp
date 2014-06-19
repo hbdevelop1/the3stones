@@ -9,7 +9,7 @@
 #else
 #include <stdlib.h>
 #endif
-#include "../common.h" //for assert
+#include "../common.h"
 
 #pragma warning (disable:4996)
 
@@ -19,7 +19,7 @@
 
 
 
-namespace hbhash
+namespace hb
 {
 #define MAX_allocations 0xff
 
@@ -33,10 +33,21 @@ struct lALLOC_INFO
 	lALLOC_INFO * next;
 } ;
 
-struct 
+static struct AllocationInfo
 {
 	lALLOC_INFO * next;
-} allocations[MAX_allocations];
+	unsigned int	nbrOfCollisions;
+	static unsigned int	nbrOfCollisionsMax;
+	static unsigned int	positionMaxCollisions;
+
+	AllocationInfo():next(NULL),nbrOfCollisions(0)
+	{
+	}
+
+} g_allocations[MAX_allocations];
+
+unsigned int AllocationInfo::nbrOfCollisionsMax=0;
+unsigned int AllocationInfo::positionMaxCollisions=0;
 
 long getHashValue0(long addr)
 {
@@ -111,13 +122,25 @@ void AddTrack(long addr, long asize, char *filename, int line)
 	if(0<=t1 && t1<MAX_allocations)
 	{
 
-		lALLOC_INFO ** p=&allocations[t1].next;
+		lALLOC_INFO ** p=&g_allocations[t1].next;
 
 		while(*p)
 		{
 			p=&((*p)->next);
 		}
 		*p=info;
+
+		++g_allocations[t1].nbrOfCollisions;
+		if(AllocationInfo::nbrOfCollisionsMax<g_allocations[t1].nbrOfCollisions)
+		{
+			AllocationInfo::nbrOfCollisionsMax=g_allocations[t1].nbrOfCollisions;
+			AllocationInfo::positionMaxCollisions=t1;
+		}
+
+		if(g_allocations[t1].nbrOfCollisions>2)
+		{
+			printf("more than 2 collisions at %d (%d)\n",t1,g_allocations[t1].nbrOfCollisions);
+		}
 		
 	}
 	else
@@ -133,7 +156,7 @@ bool RemoveTrack(long addr)
 	printf("deleting 0x%08X->0x%02X\n",addr,t1);
 	bool bFound = false;
 
-	lALLOC_INFO ** p=&allocations[t1].next;
+	lALLOC_INFO ** p=&g_allocations[t1].next;
 
 	while(*p != 0)
 	{
@@ -152,6 +175,8 @@ bool RemoveTrack(long addr)
 		lALLOC_INFO *f =*p;
 		*p=(*p)->next;
 		free(f);
+
+		--g_allocations[t1].nbrOfCollisions;
 	}
 	else
 	{
@@ -171,7 +196,7 @@ void DumpUnfreed()
 	printf("-------------------- Allocations ----------------------\n");
 	for(int i = 0; i < MAX_allocations; i++) 
 	{
-		lALLOC_INFO *pInfo = allocations[i].next;
+		lALLOC_INFO *pInfo = g_allocations[i].next;
 		while(pInfo)
 		{
 			printf("ADDRESS %x\t Size: %d unfreed - file %s at %d\n", pInfo->address, pInfo->size, pInfo->file, pInfo->line);
@@ -182,256 +207,59 @@ void DumpUnfreed()
 
 	}
 	printf("------------------------------------------------------\n");
+
+	printf("AllocationInfo::nbrOfCollisionsMax == %d at %d \n", AllocationInfo::nbrOfCollisionsMax,AllocationInfo::positionMaxCollisions);
 	printf("Total Unfreed: %d bytes\n\n\n", totalSize);
+
+
 };
 
 }//namespace hash
 
 
-
-/*
-typedef struct 
-{
-	long number;
-	long address;
-	long size;
-	char file[FILENAMELEN+1];
-	long line;
-} lALLOC_INFO;
-
-lALLOC_INFO *allocations[ 100000 ];
-int nPos = 0;
-
-void AddTrack(long addr, long asize, char *filename, int line)
-{
-	lALLOC_INFO * info= (lALLOC_INFO *)malloc(sizeof(lALLOC_INFO));
-	info->address = addr;
-	info->size = asize;
-
-
-	{
-		int sz=strlen(filename);
-		char *p;
-		if(sz<=FILENAMELEN)
-		{
-			p=filename;
-		}
-		else
-		{
-			p=filename+sz-FILENAMELEN;
-		}
-		strcpy(info->file,p);
-
-		info->line=line;
-	}
-
-
-	info->number = nPos;
-	allocations[nPos] = info;
-	nPos ++;
-};
-
-bool RemoveTrack(long addr)
-{
-	bool bFound = false;
-	for(int i = 0; i != nPos; i++)
-	{
-		if(allocations[i]->address == addr)
-		{
-			// Okay, delete this one.
-			free( allocations[i] );
-			bFound = true;
-			// And copy the rest down to it.
-			for ( int j=i; j<nPos-1; ++j )
-				allocations[j] = allocations[j+1];
-			nPos --;
-			break;
-		}
-	}
-	assert( bFound );
-
-	return bFound;
-};
-
-
-void DumpUnfreed()
-{
-long totalSize = 0;
-printf("-------------------- Allocations ----------------------\n");
-for(int i = 0; i < nPos; i++) 
-{
-lALLOC_INFO *pInfo = allocations[i];
-printf("(%ld) ADDRESS %x\t Size: %d unfreed - file %s at %d\n", pInfo->number, pInfo->address, pInfo->size, pInfo->file, pInfo->line);
-totalSize += pInfo->size;
-}
-printf("------------------------------------------------------\n");
-printf("Total Unfreed: %d bytes\n\n\n", totalSize);
-};
-*/
-
-//inline 
 void * operator new(size_t  size, char *filename, int line)
 {
-	void *ptr = //(void *)malloc(size);
-		::operator new(size);
+	void *ptr = ::operator new(size);
 
-	//AddTrack((long)ptr, size,filename, line);
-	hbhash::AddTrack((long)ptr, size,filename, line);
+	hb::AddTrack((long)ptr, size,filename, line);
 	return(ptr);
 };
 
 //inline 
 void * operator new[](size_t size, char *filename, int line)
 {
-	void *ptr = //(void *)malloc(size);
-		::operator new[](size);
+	void *ptr = ::operator new[](size);
 
-	//AddTrack((long)ptr, size,filename, line);
-	hbhash::AddTrack((long)ptr, size,filename, line);
+	hb::AddTrack((long)ptr, size,filename, line);
 	return(ptr);
 };
 
 //inline 
 void operator delete(void *p, char *filename, int line)
 {
-	//if ( hbhash::RemoveTrack((long)p))
-	//if ( RemoveTrack((long)p) )
-		//free(p);
-		delete p;
+	delete p;
 };
 
 //inline 
 void operator delete[](void *p, char *filename, int line)
 {
-	//if ( hbhash::RemoveTrack((long)p))
-	//if ( RemoveTrack((long)p) )
-		//free(p);
-		delete [] p;
+	delete [] p;
 };
 
 void operator delete(void *p)
 {
 	if(p)
-		hbhash::RemoveTrack((long)p);
+		hb::RemoveTrack((long)p);
 
 	free(p);
-	/*
-	if ( hbhash::RemoveTrack((long)p))
-	//if ( RemoveTrack((long)p) )
-		//free(p);
-		delete p;
-		*/
 };
 
 void operator delete[](void *p)
 {
 	if(p)
-		hbhash::RemoveTrack((long)p);
+		hb::RemoveTrack((long)p);
 
 	free(p);
 };
-
-#ifdef testingnewdelete
-void * operator new(size_t  size)
-{
-	void *ptr = (void *)malloc(size);
-
-	AddTrack((long)ptr, size,"", 0);
-	return(ptr);
-};
-
-//inline 
-void * operator new[](size_t size)
-{
-	void *ptr = (void *)malloc(size);
-
-	AddTrack((long)ptr, size,"",0);
-	return(ptr);
-};
-
-//inline 
-void operator delete(void *p)
-{
-	if ( RemoveTrack((long)p) )
-		free(p);
-};
-
-//inline 
-void operator delete[](void *p)
-{
-	if ( RemoveTrack((long)p) )
-		free(p);
-};
-
-template<class T> void deleteo2(T *p)
-{
-	if ( RemoveTrack((long)p) )
-	{
-		delete p;
-	}
-	else
-		assert(0);
-};
-
-template<class T> void deletea2(T *p)
-{
-	if ( RemoveTrack((long)p - sizeof(unsigned int)) )
-	{
-		delete [] p;
-	}
-	else
-		assert(0);
-};
-
-struct O11
-{
-	//unsigned int m_texObj;
-
-public:
-	//O11 (){}
-
-	~O11 (){}
-};
-
-void main1()
-{
-	char *c=new char;
-	delete c;
-
-	char *c2=new char[3];
-	delete c2;  //<---- note : i am not using delete[]
-
-	char *c3=new char[3];
-	delete [] c3;
-
-	O11 *o=new O11;
-	delete o;
-
-	O11 *o1=new O11[10];
-	delete [] o1;
-
-
-	{
-#define new new(__FILE__,__LINE__)
-
-	char *c=new char;
-	deleteo<char>(c);
-
-	char *c2=new char[3];
-	deleteo<char>(c2);  //<---- note : i am not using deletea
-
-	char *c3=new char[3];
-	deleteo<char>(c3);
-
-	O11 *o=new O11;
-	deleteo<O11>(o);
-
-	O11 *o1=new O11[10];
-	deletea<O11>(o1);
-	}
-
-}
-#endif //testingnewdelete
-
 
 #endif //_use_my_mem_tracker_

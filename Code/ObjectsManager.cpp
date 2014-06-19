@@ -39,10 +39,6 @@ void ObjectsManager::reset()
 
 	activeobjects.next=&activeobjectstail;
 	activeobjects.prev=&activeobjectstail;
-#if (DEBUGMODE & TESTING)
-	activeobjectstail.name='t';
-	activeobjects.name='a';
-#endif //DEBUGMODE & TESTING
 
 	DelayedPops.NbrOfPopsToRun=0;
 }
@@ -76,7 +72,6 @@ void ObjectsManager::PushBack(int classid, bool immediate)
 void ObjectsManager::PushBack(Object * obj, bool immediate)
 {
 //sanity check:what if i push an object already pushed ?
-//#if DEBUGMODE
 	assert(obj);
 
 	Object *o;
@@ -86,7 +81,6 @@ void ObjectsManager::PushBack(Object * obj, bool immediate)
 			break;
 	}
 	assert(o!=obj);
-//#endif //DEBUGMODE
 
 	if(!immediate )
 	{
@@ -165,7 +159,6 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 	Object *o;
 
 //sanity check:make sure the object is really in the list. otherwise i'll have an infinite loop
-//#if DEBUGMODE
 	assert(obj);
 
 	if(!immediate )
@@ -181,7 +174,6 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 			break;
 	}
 	assert(o==obj);
-//#endif //_DEBUG_
 
 	if(obj->GetFlag() & Object::e_FLAG_MASTER)
 	{

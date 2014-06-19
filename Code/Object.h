@@ -8,10 +8,6 @@ class ObjectsManager;
 
 class Object  : private boost::noncopyable
 {
-#if DEBUGMODE & TESTING
-	public:
-		char name;
-#endif //DEBUGMODE & TESTING
 public:
 
 	enum FLAGS

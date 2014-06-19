@@ -48,17 +48,13 @@ struct Text
 
 namespace hb
 {
-typedef std::deque<Text,hb::allocator<Text> > deque;
+typedef std::list<Text,hb::allocator<Text> > list;
 }
 
 class IndividualScore
 {
-	hb::deque		m_texts; //watch out:no cc for Text
+	hb::list		m_texts; //watch out:no cc for Text
 	GlobalScore &	m_gs;
-
-#ifdef _comparedifferentdrawing_ 
-	IndividualScore2		m_is2;
-#endif
 
 public:
 	static const char	ms_score_str[5];

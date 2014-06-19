@@ -17,20 +17,6 @@ CountDown::CountDown():r(ObjectsRectangles[e_rect_countdown]),
 
 	SetFlag(e_FLAG_MASTER);
 
-#ifdef DEBUGMODE
-#ifdef TESTING
-//for tests only
-	UnSetFlag(e_FLAG_MASTER);
-	ObjectsManager::GetInstance().RegisterGlobalObject(this, CLASSID_CountDown);
-#else
-	assert(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_CountDown)==0);
-	assert(GetFlag() & e_FLAG_MASTER);
-
-#endif //TESTING
-
-
-#endif //DEBUGMODE
-
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_countdown);
 
 	counter=3001;
@@ -43,37 +29,10 @@ CountDown::CountDown():r(ObjectsRectangles[e_rect_countdown]),
 
 CountDown::~CountDown()
 {
-
-#if DEBUGMODE & TESTING
-
-	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
-
-#endif //DEBUGMODE TESTING
 }
 
 void CountDown::Update()
 {
-	/*
-	--counter;
-
-	if(counter>2000)
-	{
-		color_index=2;
-	}
-	else if(counter>1000)
-	{
-		color_index=1;
-	}
-	else
-	{
-		color_index=0;
-	}
-
-	if(counter<=0)
-	{
-		ObjectsManager::GetInstance().Pop(this,false);
-	}
-	*/
 	DWORD t=timeGetTime();
 	
 	if(t0==0)
@@ -164,44 +123,3 @@ void CountDown::Draw()
     
 }
 
-
-void CountDown::Animate()
-{
-	//currentframe : 0,1,2
-	//currentfigure:3,2,1
-	/*
-	int fx = (currentframe % e_nbrcolumns) * e_tilewidth;
-	int fy =e_tileheight*(currentfigure-1);
-
-
-	l=((GLfloat)fx)/e_imagewidth;
-	b=((GLfloat)fy)/e_imageheight;
-	r=((GLfloat)fx+e_tilewidth)/e_imagewidth;
-	t=((GLfloat)fy+e_tileheight)/e_imageheight;
-	*/
-}
-
-
-/*
-void CountDown::Draw()
-{
-    glColor3f (0.0, 0.0, 1.0);
-
-    glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
-    glEnd();
-
-    glColor3f (figures[color_index].r, figures[color_index].g, figures[color_index].b);
-
-    glBegin(GL_POLYGON);
-        glVertex2f (rf.l, rf.b);
-        glVertex2f (rf.r, rf.b);
-        glVertex2f (rf.r, rf.t);
-        glVertex2f (rf.l, rf.t);
-    glEnd();
-
-}
-*/

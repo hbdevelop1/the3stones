@@ -49,11 +49,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_use_sprite_;Q_showanimationallthetime_;Q_testingthenewspriteobjectclass_;AADEBUGMODE;AATESTING;Q_showanimationallthetime_;_MBCS;%(PreprocessorDefinitions);;_use_smart_ptr_;_use_my_mem_tracker_</PreprocessorDefinitions>
+      <PreprocessorDefinitions>;_use_smart_ptr_;_use_my_mem_tracker_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>true</PreprocessKeepComments>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -94,7 +94,6 @@
     <ClCompile Include="Code\graphic\Sprite.cpp" />
     <ClCompile Include="Code\graphic\TexturesManager.cpp" />
     <ClCompile Include="code\Intro.cpp" />
-    <ClCompile Include="Code\Mem\memtest.cpp" />
     <ClCompile Include="Code\Mem\MemTracker.cpp" />
     <ClCompile Include="code\Object.cpp" />
     <ClCompile Include="code\ObjectsManager.cpp" />

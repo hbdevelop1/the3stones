@@ -12,11 +12,7 @@ struct DelayedFunctionInfo
 
 	enum
 	{
-#ifdef _testingthenewspriteobjectclass_
-		e_NumberOfDelayedFunctionsToRun=7,
-#else
 		e_NumberOfDelayedFunctionsToRun=5,
-#endif //_testingthenewspriteobjectclass_
 	};
 	int 				nbroffi;
 	FunctionInfoBase 	*arrayoffi[e_NumberOfDelayedFunctionsToRun];

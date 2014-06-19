@@ -10,18 +10,10 @@
 
 #include <boost/smart_ptr/scoped_array.hpp>
 
-#define _bezier_ 0
-
-#if _bezier_ > 0
-#include "time.h"
-#endif _bezier_ > 0
 
 
 class Tile;
-#ifndef _use_sprite_
-struct TileColored;
-struct TileTex;
-#endif //_use_sprite_
+
 //namespace hb{
 
 struct Event
@@ -61,35 +53,15 @@ public:
 		e_ColumnSize=8
 	};
 private:
-	//std::vector<std::vector<Square> > 
-	//SquareColored squares[e_RowSize][e_ColumnSize];
 	PositionInBoard positions[e_ColumnSize][e_RowSize+1];
-	//TileColored 
 
 	boost::scoped_array<Tile> tiles;
-
-#if _bezier_ == 1
-	hb::Pointu32	m_bzP[4];
-	hb::Pointu32	m_txtpos;
-	float			m_t; //goes from 0 to 1
-	float		m_stept; //=0.1 => will take 8 postions for the text to travel to its resting position
-	clock_t		m_tm;
-#endif _bezier_ == 1
-
-#if _bezier_ == 2
-	hb::Pointu32	m_bzP[3];
-	hb::Pointu32	m_txtpos;
-	float			m_t; //goes from 0 to 1
-	float		m_stept;
-	clock_t		m_tm;
-#endif _bezier_ == 1
 
 	const hb::Rectangle * m_rect;
 	Event		click;
 	hb::Pointu8	SelectedTilesPosition;
 
 	int nbrofframes2waitafterswap;
-	//static const int nbrOfFrames2WaitAfterSwap;
 
 private:
 	Board(const Board &);

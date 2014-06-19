@@ -122,7 +122,7 @@ void Text::Reset(const char* s, hb::Pointu32 sp)
 	initialPos=sp;
 	controlPoint=hb::Pointu32(sp.x,ObjectsRectangles[e_rect_window].t);
 	landingPoint=hb::Pointu32(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b);
-		//hb::Pointu32(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b);
+
 	t=0;
 	tmNcrg=tm=clock();
 	end=false;
@@ -167,9 +167,9 @@ IndividualScore::IndividualScore(GlobalScore & gs):m_gs(gs)
 
 IndividualScore::~IndividualScore()
 {
-	for(hb::deque::reverse_iterator rit=m_texts.rbegin();rit!=m_texts.rend(); )
+	for(auto it=m_texts.begin(); it!=m_texts.end();)
 	{
-		rit=std::reverse_iterator<hb::deque::iterator>(m_texts.erase((rit+1).base()));
+		it=m_texts.erase(it);
 	}
 }
 
@@ -181,21 +181,24 @@ void IndividualScore::Reset()
 
 void IndividualScore::Update()
 {
-	int i=0;
-	for(hb::deque::reverse_iterator rit=m_texts.rbegin(); rit!=m_texts.rend(); ++i)
+	for(auto it=m_texts.begin(); it!=m_texts.end();)
 	{
-		if(!rit->end)
+		if(!it->end)
 		{
-			rit->Update();
+			it->Update();
+			++it;
 		}
-		++rit;
+		else
+		{
+			it=m_texts.erase(it);
+		}
 	}
 }
 void IndividualScore::Add(hb::Pointu32 sp)
 {
 	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
 
-	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	for(hb::list::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(it->end)
 		{
@@ -210,7 +213,7 @@ void IndividualScore::Draw()
 {
 	glColor3f(.0f,.0f,.0f);
 
-	for(hb::deque::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	for(hb::list::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
 	{
 		if(!it->end && it->t!=0 /*to avoid drawing a static text*/)
 		{
