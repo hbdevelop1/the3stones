@@ -24,6 +24,9 @@ void AtExit()
 
 void game_init()
 {
+	//toremove
+	int size_t_bits = std::numeric_limits<std::size_t>::digits;
+
 	if(atexit (AtExit))
 		exit(1);
 

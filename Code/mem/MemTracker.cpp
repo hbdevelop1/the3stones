@@ -74,29 +74,142 @@ long getHashValue2(long addr)
 	return a;
 }
 
-char getHashValue3(long addr)
+unsigned char getHashValue3(long addr)
 {
-	register char *k=(char*)&addr;
-   register char a;
-//   a = 0xb9;  /* the golden ratio; an arbitrary value */
-a=(char )0xff;//cast to avoid warning C4309: '=' : truncation of constant value
+	unsigned char  *k=(unsigned char *)&addr;
+	unsigned char a=0xb9;  /* an arbitrary value */
 
    a=a^k[3]; 
    a=a^k[2];
    a=a^k[1];
    a=a^k[0];
-     
+    
+   if(a==0xff)
+	   a=0;
+	if(a== 0)
+		a=0xfe;
+
    return a;
 }
 
+unsigned char getHashValue4(long addr)
+{
+	unsigned char a=(addr>>4 & 0x0f)<<4;
+	unsigned char b=addr>>8 & 0x0f;
+	a |= b;
+	
+	if(a== 0xff)
+		a=0;
+	if(a== 0)
+		a=0xfe;
+
+	return a;
+}
+
+unsigned char getHashValue5(long addr)
+{
+	unsigned char a=addr>>4 & 0xff;
+	unsigned char *b=(unsigned char *)&addr;
+
+	unsigned char c=0;
+	c ^= b[0];
+	c ^= b[1];
+	c ^= b[3];
+	c ^= b[4];
+
+	return a;
+}
+
+
+#if 0
+
+long getHahsValue4(long adr)
+{
+typedef  unsigned long int  u4;   /* unsigned 4-byte type */
+typedef  unsigned     char  u1;   /* unsigned 1-byte type */
+
+/* The mixing step */
+#define mix(a,b,c) \
+{ \
+  a=a-b;  a=a-c;  a=a^(c>>13); \
+  b=b-c;  b=b-a;  b=b^(a<<8);  \
+  c=c-a;  c=c-b;  c=c^(b>>13); \
+  a=a-b;  a=a-c;  a=a^(c>>12); \
+  b=b-c;  b=b-a;  b=b^(a<<16); \
+  c=c-a;  c=c-b;  c=c^(b>>5);  \
+  a=a-b;  a=a-c;  a=a^(c>>3);  \
+  b=b-c;  b=b-a;  b=b^(a<<10); \
+  c=c-a;  c=c-b;  c=c^(b>>15); \
+}
+
+/* The whole new hash function */
+//u4 hash( k, length, initval)
+register u1 *k=(u1 *)&adr;        /* the key */
+u4           length=4;   /* the length of the key in bytes */
+u4           initval=0;  /* the previous hash, or an arbitrary value */
+{
+   register u4 a,b,c;  /* the internal state */
+   u4          len;    /* how many key bytes still need mixing */
+
+   /* Set up the internal state */
+   len = length;
+   a = b = 0x9e3779b9;  /* the golden ratio; an arbitrary value */
+   c = initval;         /* variable initialization of internal state */
+
+   /*---------------------------------------- handle most of the key */
+   while (len >= 12)
+   {
+      a=a+(k[0]+((u4)k[1]<<8)+((u4)k[2]<<16) +((u4)k[3]<<24));
+      b=b+(k[4]+((u4)k[5]<<8)+((u4)k[6]<<16) +((u4)k[7]<<24));
+      c=c+(k[8]+((u4)k[9]<<8)+((u4)k[10]<<16)+((u4)k[11]<<24));
+      mix(a,b,c);
+      k = k+12; len = len-12;
+   }
+
+   /*------------------------------------- handle the last 11 bytes */
+   c = c+length;
+   switch(len)              /* all the case statements fall through */
+   {
+   case 11: c=c+((u4)k[10]<<24);
+   case 10: c=c+((u4)k[9]<<16);
+   case 9 : c=c+((u4)k[8]<<8);
+      /* the first byte of c is reserved for the length */
+   case 8 : b=b+((u4)k[7]<<24);
+   case 7 : b=b+((u4)k[6]<<16);
+   case 6 : b=b+((u4)k[5]<<8);
+   case 5 : b=b+k[4];
+   case 4 : a=a+((u4)k[3]<<24);
+   case 3 : a=a+((u4)k[2]<<16);
+   case 2 : a=a+((u4)k[1]<<8);
+   case 1 : a=a+k[0];
+     /* case 0: nothing left to add */
+   }
+   mix(a,b,c);
+   /*-------------------------------------------- report the result */
+   return c;
+}
+
+}
+
+#endif 0
+
+unsigned char (*currenthash)(long addr) = NULL;
 
 void AddTrack(long addr, long asize, char *filename, int line)
 {
-	long t1=getHashValue1(addr);
-	long t2=getHashValue2(addr);
-	char t3=getHashValue3(addr);
+	if(currenthash == NULL)
+		currenthash = getHashValue3;
+	/*
+	long s0=getHashValue0(addr);
+	long s1=getHashValue1(addr);
+	long s2=getHashValue2(addr);
+	char s3=getHashValue3(addr);
+	char s4=getHashValue4(addr);
+	*/
+	unsigned char t1=currenthash(addr);
 
-	printf("0x%08X->0x%02X:0x%02X:0x%02X\n",addr,t1,t2,t3);
+
+	//printf("0x%08X->0x%02X:0x%02X:0x%02X\n",addr,s0,s1,s2,s3);
 
 
 	lALLOC_INFO * info= (lALLOC_INFO *)malloc(sizeof(lALLOC_INFO));
@@ -137,9 +250,9 @@ void AddTrack(long addr, long asize, char *filename, int line)
 			AllocationInfo::positionMaxCollisions=t1;
 		}
 
-		if(g_allocations[t1].nbrOfCollisions>2)
+		if(g_allocations[t1].nbrOfCollisions>3)
 		{
-			printf("more than 2 collisions at %d (%d)\n",t1,g_allocations[t1].nbrOfCollisions);
+			printf("more than 3 collisions at %d (%d)\n",t1,g_allocations[t1].nbrOfCollisions);
 		}
 		
 	}
@@ -152,7 +265,7 @@ void AddTrack(long addr, long asize, char *filename, int line)
 
 bool RemoveTrack(long addr)
 {
-	long t1=getHashValue1(addr);
+	long t1=currenthash(addr);
 	printf("deleting 0x%08X->0x%02X\n",addr,t1);
 	bool bFound = false;
 
