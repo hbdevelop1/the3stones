@@ -26,6 +26,15 @@ extern unsigned int g_currentframe;
 
 enum
 {
+	e_blu,
+	e_gre,
+	e_pur,
+	e_red,
+	e_yel,
+};
+
+enum
+{
 	e_ncrg_good,
 	e_ncrg_wow,
 

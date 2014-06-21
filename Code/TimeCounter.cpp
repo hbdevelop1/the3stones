@@ -37,7 +37,7 @@ void TimeCounter::Update()
 	}
 	if(m>=1)
 	{
-		m_timeout=true;
+		//m_timeout=true;
 	}
 }
 
