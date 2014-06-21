@@ -93,16 +93,7 @@ template<class T> stRectangle<T> stRectangle<T>::operator+(const stRectangle<T> 
 }
 
 typedef stRectangle<uint32> Rectangle;
-typedef stRectangle<sint32> signedRectangle;
-
-
-struct stRectangle2
-{
-	hb::Points32 lb;
-	hb::Points32 rb;
-	hb::Points32 rt;
-	hb::Points32 lt;
-};
+typedef stRectangle<sint32> sRectangle;
 
 }
 

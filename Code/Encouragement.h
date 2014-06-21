@@ -3,7 +3,7 @@
 
 #include "object.h"
 #include "common.h"
-#include <list>
+#include <l	ist>
 #include "rectangle.h"
 #include "mem/allocator.h"
 

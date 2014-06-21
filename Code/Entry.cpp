@@ -17,16 +17,11 @@ void AtExit()
 {
 	ObjectsManager::GetInstance().Clear();
 
-#ifdef _use_my_mem_tracker_
 	hb::DumpUnfreed();
-#endif
 }
 
 void game_init()
 {
-	//toremove
-	int size_t_bits = std::numeric_limits<std::size_t>::digits;
-
 	if(atexit (AtExit))
 		exit(1);
 

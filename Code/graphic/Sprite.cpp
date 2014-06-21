@@ -66,7 +66,7 @@ void AnimatedSprite::Draw()
 
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
-	const hb::signedRectangle *rect = reinterpret_cast<const hb::signedRectangle *>(m_rect);
+	const hb::sRectangle *rect = reinterpret_cast<const hb::sRectangle *>(m_rect);
 
 	glBegin(GL_POLYGON);
         glTexCoord2f(0, 0); glVertex2f (rect->l+m_offset[0].x, rect->b+m_offset[0].y);

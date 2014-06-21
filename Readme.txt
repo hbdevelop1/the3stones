@@ -9,14 +9,15 @@ Then Game::Behavior_countdown will present the count down before starting to pla
 Game::Behavior_playing is where the game really takes place.
 
 2-
-Game contains a board, a score and a time counter objects.
+Game contains a board, a score and a time counter and an encouragement object.
 
 3-
 The board class contains 64 tiles. 
-Each tile can be one of 5 types.
+Each tile can be one of 5 types (colors)
 
 4-
 The classes Game, Board, Score, TimeOut, Intro, CountDown are derived from the class Object
+The classes Game, Board, Score, TimeOut, Intro, are derived from the classes Object and Sprite
 
 5-
 ObjectsManager is a class that calls Update and Draw functions of Object instances it has in its double linked list.

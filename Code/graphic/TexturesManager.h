@@ -8,9 +8,6 @@ class TexturesManager
 {
 	boost::scoped_array<CTargaImage>	m_tex;
 	boost::scoped_array<unsigned int>	m_texObj;
-
-	//std::unordered_map<std::string,unsigned int> m_textures;
-
 	
 private:
 	TexturesManager();

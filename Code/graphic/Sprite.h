@@ -12,11 +12,9 @@
 class Sprite
 {
 protected:
-	//const hb::stRectangle2	*m_rect;
+
 	const hb::Rectangle	*m_rect;
-	//hb::Points32	(& m_r2)[4];
-	//const 
-		unsigned int	m_texObj; //can not be const as it is modifiable in derived class
+	unsigned int		m_texObj;
 
 public:
 	Sprite(const hb::Rectangle * rect, int itex);

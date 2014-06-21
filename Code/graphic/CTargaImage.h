@@ -67,7 +67,6 @@ private:
 	unsigned char  m_colorDepth;
 	unsigned char  m_imageDataType;
 	unsigned char  m_imageDataFormat;
-//	unsigned char *m_pImageData;
 	boost::scoped_ptr<unsigned char> m_pImageData;
 	unsigned short m_width;
 	unsigned short m_height;	

@@ -19,7 +19,7 @@ class Tile;
 struct Event
 {
 	hb::Pointu8 p;
-	bool notprocessed;
+	bool		notprocessed;
 };
 
 namespace Square
@@ -35,9 +35,8 @@ struct PositionInBoard
 {
 	hb::Pointu8		point;
 	Tile			*tile;
-	hb::Rectangle rect;
+	hb::Rectangle	rect;
 
-public:
 	PositionInBoard();
 	~PositionInBoard();
 	bool operator==(PositionInBoard );
@@ -53,15 +52,15 @@ public:
 		e_ColumnSize=8
 	};
 private:
-	PositionInBoard positions[e_ColumnSize][e_RowSize+1];
+	PositionInBoard			m_positions[e_ColumnSize][e_RowSize+1];
 
-	boost::scoped_array<Tile> tiles;
+	boost::scoped_array<Tile> m_tiles;
 
-	const hb::Rectangle * m_rect;
-	Event		click;
-	hb::Pointu8	SelectedTilesPosition;
+	const hb::Rectangle *	m_rect;
+	Event					m_click;
+	hb::Pointu8				m_selectedTilesPosition;
 
-	int nbrofframes2waitafterswap;
+	int						m_nbrOfFrames2WaitAfterSwap;
 
 private:
 	Board(const Board &);

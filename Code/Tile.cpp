@@ -15,10 +15,6 @@
 #include "Mem/MemNew.h"
 
 
-
-//const unsigned int Tile::SpeedOfSwapping=Settings::SpeedOfSwapping;   //rank 10
-//const unsigned int Tile::NbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
-
 Tile::type Tile::m_currentType=e_type1;
 Board * Tile::m_board=NULL;
 
@@ -370,8 +366,8 @@ void Tile::Behavior_WaitingToGoIntoBoard()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		//all disappeared tiles in a column have the same rectangle, waiting to get into the board
-		m_rect = Tile::m_board->positions[m_loc.x][Board::e_RowSize].rect;
-		m_loc=Tile::m_board->positions[m_loc.x][Board::e_RowSize].point;
+		m_rect = Tile::m_board->m_positions[m_loc.x][Board::e_RowSize].rect;
+		m_loc=Tile::m_board->m_positions[m_loc.x][Board::e_RowSize].point;
 		assert(m_loc==hb::Pointu8(m_loc.x,Board::e_RowSize));
 		SetType(++Tile::m_currentType);
 	}
@@ -408,50 +404,50 @@ bool Tile::CheckMatches()
 
 //	Tile::type t=b.positions[x][y].tile->t;
 
-	if(y-1>=0 && b->positions[x][y-1].tile->m_type==m_type && b->positions[x][y-1].tile->m_toDestroy==false)
+	if(y-1>=0 && b->m_positions[x][y-1].tile->m_type==m_type && b->m_positions[x][y-1].tile->m_toDestroy==false)
 	{
-		if(y-2>=0 && b->positions[x][y-2].tile->m_type==m_type && b->positions[x][y-2].tile->m_toDestroy==false)
+		if(y-2>=0 && b->m_positions[x][y-2].tile->m_type==m_type && b->m_positions[x][y-2].tile->m_toDestroy==false)
 		{
-			Destroy(b->positions[x][y-2].tile, b->positions[x][y-1].tile, b->positions[x][y].tile);
+			Destroy(b->m_positions[x][y-2].tile, b->m_positions[x][y-1].tile, b->m_positions[x][y].tile);
 			return true;
 		}
-		if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->m_type==m_type && b->positions[x][y+1].tile->m_toDestroy==false)
+		if(y+1<=Board::e_RowSize-1 && b->m_positions[x][y+1].tile->m_type==m_type && b->m_positions[x][y+1].tile->m_toDestroy==false)
 		{//2067
-			Destroy(b->positions[x][y-1].tile, b->positions[x][y].tile, b->positions[x][y+1].tile);
+			Destroy(b->m_positions[x][y-1].tile, b->m_positions[x][y].tile, b->m_positions[x][y+1].tile);
 			return true;
 		}
 	}
 
-	if(y+1<=Board::e_RowSize-1 && b->positions[x][y+1].tile->m_type==m_type && b->positions[x][y+1].tile->m_toDestroy==false) //todo:possibility to optimize out this test, by reusing the result in the previous test
+	if(y+1<=Board::e_RowSize-1 && b->m_positions[x][y+1].tile->m_type==m_type && b->m_positions[x][y+1].tile->m_toDestroy==false) //todo:possibility to optimize out this test, by reusing the result in the previous test
 	{
 
-		if(y+2<=Board::e_RowSize-1 && b->positions[x][y+2].tile->m_type==m_type && b->positions[x][y+2].tile->m_toDestroy==false)
+		if(y+2<=Board::e_RowSize-1 && b->m_positions[x][y+2].tile->m_type==m_type && b->m_positions[x][y+2].tile->m_toDestroy==false)
 		{
-			Destroy(b->positions[x][y].tile, b->positions[x][y+1].tile, b->positions[x][y+2].tile);
+			Destroy(b->m_positions[x][y].tile, b->m_positions[x][y+1].tile, b->m_positions[x][y+2].tile);
 			return true;
 		}
 	}
 
-	if(x-1>=0 && b->positions[x-1][y].tile->m_type==m_type && b->positions[x-1][y].tile->m_toDestroy==false)
+	if(x-1>=0 && b->m_positions[x-1][y].tile->m_type==m_type && b->m_positions[x-1][y].tile->m_toDestroy==false)
 	{
-		if(x-2>=0 && b->positions[x-2][y].tile->m_type==m_type && b->positions[x-2][y].tile->m_toDestroy==false)
+		if(x-2>=0 && b->m_positions[x-2][y].tile->m_type==m_type && b->m_positions[x-2][y].tile->m_toDestroy==false)
 		{
-			Destroy(b->positions[x-2][y].tile, b->positions[x-1][y].tile, b->positions[x][y].tile);
+			Destroy(b->m_positions[x-2][y].tile, b->m_positions[x-1][y].tile, b->m_positions[x][y].tile);
 			return true;
 		}
-		if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->m_type==m_type && b->positions[x+1][y].tile->m_toDestroy==false)
+		if(x+1<=Board::e_ColumnSize-1 && b->m_positions[x+1][y].tile->m_type==m_type && b->m_positions[x+1][y].tile->m_toDestroy==false)
 		{//2066
-			Destroy(b->positions[x-1][y].tile, b->positions[x][y].tile, b->positions[x+1][y].tile);
+			Destroy(b->m_positions[x-1][y].tile, b->m_positions[x][y].tile, b->m_positions[x+1][y].tile);
 			return true;
 		}
 	}
 
-	if(x+1<=Board::e_ColumnSize-1 && b->positions[x+1][y].tile->m_type==m_type && b->positions[x+1][y].tile->m_toDestroy==false)
+	if(x+1<=Board::e_ColumnSize-1 && b->m_positions[x+1][y].tile->m_type==m_type && b->m_positions[x+1][y].tile->m_toDestroy==false)
 	{
 
-		if(x+2<=Board::e_RowSize-1 && b->positions[x+2][y].tile->m_type==m_type && b->positions[x+2][y].tile->m_toDestroy==false)
+		if(x+2<=Board::e_RowSize-1 && b->m_positions[x+2][y].tile->m_type==m_type && b->m_positions[x+2][y].tile->m_toDestroy==false)
 		{
-			Destroy(b->positions[x][y].tile, b->positions[x+1][y].tile, b->positions[x+2][y].tile);
+			Destroy(b->m_positions[x][y].tile, b->m_positions[x+1][y].tile, b->m_positions[x+2][y].tile);
 			return true;
 		}
 	}

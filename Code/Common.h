@@ -14,13 +14,6 @@ typedef unsigned char	uint8;
 typedef signed char		sint8;
 
 
-struct Color
-{
-	float r;
-	float g;
-	float b;
-};
-
 namespace hb
 {
 void DrawText(const char *txt, signed int x=-1, signed int y=-1);

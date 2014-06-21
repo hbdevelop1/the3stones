@@ -8,50 +8,16 @@
 TexturesManager::TexturesManager()
 {
 	TexInit();
-	/*
-	hb::scoped_array<unsigned int>	texObj;
-	texObj.reset(new unsigned int[e_tex_nbrofTextures]);
-	*/
 }
 
 TexturesManager::~TexturesManager()
 {
 	TexUninit();
 }
-	/*
-int GetTexId(char * filefname)
-{
-	it=textures.find(filefname);
-	if (it==textures.end())
-	{
-		CTargaImage j;
-		j.Load(filename);
-
-		int v;
-		glGenTextures(1, &v);
-
-		// bind the texture object
-		glBindTexture(GL_TEXTURE_2D, v);
-
-		// minimum required to set the min and mag texture filters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		// now that the texture object is bound, specify a texture for it
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, j.GetWidth(), j.GetHeight(),
-						0, GL_RGB, GL_UNSIGNED_BYTE, j.GetImage());
-
-
-		textures.insert(pair<>(filename,v));
-	}
-}
-	*/
-
 
 bool TexturesManager::TexInit()
 {
 	
-	//m_tex = new CTargaImage[e_tex_nbrofTextures];
 	m_tex.reset(new CTargaImage[e_tex_nbrofTextures]);
 
 	unsigned int i=0;
@@ -70,7 +36,6 @@ bool TexturesManager::TexInit()
 	if (!m_tex[e_tex_encrg_wow		].Load("data/Encrg-Wow.tga")) return false;	
 	
 
-	//m_texObj = new unsigned int[e_tex_nbrofTextures];
 	m_texObj.reset(new unsigned int[e_tex_nbrofTextures]);
 
 	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i)
@@ -106,15 +71,6 @@ void TexturesManager::TexUninit()
 {
 	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i)
 		glDeleteTextures(1, &m_texObj[i]);
-
-//	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i) m_tex[i].Release();
-
-	////delete [] m_tex;
-	//deletea<CTargaImage>(m_tex);
-
-	////delete [] m_texObj;
-	//deleteo<unsigned int>(m_texObj);
-
 }
 
 unsigned int TexturesManager::GetTextureObj(unsigned int i)

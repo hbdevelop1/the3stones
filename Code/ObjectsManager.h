@@ -35,7 +35,7 @@ struct DelayedFunctionInfo
 		{
 			(mo->*mf)(marg1,marg2);
 		}
-	}; //can register any function with two arguments
+	};
 
 	template<class O, class FunctionType, class Arg1, class Arg2> 
 	void RegisterFunction(O *o, FunctionType f, Arg1 arg1, Arg2 arg2)

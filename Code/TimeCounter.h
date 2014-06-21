@@ -13,7 +13,7 @@ class TimeCounter : public Object, public Sprite
 {
 	bool	m_timeout;
 	time_t	m_startTime;
-	char	time_str[20];
+	char	m_time_str[20];
 
 public:
 	enum

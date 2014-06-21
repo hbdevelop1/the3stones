@@ -29,7 +29,7 @@ void TimeCounter::Update()
 	long m=t/60;
 	long s=t%60;
 
-	sprintf(time_str,"%01d:%02d",m,s);
+	sprintf(m_time_str,"%01d:%02d",m,s);
 
 	if(s>=13)
 	{
@@ -49,7 +49,7 @@ void TimeCounter::Draw()
 
 	glRasterPos2f(m_rect->l +30, m_rect->t-50);
 
-	char* p = (char*) time_str;
+	char* p = (char*) m_time_str;
 	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
 }
 
@@ -64,6 +64,6 @@ void TimeCounter::Stop()
 }
 void TimeCounter::Reset()
 {
-	sprintf(time_str,"0:00");
+	sprintf(m_time_str,"0:00");
 	m_timeout=true;
 }

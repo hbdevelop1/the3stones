@@ -11,20 +11,15 @@
 
 ImplementCreator(CountDown)
 
-CountDown::CountDown():r(ObjectsRectangles[e_rect_countdown]),
-						rf(r.l+25, r.b+25, r.l+25+25, r.b+25+25)
+CountDown::CountDown():m_rect(ObjectsRectangles[e_rect_countdown])
 {
-
 	SetFlag(e_FLAG_MASTER);
 
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_countdown);
 
-	counter=3001;
-	color_index=2;
-
-	t0=0;
-	currentframe=-1;
-	currentfigure=3;
+	m_t0=0;
+	m_currentframe=-1;
+	m_currentfigure=3;
 }
 
 CountDown::~CountDown()
@@ -35,28 +30,28 @@ void CountDown::Update()
 {
 	DWORD t=timeGetTime();
 	
-	if(t0==0)
+	if(m_t0==0)
 	{
-		t0=timeGetTime();
+		m_t0=timeGetTime();
 	}
 	else
 	{
-		t=t-t0;
+		t=t-m_t0;
 		if(t>e_timeperframe)
 		{
-			t0=timeGetTime();
+			m_t0=timeGetTime();
 
-			currentframe++;
-			if(currentframe>=e_nbrframes)
+			m_currentframe++;
+			if(m_currentframe>=e_nbrframes)
 			{
-				if(currentfigure>1)
+				if(m_currentfigure>1)
 				{
-					currentfigure--;
-					currentframe=0;
+					m_currentfigure--;
+					m_currentframe=0;
 				}
 				else
 				{
-					currentframe--; //to avoid drawing e_nbrframes frame
+					m_currentframe--; //to avoid drawing e_nbrframes frame
 					ObjectsManager::GetInstance().Pop(this,false);
 				}
 			}
@@ -85,23 +80,16 @@ void CountDown::Draw()
 	glDisable(GL_BLEND); 
 
 
-
-	if(currentframe<0)
+	if(m_currentframe<0)
 		return;
 
-
-
-
-	int fx = (currentframe % e_nbrframes) * e_tilewidth;
-	int fy =e_tileheight*(currentfigure-1);
+	int fx = (m_currentframe % e_nbrframes) * e_tilewidth;
+	int fy =e_tileheight*(m_currentfigure-1);
 
 	GLfloat rtxl=((GLfloat)fx)/e_imagewidth;
 	GLfloat rtxb=((GLfloat)fy)/e_imageheight;
 	GLfloat rtxr=((GLfloat)fx+e_tilewidth)/e_imagewidth;
 	GLfloat rtxt=((GLfloat)fy+e_tileheight)/e_imageheight;
-
-
-
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_ALPHA_TEST);
@@ -111,10 +99,10 @@ void CountDown::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(rtxl, rtxb); glVertex2f (r.l, r.b);
-        glTexCoord2f(rtxr, rtxb); glVertex2f (r.r, r.b);
-        glTexCoord2f(rtxr, rtxt); glVertex2f (r.r, r.t);
-        glTexCoord2f(rtxl, rtxt); glVertex2f (r.l, r.t);
+        glTexCoord2f(rtxl, rtxb); glVertex2f (m_rect.l, m_rect.b);
+        glTexCoord2f(rtxr, rtxb); glVertex2f (m_rect.r, m_rect.b);
+        glTexCoord2f(rtxr, rtxt); glVertex2f (m_rect.r, m_rect.t);
+        glTexCoord2f(rtxl, rtxt); glVertex2f (m_rect.l, m_rect.t);
     glEnd();
 	
 	glDisable(GL_ALPHA_TEST);

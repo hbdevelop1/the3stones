@@ -87,7 +87,6 @@ bool CTargaImage::Load(const char *filename)
 	m_imageSize = m_width * m_height * colorMode;
 
 	// allocate memory for TGA image data
-	//m_pImageData = new unsigned char[m_imageSize];
 	m_pImageData.reset(new unsigned char[m_imageSize] );
 
 	// skip past the id if there is one
@@ -211,7 +210,6 @@ bool CTargaImage::FlipVertical()
 
 	if (m_colorDepth == 32)
 	{
-//		rgba_t* tmpBits = new rgba_t[m_width];
 		boost::scoped_ptr<rgba_t> scoped_tmpBits(new rgba_t[m_width]);
 		rgba_t* tmpBits = scoped_tmpBits.get();
 		if (!tmpBits)
@@ -232,14 +230,11 @@ bool CTargaImage::FlipVertical()
 			bottom = (rgba_t* )((unsigned char*)bottom - lineWidth);
 		}
 
-		////delete [] tmpBits;
-		//deleteo<rgba_t>(tmpBits);
 
 		tmpBits = 0;
 	}
 	else if (m_colorDepth == 24)
 	{
-		//rgb_t* tmpBits = new rgb_t[m_width];
 		boost::scoped_ptr<rgb_t> scoped_tmpBits(new rgb_t[m_width]);
 		rgb_t* tmpBits = scoped_tmpBits.get();
 		if (!tmpBits)
@@ -260,9 +255,6 @@ bool CTargaImage::FlipVertical()
 			bottom = (rgb_t*)((unsigned char*)bottom - lineWidth);
 		}
 
-		////delete [] tmpBits;
-		//deleteo<rgb_t>(tmpBits);
-
 		tmpBits = 0;
 	}
 
@@ -271,18 +263,12 @@ bool CTargaImage::FlipVertical()
 
 void CTargaImage::Release()
 {
-////	delete [] m_pImageData;
-//	deleteo<unsigned char>(m_pImageData);
-//	m_pImageData = NULL;
-
-//CTargaImage::Release is called in destructor only. so let scoped_ptr desctructor deallocate memory allocated to the image data
 }
 
 bool CTargaImage::ConvertRGBToRGBA(unsigned char alphaValue)
 {
 	if ((m_colorDepth == 24) && (m_imageDataFormat == IMAGE_RGB))
 	{
-//		rgba_t *newImage = new rgba_t[m_width * m_height];
 		boost::scoped_ptr<unsigned char> 
 			auto_newImage(new unsigned char[sizeof(rgba_t)* m_width * m_height]);
 		rgba_t *newImage = reinterpret_cast<rgba_t *>(auto_newImage.get());
@@ -308,9 +294,6 @@ bool CTargaImage::ConvertRGBToRGBA(unsigned char alphaValue)
 		}
 
 
-		////delete [] m_pImageData;
-		//deleteo<unsigned char>(m_pImageData);
-		//m_pImageData = (unsigned char*)newImage;
 		m_pImageData.swap(auto_newImage);
 
 		m_colorDepth = 32;
@@ -327,7 +310,6 @@ bool CTargaImage::ConvertRGBAToRGB()
 {
 	if ((m_colorDepth == 32) && (m_imageDataFormat == IMAGE_RGBA))
 	{
-		//rgb_t *newImage = new rgb_t[m_width * m_height];
 		boost::scoped_ptr<unsigned char> 
 			auto_newImage(new unsigned char[sizeof(rgb_t) * m_width * m_height]);
 		rgb_t *newImage = reinterpret_cast<rgb_t *>(auto_newImage.get());
@@ -352,9 +334,6 @@ bool CTargaImage::ConvertRGBAToRGB()
 			}
 		}
 
-		////delete [] m_pImageData;
-		//deleteo<unsigned char>(m_pImageData);
-		//m_pImageData = (unsigned char*)newImage;
 		m_pImageData.swap(auto_newImage);
 
 		m_colorDepth = 24;
@@ -372,7 +351,6 @@ bool CTargaImage::SetOpaqueColor(unsigned char r,unsigned char g,unsigned char b
 {
 	if ((m_colorDepth == 24) && (m_imageDataFormat == IMAGE_RGB))
 	{
-		//rgba_t *newImage = new rgba_t[m_width * m_height];
 		boost::scoped_ptr<unsigned char> 
 			auto_newImage(new unsigned char[sizeof(rgba_t)* m_width * m_height]);
 		rgba_t *newImage = reinterpret_cast<rgba_t *>(auto_newImage.get());
@@ -406,9 +384,6 @@ bool CTargaImage::SetOpaqueColor(unsigned char r,unsigned char g,unsigned char b
 			}
 		}
 
-		////delete [] m_pImageData;
-		//deleteo<unsigned char>(m_pImageData);
-		//m_pImageData = (unsigned char*)newImage;
 		m_pImageData.swap(auto_newImage);
 
 		m_colorDepth = 32;
