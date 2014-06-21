@@ -50,7 +50,6 @@ void display(void)
 /*  clear all pixels  */
     glClear (GL_COLOR_BUFFER_BIT);
 
-	++g_currentframe;
 	ObjectsManager::GetInstance().Update();
 	ObjectsManager::GetInstance().Draw();
 	ObjectsManager::GetInstance().RunDelayedFunctions();

@@ -22,17 +22,6 @@ void DrawText(const char *txt, signed int x=-1, signed int y=-1);
 
 #include "Mem/MemTracker.h"
 
-extern unsigned int g_currentframe;
-
-enum
-{
-	e_blu,
-	e_gre,
-	e_pur,
-	e_red,
-	e_yel,
-};
-
 enum
 {
 	e_ncrg_good,

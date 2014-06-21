@@ -33,17 +33,6 @@ Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
 	m_click.notprocessed=false;
 
 	m_tiles.reset(new Tile [e_RowSize*e_ColumnSize]);
-#ifdef improvetilespositions2
-	for(uint8 i=0; i<e_ColumnSize; ++i)
-	{
-		for(uint8 j=0; j<e_RowSize+1; ++j)
-		{
-			m_positions[i][j].point=hb::Pointu8(i,j);
-			m_positions[i][j].rect=hb::Rectangle(m_rect->l+i*Square::e_Width,	m_rect->b+j*Square::e_Height,
-											m_rect->l+(i+1)*Square::e_Width,	m_rect->b+(j+1)*Square::e_Height);
-		}
-	}
-#else
 	for(uint8 i=0; i<e_ColumnSize; ++i)
 	{
 		for(uint8 j=0; j<e_RowSize+1; ++j)
@@ -53,7 +42,6 @@ Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
 											m_rect->l+(i+1)*Square::e_Width,	m_rect->b+(j+1)*Square::e_Height);
 		}
 	}
-#endif
 
 	Reset();
 }
@@ -85,71 +73,25 @@ void Board::Reset()
 		m_positions[i][j].tile=NULL;
 	}
 	
+	Tile::type g[][e_RowSize]=
+	{
+		{ Tile::e_type3,Tile::e_type2,Tile::e_type4,Tile::e_type4,Tile::e_type1,Tile::e_type4,Tile::e_type3,Tile::e_type2},
+		{ Tile::e_type5,Tile::e_type1,Tile::e_type2,Tile::e_type3,Tile::e_type1,Tile::e_type2,Tile::e_type3,Tile::e_type5},
+		{ Tile::e_type3,Tile::e_type4,Tile::e_type3,Tile::e_type2,Tile::e_type5,Tile::e_type1,Tile::e_type2,Tile::e_type3},
+		{ Tile::e_type1,Tile::e_type3,Tile::e_type1,Tile::e_type5,Tile::e_type3,Tile::e_type3,Tile::e_type5,Tile::e_type4},
+		{ Tile::e_type4,Tile::e_type5,Tile::e_type2,Tile::e_type2,Tile::e_type5,Tile::e_type2,Tile::e_type5,Tile::e_type4},
+		{ Tile::e_type2,Tile::e_type3,Tile::e_type4,Tile::e_type1,Tile::e_type5,Tile::e_type1,Tile::e_type4,Tile::e_type2},
+		{ Tile::e_type5,Tile::e_type1,Tile::e_type1,Tile::e_type4,Tile::e_type1,Tile::e_type2,Tile::e_type1,Tile::e_type1},
+		{ Tile::e_type4,Tile::e_type5,Tile::e_type1,Tile::e_type4,Tile::e_type3,Tile::e_type1,Tile::e_type4,Tile::e_type3}
+	};
 
-#ifdef improvetilespositions2
-	{//set map
-		int g0[][e_RowSize]={
-			{ e_red, e_red, e_yel, e_pur, e_blu, e_red, e_gre, e_yel},
-			{ e_red, e_blu, e_red, e_pur, e_yel, e_pur, e_blu, e_yel},
-			{ e_gre, e_red, e_pur, e_blu, e_pur, e_gre, e_yel, e_pur},
-			{ e_pur, e_red, e_gre, e_yel, e_blu, e_red, e_gre, e_gre},
-			{ e_yel, e_pur, e_yel, e_pur, e_yel, e_blu, e_blu, e_pur},
-			{ e_red, e_gre, e_blu, e_pur, e_blu, e_yel, e_gre, e_blu},
-			{ e_pur, e_pur, e_red, e_yel, e_yel, e_pur, e_blu, e_red},
-			{ e_gre, e_yel, e_pur, e_blu, e_red, e_gre, e_blu, e_pur}
-		};
-
-		int g[][e_RowSize]={
-			{ e_gre, e_yel, e_pur, e_red, e_red, e_gre, e_blu, e_pur},
-			{ e_pur, e_pur, e_gre, e_yel, e_yel, e_red, e_blu, e_red},
-			{ e_red, e_gre, e_blu, e_pur, e_gre, e_blu, e_gre, e_blu},
-			{ e_blu, e_blu, e_yel, e_pur, e_yel, e_yel, e_blu, e_pur},
-			{ e_red, e_pur, e_gre, e_yel, e_gre, e_blu, e_red, e_red},
-			{ e_red, e_gre, e_pur, e_blu, e_gre, e_red, e_blu, e_blu},
-			{ e_gre, e_blu, e_red, e_pur, e_yel, e_pur, e_blu, e_yel},
-			{ e_pur, e_yel, e_pur, e_blu, e_red, e_gre, e_yel, e_red},
-		};
-		int g1[][e_RowSize]={
-			{ e_pur, e_gre, e_red, e_red, e_blu, e_red, e_pur, e_gre},
-			{ e_yel,e_blu,e_gre,e_pur,e_blu,e_gre,e_pur,e_yel},
-			{ e_pur,e_red,e_pur,e_gre,e_yel,e_blu,e_gre,e_pur},
-			{ e_blu,e_pur,e_blu,e_yel,e_pur,e_pur,e_yel,e_red},
-			{ e_red,e_yel,e_gre,e_gre,e_yel,e_gre,e_yel,e_red},
-			{ e_gre,e_pur,e_red,e_blu,e_yel,e_blu,e_red,e_gre},
-			{ e_yel,e_blu,e_blu,e_red,e_blu,e_gre,e_blu,e_blu},
-			{ e_red,e_yel,e_blu,e_red,e_pur,e_blu,e_red,e_pur}
-		};
-		for(uint8 i=0; i<e_ColumnSize; ++i)
+	for(uint8 i=0; i<e_ColumnSize; ++i)
+	{
+		for(uint8 j=0; j<e_RowSize; ++j)
 		{
-			for(uint8 j=0; j<e_RowSize; ++j)
-			{
-				//m_tiles[i*e_RowSize+j].Reset((Tile::type)g[e_RowSize-1-j][i]);
-				m_tiles[i*e_RowSize+j].Reset((Tile::type)g1[i][j]);
-			}
+			m_tiles[i*e_RowSize+j].Reset(g[i][j]);
 		}
 	}
-#else
-	{//set map
-		Tile::type g[][e_RowSize]={
-			{ Tile::e_type4, Tile::e_type4, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5},
-			{ Tile::e_type4, Tile::e_type1, Tile::e_type4, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type5},
-			{ Tile::e_type2, Tile::e_type4, Tile::e_type3, Tile::e_type1, Tile::e_type3, Tile::e_type2, Tile::e_type5, Tile::e_type3},
-			{ Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2},
-			{ Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1},
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3, Tile::e_type1, Tile::e_type1, Tile::e_type2, Tile::e_type1},
-			{ Tile::e_type3, Tile::e_type3, Tile::e_type4, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4},
-			{ Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3}
-		};
-
-		for(uint8 i=0; i<e_ColumnSize; ++i)
-		{
-			for(uint8 j=0; j<e_RowSize; ++j)
-			{
-				m_tiles[i*e_RowSize+j].Reset(g[i][j]);
-			}
-		}
-	}
-#endif
 
 
 	START_BEHAVIOR(Board, Behavior_Stable);
