@@ -38,12 +38,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\libs;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)EXE\</OutDir>
+    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <OutDir>$(SolutionDir)..\EXE\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\libs;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)EXE\</OutDir>
+    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <OutDir>$(SolutionDir)..\EXE\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -58,7 +58,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libs\glut\glut32.lib;libs\xml\expat.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\libs\glut\glut32.lib;..\libs\xml\expat.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libs\xml\expat.lib;libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\libs\xml\expat.lib;..\libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -86,52 +86,52 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="code\Board.cpp" />
-    <ClCompile Include="Code\Encouragement.cpp" />
-    <ClCompile Include="code\Entry.cpp" />
-    <ClCompile Include="code\CountDown.cpp" />
-    <ClCompile Include="code\Game.cpp" />
-    <ClCompile Include="Code\graphic\Anim.cpp" />
-    <ClCompile Include="Code\graphic\CTargaImage.cpp" />
-    <ClCompile Include="Code\graphic\Sprite.cpp" />
-    <ClCompile Include="Code\graphic\TexturesManager.cpp" />
-    <ClCompile Include="code\Intro.cpp" />
-    <ClCompile Include="Code\Mem\MemTracker.cpp" />
-    <ClCompile Include="code\Object.cpp" />
-    <ClCompile Include="code\ObjectsManager.cpp" />
-    <ClCompile Include="code\Rectangle.cpp" />
-    <ClCompile Include="code\Score.cpp" />
-    <ClCompile Include="code\Tile.cpp" />
-    <ClCompile Include="code\TimeCounter.cpp" />
-    <ClCompile Include="code\TimeOut.cpp" />
-    <ClCompile Include="Code\xml\xml.cpp" />
+    <ClCompile Include="..\code\Board.cpp" />
+    <ClCompile Include="..\code\Encouragement.cpp" />
+    <ClCompile Include="..\code\Entry.cpp" />
+    <ClCompile Include="..\code\CountDown.cpp" />
+    <ClCompile Include="..\code\Game.cpp" />
+    <ClCompile Include="..\code\graphic\Anim.cpp" />
+    <ClCompile Include="..\code\graphic\CTargaImage.cpp" />
+    <ClCompile Include="..\code\graphic\Sprite.cpp" />
+    <ClCompile Include="..\code\graphic\TexturesManager.cpp" />
+    <ClCompile Include="..\code\Intro.cpp" />
+    <ClCompile Include="..\code\Mem\MemTracker.cpp" />
+    <ClCompile Include="..\code\Object.cpp" />
+    <ClCompile Include="..\code\ObjectsManager.cpp" />
+    <ClCompile Include="..\code\Rectangle.cpp" />
+    <ClCompile Include="..\code\Score.cpp" />
+    <ClCompile Include="..\code\Tile.cpp" />
+    <ClCompile Include="..\code\TimeCounter.cpp" />
+    <ClCompile Include="..\code\TimeOut.cpp" />
+    <ClCompile Include="..\code\xml\xml.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\Board.h" />
-    <ClInclude Include="code\Classids.h" />
-    <ClInclude Include="code\Common.h" />
-    <ClInclude Include="code\CountDown.h" />
-    <ClInclude Include="Code\Encouragement.h" />
-    <ClInclude Include="code\fsm.h" />
-    <ClInclude Include="code\Game.h" />
-    <ClInclude Include="Code\graphic\Anim.h" />
-    <ClInclude Include="Code\graphic\CTargaImage.h" />
-    <ClInclude Include="Code\graphic\Sprite.h" />
-    <ClInclude Include="Code\graphic\TexturesManager.h" />
-    <ClInclude Include="code\Intro.h" />
-    <ClInclude Include="Code\Mem\allocator.h" />
-    <ClInclude Include="Code\Mem\MemNew.h" />
-    <ClInclude Include="Code\Mem\MemTracker.h" />
-    <ClInclude Include="code\Object.h" />
-    <ClInclude Include="code\ObjectsManager.h" />
-    <ClInclude Include="code\ObjectsRectangles.h" />
-    <ClInclude Include="code\Rectangle.h" />
-    <ClInclude Include="code\Score.h" />
-    <ClInclude Include="code\Settings.h" />
-    <ClInclude Include="code\Tile.h" />
-    <ClInclude Include="code\TimeCounter.h" />
-    <ClInclude Include="code\TimeOut.h" />
-    <ClInclude Include="Code\xml\xml.h" />
+    <ClInclude Include="..\code\Board.h" />
+    <ClInclude Include="..\code\Classids.h" />
+    <ClInclude Include="..\code\Common.h" />
+    <ClInclude Include="..\code\CountDown.h" />
+    <ClInclude Include="..\code\Encouragement.h" />
+    <ClInclude Include="..\code\fsm.h" />
+    <ClInclude Include="..\code\Game.h" />
+    <ClInclude Include="..\code\graphic\Anim.h" />
+    <ClInclude Include="..\code\graphic\CTargaImage.h" />
+    <ClInclude Include="..\code\graphic\Sprite.h" />
+    <ClInclude Include="..\code\graphic\TexturesManager.h" />
+    <ClInclude Include="..\code\Intro.h" />
+    <ClInclude Include="..\code\Mem\allocator.h" />
+    <ClInclude Include="..\code\Mem\MemNew.h" />
+    <ClInclude Include="..\code\Mem\MemTracker.h" />
+    <ClInclude Include="..\code\Object.h" />
+    <ClInclude Include="..\code\ObjectsManager.h" />
+    <ClInclude Include="..\code\ObjectsRectangles.h" />
+    <ClInclude Include="..\code\Rectangle.h" />
+    <ClInclude Include="..\code\Score.h" />
+    <ClInclude Include="..\code\Settings.h" />
+    <ClInclude Include="..\code\Tile.h" />
+    <ClInclude Include="..\code\TimeCounter.h" />
+    <ClInclude Include="..\code\TimeOut.h" />
+    <ClInclude Include="..\code\xml\xml.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exe\data\anim1.xml">

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\code\Board.cpp" />
+    <ClCompile Include="..\code\Entry.cpp" />
+    <ClCompile Include="..\code\CountDown.cpp" />
+    <ClCompile Include="..\code\Game.cpp" />
+    <ClCompile Include="..\code\Intro.cpp" />
+    <ClCompile Include="..\code\Object.cpp" />
+    <ClCompile Include="..\code\ObjectsManager.cpp" />
+    <ClCompile Include="..\code\Rectangle.cpp" />
+    <ClCompile Include="..\code\Score.cpp" />
+    <ClCompile Include="..\code\Tile.cpp" />
+    <ClCompile Include="..\code\TimeCounter.cpp" />
+    <ClCompile Include="..\code\TimeOut.cpp" />
+    <ClCompile Include="..\code\Encouragement.cpp" />
+    <ClCompile Include="..\code\xml\xml.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code\Mem\MemTracker.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code\graphic\CTargaImage.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code\graphic\Sprite.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code\graphic\TexturesManager.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code\graphic\Anim.cpp">
+      <Filter>graphic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\code\Board.h" />
+    <ClInclude Include="..\code\Classids.h" />
+    <ClInclude Include="..\code\Common.h" />
+    <ClInclude Include="..\code\CountDown.h" />
+    <ClInclude Include="..\code\fsm.h" />
+    <ClInclude Include="..\code\Game.h" />
+    <ClInclude Include="..\code\Intro.h" />
+    <ClInclude Include="..\code\Object.h" />
+    <ClInclude Include="..\code\ObjectsManager.h" />
+    <ClInclude Include="..\code\ObjectsRectangles.h" />
+    <ClInclude Include="..\code\Rectangle.h" />
+    <ClInclude Include="..\code\Score.h" />
+    <ClInclude Include="..\code\Tile.h" />
+    <ClInclude Include="..\code\TimeCounter.h" />
+    <ClInclude Include="..\code\TimeOut.h" />
+    <ClInclude Include="..\code\Encouragement.h" />
+    <ClInclude Include="..\code\xml\xml.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\Mem\allocator.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\Mem\MemNew.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\Mem\MemTracker.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\graphic\CTargaImage.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\graphic\Sprite.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\graphic\TexturesManager.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\Settings.h" />
+    <ClInclude Include="..\code\graphic\Anim.h">
+      <Filter>graphic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="exe\data\anim1.xml">
+      <Filter>data</Filter>
+    </None>
+    <None Include="exe\data\goodNwow.xml">
+      <Filter>data</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="xml">
+      <UniqueIdentifier>{00de74a8-daa1-4175-a642-7fb1433a0d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphic">
+      <UniqueIdentifier>{012d835b-9730-4503-b724-0b6beee2fe4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{0c759048-ecae-4910-a738-67a0cdb2e362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{c95f1cb5-4748-4a95-a6cf-2884e57e6c1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
