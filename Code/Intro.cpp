@@ -94,7 +94,7 @@ void Intro::Draw()
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("Start",m_rplay->l+10, m_rplay->b+(m_rplay->t-m_rplay->b)/2);
+	hb::DrawText("Start",m_rplay->l+30, m_rplay->b+20);
 
 
 

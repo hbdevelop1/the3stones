@@ -69,6 +69,9 @@ bool TexturesManager::TexInit()
 
 void TexturesManager::TexUninit()
 {
+	if(!m_texObj)
+		return;
+
 	for(unsigned int i=0; i<e_tex_nbrofTextures; ++i)
 		glDeleteTextures(1, &m_texObj[i]);
 }

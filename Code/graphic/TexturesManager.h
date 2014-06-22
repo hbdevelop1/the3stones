@@ -15,7 +15,6 @@ private:
 	TexturesManager & operator=(const TexturesManager&);
 
 
-	bool TexInit();
 	void TexUninit();
 
 public:
@@ -27,6 +26,8 @@ public:
 		return instance;
 	}
 	unsigned int GetTextureObj(unsigned int i);
+
+	bool TexInit();
 };
 
 enum

@@ -10,6 +10,7 @@
 #include "objectsmanager.h"
 #include "ObjectsRectangles.h"
 #include "common.h"
+#include "graphic/TexturesManager.h"
 
 #include "Mem/MemNew.h"
 
@@ -23,6 +24,9 @@ void AtExit()
 void game_init()
 {
 	if(atexit (AtExit))
+		exit(1);
+
+	if(!TexturesManager::GetInstance().TexInit())
 		exit(1);
 
 	ObjectsManager::GetInstance().PushBack(CLASSID_game,true);
