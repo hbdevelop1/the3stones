@@ -38,11 +38,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\EXE\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\EXE\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
