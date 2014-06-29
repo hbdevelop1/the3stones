@@ -17,6 +17,8 @@
 
 Tile::type Tile::m_currentType=e_type1;
 Board * Tile::m_board=NULL;
+int	Tile::ms_paceOfDisplacement=Square::e_Width>>4; //I consider Square::e_Width == Square::e_Width
+
 
 Tile::type & operator++(Tile::type & a)
 {
@@ -204,8 +206,11 @@ void Tile::PrepareMoving()
 
 	m_currentPosition = m_freePositionToMoveTo;
 	m_currentPosition->tile = this;
-
+#ifdef _timeinsteadofframes_
+	//m_timePaceOfDisplacement=Settings::TimeSpeedOfFalling;
+#else
 	m_paceOfFall=Settings::SpeedOfFalling;
+#endif
 }
 
 void Tile::Behavior_Moving()
@@ -218,15 +223,25 @@ void Tile::Behavior_Moving()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
+#ifdef _timeinsteadofframes_
+/*		clock_t tempt=clock();
+		if( tempt-m_timePaceOfDisplacement<Settings::TimeSpeedOfFalling)
+			return;
+			
+		m_timePaceOfDisplacement=tempt;*/
+		m_rect.b-=Tile::ms_paceOfDisplacement; m_rect.t-=Tile::ms_paceOfDisplacement;
+		if(m_rect.b == m_currentPosition->rect.b)//todo:see 12
+		{
+#else
 		if(--m_paceOfFall>0)
 			return;
 
 		m_paceOfFall=Settings::SpeedOfFalling;
-
 		m_rect.b--; m_rect.t--;
 		//m_rect.b-=2; m_rect.t-=2;
 		if(m_rect.b == m_currentPosition->rect.b)//todo:see 12
 		{
+#endif
 			assert(m_rect==m_currentPosition->rect);
 			assert(m_loc.x==m_currentPosition->point.x);
 
@@ -263,7 +278,13 @@ CONSTRUCT_BEHAVIOR_BEGIN
 	assert(m_delta.x==-1 || m_delta.x==1 || m_delta.x==0);
 	assert(m_delta.y==-1 || m_delta.y==1 || m_delta.y==0);
 	assert((m_delta.x && m_delta.y==0) || (m_delta.y && m_delta.x==0));
+#ifdef _timeinsteadofframes_
+	//m_timePaceOfDisplacement=clock();
+	m_delta.x = m_delta.x * Tile::ms_paceOfDisplacement;
+	m_delta.y = m_delta.y * Tile::ms_paceOfDisplacement;
+#else
 	m_paceOfSwap=Settings::SpeedOfSwapping;
+#endif
 }
 CONSTRUCT_BEHAVIOR_END
 
@@ -271,6 +292,24 @@ UPDATE_BEHAVIOR_BEGIN
 {
 	//if(m_freePositionToMoveTo!=NULL)//when a tile is in place, m_freePositionToMoveTo <- NULL
 	
+#ifdef _timeinsteadofframes_
+/*	clock_t tempt =clock();
+	if(tempt-m_timePaceOfDisplacement > Settings::TimeSpeedOfSwapping)
+	{
+		m_timePaceOfDisplacement=tempt;*/
+	{
+		if(m_delta.x)
+		{
+			m_rect.r+=m_delta.x;
+			m_rect.l+=m_delta.x;
+		}
+		else
+		{
+			m_rect.b+=m_delta.y;
+			m_rect.t+=m_delta.y;
+		}
+
+#else
 	m_paceOfSwap--; //tile moves each other Settings::SpeedOfSwapping frames.
 
 	if(m_paceOfSwap<=0)
@@ -287,6 +326,7 @@ UPDATE_BEHAVIOR_BEGIN
 			m_rect.b=m_rect.b+m_delta.y;
 			m_rect.t=m_rect.t+m_delta.y;
 		}
+#endif
 
 		if(m_rect == m_freePositionToMoveTo->rect)
 		{
@@ -304,7 +344,9 @@ DESTRUCT_BEHAVIOR_BEGIN
 {
 	//m_previousbehavior=&Tile::Behavior_Swapping;
 	m_delta = hb::Points8(0,0);
+#ifndef _timeinsteadofframes_
 	m_paceOfSwap=0;
+#endif
 }
 DESTRUCT_BEHAVIOR_END
 
@@ -338,16 +380,29 @@ void Tile::Behavior_Destroying()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 		//m_visible=false;
+#ifdef _timeinsteadofframes_
+		m_time2WaitBeforeDestruction=clock();
+#else
 		m_nbrOfFramesBeforeDestruction=Settings::NbrOfFramesBeforeDestruction;
+#endif
 		m_toDestroy=false;
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
+#ifdef _timeinsteadofframes_
+		clock_t tempt=clock();
+		if(tempt-m_time2WaitBeforeDestruction >= Settings::TimeToWaitBeforeDestruction)
+		{
+			m_time2WaitBeforeDestruction=tempt;
+#else
+
 		if(m_nbrOfFramesBeforeDestruction>0)
 			m_nbrOfFramesBeforeDestruction--;
 		else
 		{
+
+#endif
 			m_currentPosition->tile=NULL; //position is free. can be taken by another tile
 			m_currentPosition=NULL;
 			//m_visible=false; //not m_visible but m_active

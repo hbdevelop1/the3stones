@@ -4,6 +4,7 @@
 
 #include "rectangle.h"
 #include "fsm.h"
+#include <time.h>
 
 //namespace hb{
 
@@ -35,14 +36,20 @@ private:
 	PositionInBoard *m_currentPosition;
 	PositionInBoard *m_freePositionToMoveTo;
 	hb::Points8		m_delta;
+#ifdef _timeinsteadofframes_
+	clock_t			m_time2WaitBeforeDestruction;
+	clock_t			m_timePaceOfDisplacement;
+	static int		ms_paceOfDisplacement;
+#else
 	signed int		m_nbrOfFramesBeforeDestruction;
+	int				m_paceOfSwap;
+	int				m_paceOfFall;
+#endif
 	bool			m_visible;
 	bool			m_active;
 	bool			m_selected;//to indicate if the tile is selected
 	bool			m_toDestroy;
 	bool			m_toSwap;
-	int				m_paceOfSwap;
-	int				m_paceOfFall;
 
 
 	//static const unsigned int SpeedOfSwapping;
@@ -86,7 +93,6 @@ public:
 	friend class Board;
 };
 //}
-
 
 
 

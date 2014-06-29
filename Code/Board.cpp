@@ -28,7 +28,6 @@ bool PositionInBoard::operator==(PositionInBoard  b)
 Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
 				m_selectedTilesPosition(hb::Pointu8::Invalid)
 {
-
 	Tile::m_board=this;
 	m_click.notprocessed=false;
 
@@ -219,7 +218,11 @@ void Board::Behavior_Swapping()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
+#ifdef _timeinsteadofframes_
+		m_time2WaitAfterSwap=clock();
+#else
 		m_nbrOfFrames2WaitAfterSwap=Settings::NbrOfFramesToWaitToCheckMatchesAfterSwap;
+#endif
 	}
 	CONSTRUCT_BEHAVIOR_END
 
@@ -230,10 +233,17 @@ void Board::Behavior_Swapping()
 			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
 		{
 			//todo:use time instead of frames
+#ifdef _timeinsteadofframes_
+			clock_t tempt=clock();
+			if(tempt-m_time2WaitAfterSwap >= Settings::TimeToWaitToCheckMatchesAfterSwap)
+			{
+				m_time2WaitAfterSwap=tempt;
+#else
 			if(m_nbrOfFrames2WaitAfterSwap>0)
 				--m_nbrOfFrames2WaitAfterSwap;
 			else
 			{
+#endif
 				//check for matches from each tile's side, horizontally and vertically
 				if(m_positions[m_click.p.x][m_click.p.y].tile->CheckMatches() || 
 					m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->CheckMatches()
@@ -264,7 +274,7 @@ void Board::Behavior_SwappingBack()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
-		m_nbrOfFrames2WaitAfterSwap=0;
+		//m_nbrOfFrames2WaitAfterSwap=0;
 	}
 	CONSTRUCT_BEHAVIOR_END
 
@@ -274,9 +284,9 @@ void Board::Behavior_SwappingBack()
 		if(m_positions[m_click.p.x][m_click.p.y].tile->m_freePositionToMoveTo==NULL && 
 			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
 		{
-			if(m_nbrOfFrames2WaitAfterSwap>0)
+/*			if(m_nbrOfFrames2WaitAfterSwap>0)
 				--m_nbrOfFrames2WaitAfterSwap;
-			else
+			else*/
 			{
 				m_selectedTilesPosition=hb::Pointu8::Invalid;
 				CHANGE_BEHAVIOR(Board,Behavior_Stable);

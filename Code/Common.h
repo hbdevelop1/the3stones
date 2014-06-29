@@ -31,4 +31,9 @@ enum
 };
 
 
+extern LARGE_INTEGER	g_frequency;
+extern LARGE_INTEGER	g_start;
+extern LARGE_INTEGER	g_end;
+
+
 #endif //_COMMON_

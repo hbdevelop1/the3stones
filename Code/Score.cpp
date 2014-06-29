@@ -133,9 +133,11 @@ void Text::Reset(const char* s, hb::Pointu32 sp)
 
 void Text::Update()
 {
-	if(clock()-tm >= 50)
+	clock_t tempt=clock();
+
+	if(tempt-tm >= 50)
 	{
-		tm=clock();
+		tm=tempt;
 
 		if(t>=1.f)
 		{
