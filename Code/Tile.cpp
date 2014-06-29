@@ -14,11 +14,24 @@
 
 #include "Mem/MemNew.h"
 
+#ifdef TIMEOFSWAP
+extern LARGE_INTEGER g_swapstart;
+extern LARGE_INTEGER g_swapend;
+#endif
+
+#ifdef TIMEOFSWAP2
+extern LARGE_INTEGER g_swapstart2;
+extern LARGE_INTEGER g_swapend2;
+extern LONGLONG		g_diffticks2;
+extern Tile*		g_tile2time;
+extern char timeofswapbuf2[80];
+#endif
 
 Tile::type Tile::m_currentType=e_type1;
 Board * Tile::m_board=NULL;
+#ifdef _timeinsteadofframes_
 int	Tile::ms_paceOfDisplacement=Square::e_Width>>4; //I consider Square::e_Width == Square::e_Width
-
+#endif
 
 Tile::type & operator++(Tile::type & a)
 {
@@ -106,10 +119,10 @@ void Tile::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_rect.l, m_rect.b);
-        glTexCoord2f(1, 0); glVertex2f (m_rect.r, m_rect.b);
-        glTexCoord2f(1, 1); glVertex2f (m_rect.r, m_rect.t);
-        glTexCoord2f(0, 1); glVertex2f (m_rect.l, m_rect.t);
+        glTexCoord2f(0, 0); glVertex2i (m_rect.l, m_rect.b);
+        glTexCoord2f(1, 0); glVertex2i (m_rect.r, m_rect.b);
+        glTexCoord2f(1, 1); glVertex2i (m_rect.r, m_rect.t);
+        glTexCoord2f(0, 1); glVertex2i (m_rect.l, m_rect.t);
     glEnd();
 }
 
@@ -146,6 +159,7 @@ void Destroy(Tile* a, Tile* b, Tile* c)
 	dynamic_cast<Score*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Score))->Add(hb::Pointu32(b->m_rect.l,b->m_rect.b));
 }
 
+
 void Swap(Tile* a, Tile* b)
 {
 	a->m_toSwap=true;
@@ -156,6 +170,13 @@ void Swap(Tile* a, Tile* b)
 	b->m_freePositionToMoveTo=a->m_currentPosition;
 	b->m_loc=b->m_freePositionToMoveTo->point;
 
+
+#ifdef TIMEOFSWAP
+	LARGE_INTEGER	tt;
+	QueryPerformanceCounter(&tt);
+	if(g_swapstart.QuadPart==-1)
+		g_swapstart.QuadPart=tt.QuadPart;
+#endif
 }
 
 void Tile::Behavior_Resting()
@@ -347,6 +368,14 @@ DESTRUCT_BEHAVIOR_BEGIN
 #ifndef _timeinsteadofframes_
 	m_paceOfSwap=0;
 #endif
+
+#ifdef TIMEOFSWAP
+	LARGE_INTEGER tt;
+	QueryPerformanceCounter(&tt);
+	if(g_swapend.QuadPart == -1)
+		g_swapend.QuadPart=tt.QuadPart;
+#endif
+
 }
 DESTRUCT_BEHAVIOR_END
 

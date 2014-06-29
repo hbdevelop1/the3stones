@@ -156,8 +156,8 @@ void Text::Update()
 		float x=A*initialPos.x+B*controlPoint.x+C*landingPoint.x;
 		float y=A*initialPos.y+B*controlPoint.y+C*landingPoint.y;
 
-		currentPos.x=x;
-		currentPos.y=y;
+		currentPos.x=static_cast<uint32>(x);
+		currentPos.y=static_cast<uint32>(y);
 		t+=Text::stept;
 	}
 }
@@ -219,9 +219,7 @@ void IndividualScore::Draw()
 	{
 		if(!it->end && it->t!=0 /*to avoid drawing a static text*/)
 		{
-			glRasterPos2f(it->currentPos.x, it->currentPos.y);
-			char* p = (char*) (*it).str;
-			while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
+			hb::DrawText((*it).str,it->currentPos.x, it->currentPos.y);
 		}
 	}
 }
@@ -291,13 +289,9 @@ void GlobalScore::Draw()
 	Sprite::Draw();
 
 
-	glColor3f (1.0, 1.0, 0.0);
-	glRasterPos2f(m_rect->l+30, m_rect->t-50);
+	glColor3f (1.0f, 1.0f, 0.0f);
 
-	char* p = (char*) m_score_str;
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-										//GLUT_BITMAP_TIMES_ROMAN_24
-		
+	hb::DrawText(m_score_str,m_rect->l+30, m_rect->t-50);
 }
 
 void GlobalScore::Reset()

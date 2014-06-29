@@ -107,14 +107,14 @@ void Anim::Lerp(stKeyFrame & frame1, stKeyFrame & frame2, long newframetime)
 {
 	float t=((float)newframetime-frame1.time)/(frame2.time-frame1.time);
 
-	m_r[0].x=(1-t)*frame1.offset[0].x + t * frame2.offset[0].x;
-	m_r[0].y=(1-t)*frame1.offset[0].y + t * frame2.offset[0].y;
-	m_r[1].x=(1-t)*frame1.offset[1].x + t * frame2.offset[1].x;
-	m_r[1].y=(1-t)*frame1.offset[1].y + t * frame2.offset[1].y;
-	m_r[2].x=(1-t)*frame1.offset[2].x + t * frame2.offset[2].x;
-	m_r[2].y=(1-t)*frame1.offset[2].y + t * frame2.offset[2].y;
-	m_r[3].x=(1-t)*frame1.offset[3].x + t * frame2.offset[3].x;
-	m_r[3].y=(1-t)*frame1.offset[3].y + t * frame2.offset[3].y;
+	m_r[0].x=static_cast<sint32>((1-t)*frame1.offset[0].x + t * frame2.offset[0].x);
+	m_r[0].y=static_cast<sint32>((1-t)*frame1.offset[0].y + t * frame2.offset[0].y);
+	m_r[1].x=static_cast<sint32>((1-t)*frame1.offset[1].x + t * frame2.offset[1].x);
+	m_r[1].y=static_cast<sint32>((1-t)*frame1.offset[1].y + t * frame2.offset[1].y);
+	m_r[2].x=static_cast<sint32>((1-t)*frame1.offset[2].x + t * frame2.offset[2].x);
+	m_r[2].y=static_cast<sint32>((1-t)*frame1.offset[2].y + t * frame2.offset[2].y);
+	m_r[3].x=static_cast<sint32>((1-t)*frame1.offset[3].x + t * frame2.offset[3].x);
+	m_r[3].y=static_cast<sint32>((1-t)*frame1.offset[3].y + t * frame2.offset[3].y);
 	
 	
 }

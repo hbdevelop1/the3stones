@@ -47,10 +47,10 @@ void Intro::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2i (rDim.l, rDim.b);
+        glVertex2i (rDim.r, rDim.b);
+        glVertex2i (rDim.r, rDim.t);
+        glVertex2i (rDim.l, rDim.t);
     glEnd();
 
 	glDisable(GL_BLEND); 
@@ -84,13 +84,13 @@ void Intro::Draw()
 
 	//button
 
-    glColor3f (1.0, 1.0, 0.2);
+    glColor3f (1.0f, 1.0f, 0.2f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (m_rplay->l, m_rplay->b);
-        glVertex2f (m_rplay->r, m_rplay->b);
-        glVertex2f (m_rplay->r, m_rplay->t);
-        glVertex2f (m_rplay->l, m_rplay->t);
+        glVertex2i (m_rplay->l, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->t);
+        glVertex2i (m_rplay->l, m_rplay->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);

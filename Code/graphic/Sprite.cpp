@@ -32,10 +32,10 @@ void Sprite::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (m_rect->l, m_rect->b);
-        glTexCoord2f(1, 0); glVertex2f (m_rect->r, m_rect->b);
-        glTexCoord2f(1, 1); glVertex2f (m_rect->r, m_rect->t);
-        glTexCoord2f(0, 1); glVertex2f (m_rect->l, m_rect->t);
+        glTexCoord2f(0, 0); glVertex2i (m_rect->l, m_rect->b);
+        glTexCoord2f(1, 0); glVertex2i (m_rect->r, m_rect->b);
+        glTexCoord2f(1, 1); glVertex2i (m_rect->r, m_rect->t);
+        glTexCoord2f(0, 1); glVertex2i (m_rect->l, m_rect->t);
     glEnd();
 	
 	
@@ -69,10 +69,10 @@ void AnimatedSprite::Draw()
 	const hb::sRectangle *rect = reinterpret_cast<const hb::sRectangle *>(m_rect);
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (rect->l+m_offset[0].x, rect->b+m_offset[0].y);
-        glTexCoord2f(1, 0); glVertex2f (rect->r+m_offset[1].x, rect->b+m_offset[1].y);
-        glTexCoord2f(1, 1); glVertex2f (rect->r+m_offset[2].x, rect->t+m_offset[2].y);
-        glTexCoord2f(0, 1); glVertex2f (rect->l+m_offset[3].x, rect->t+m_offset[3].y);
+        glTexCoord2f(0, 0); glVertex2i (rect->l+m_offset[0].x, rect->b+m_offset[0].y);
+        glTexCoord2f(1, 0); glVertex2i (rect->r+m_offset[1].x, rect->b+m_offset[1].y);
+        glTexCoord2f(1, 1); glVertex2i (rect->r+m_offset[2].x, rect->t+m_offset[2].y);
+        glTexCoord2f(0, 1); glVertex2i (rect->l+m_offset[3].x, rect->t+m_offset[3].y);
     glEnd();	
 
 

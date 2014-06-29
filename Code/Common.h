@@ -4,7 +4,6 @@
 
 #include <windows.h>
 #include <GL/gl.h>
-#include <glut\glut.h>
 #include <assert.h>
 
 
@@ -19,6 +18,7 @@ namespace hb
 void DrawText(const char *txt, signed int x=-1, signed int y=-1);
 }
 
+GLvoid glPrint(const char *fmt, ...);
 
 #include "Mem/MemTracker.h"
 

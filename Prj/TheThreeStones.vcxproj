@@ -10,22 +10,71 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\Board.cpp" />
+    <ClCompile Include="..\Code\CountDown.cpp" />
+    <ClCompile Include="..\Code\Encouragement.cpp" />
+    <ClCompile Include="..\Code\Entry.cpp" />
+    <ClCompile Include="..\Code\Game.cpp" />
+    <ClCompile Include="..\Code\Graphic\Anim.cpp" />
+    <ClCompile Include="..\Code\Graphic\CTargaImage.cpp" />
+    <ClCompile Include="..\Code\Graphic\Sprite.cpp" />
+    <ClCompile Include="..\Code\Graphic\TexturesManager.cpp" />
+    <ClCompile Include="..\Code\Intro.cpp" />
+    <ClCompile Include="..\Code\Mem\MemTracker.cpp" />
+    <ClCompile Include="..\Code\Object.cpp" />
+    <ClCompile Include="..\Code\ObjectsManager.cpp" />
+    <ClCompile Include="..\Code\Rectangle.cpp" />
+    <ClCompile Include="..\Code\Score.cpp" />
+    <ClCompile Include="..\Code\Tile.cpp" />
+    <ClCompile Include="..\Code\TimeCounter.cpp" />
+    <ClCompile Include="..\Code\TimeOut.cpp" />
+    <ClCompile Include="..\Code\Xml\xml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Code\Board.h" />
+    <ClInclude Include="..\Code\Classids.h" />
+    <ClInclude Include="..\Code\Common.h" />
+    <ClInclude Include="..\Code\CountDown.h" />
+    <ClInclude Include="..\Code\Encouragement.h" />
+    <ClInclude Include="..\Code\fsm.h" />
+    <ClInclude Include="..\Code\Game.h" />
+    <ClInclude Include="..\Code\Graphic\Anim.h" />
+    <ClInclude Include="..\Code\Graphic\CTargaImage.h" />
+    <ClInclude Include="..\Code\Graphic\Sprite.h" />
+    <ClInclude Include="..\Code\Graphic\TexturesManager.h" />
+    <ClInclude Include="..\Code\Intro.h" />
+    <ClInclude Include="..\Code\Mem\allocator.h" />
+    <ClInclude Include="..\Code\Mem\MemNew.h" />
+    <ClInclude Include="..\Code\Mem\MemTracker.h" />
+    <ClInclude Include="..\Code\Object.h" />
+    <ClInclude Include="..\Code\ObjectsManager.h" />
+    <ClInclude Include="..\Code\ObjectsRectangles.h" />
+    <ClInclude Include="..\Code\Rectangle.h" />
+    <ClInclude Include="..\Code\Score.h" />
+    <ClInclude Include="..\Code\Settings.h" />
+    <ClInclude Include="..\Code\Tile.h" />
+    <ClInclude Include="..\Code\TimeCounter.h" />
+    <ClInclude Include="..\Code\TimeOut.h" />
+    <ClInclude Include="..\Code\Xml\expat.h" />
+    <ClInclude Include="..\Code\Xml\xml.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CB0B4FCD-797D-4147-9B59-B74CFE86860E}</ProjectGuid>
-    <RootNamespace>draw01</RootNamespace>
-    <ProjectName>TheThreeStones</ProjectName>
+    <ProjectGuid>{7E033205-AE3A-4AE7-BAC0-B37DA6E4EEA2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TheThreeStones</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -38,110 +87,45 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\EXE\</OutDir>
+    <IncludePath>C:\data\code\libs\boost_1_54_0;$(ProjectDir)\..\libs;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\..\libs;$(IncludePath);C:\data\code\libs\boost_1_54_0</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\EXE\</OutDir>
+    <IncludePath>C:\data\code\libs\boost_1_54_0;$(ProjectDir)\..\libs;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_timeinsteadofframes_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <PreprocessorDefinitions>PERF1R;_timeinsteadofframes_;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\libs\glut\glut32.lib;..\libs\xml\expat.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\libs\xml\expat.lib;Glu32.lib;Opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_timeinsteadofframes_;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessorDefinitions>PERF1R;_timeinsteadofframes_;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\libs\xml\expat.lib;..\libs\glut\glut32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\libs\xml\expat.lib;Glu32.lib;Opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\code\Board.cpp" />
-    <ClCompile Include="..\code\Encouragement.cpp" />
-    <ClCompile Include="..\code\Entry.cpp" />
-    <ClCompile Include="..\code\CountDown.cpp" />
-    <ClCompile Include="..\code\Game.cpp" />
-    <ClCompile Include="..\code\graphic\Anim.cpp" />
-    <ClCompile Include="..\code\graphic\CTargaImage.cpp" />
-    <ClCompile Include="..\code\graphic\Sprite.cpp" />
-    <ClCompile Include="..\code\graphic\TexturesManager.cpp" />
-    <ClCompile Include="..\code\Intro.cpp" />
-    <ClCompile Include="..\code\Mem\MemTracker.cpp" />
-    <ClCompile Include="..\code\Object.cpp" />
-    <ClCompile Include="..\code\ObjectsManager.cpp" />
-    <ClCompile Include="..\code\Rectangle.cpp" />
-    <ClCompile Include="..\code\Score.cpp" />
-    <ClCompile Include="..\code\Tile.cpp" />
-    <ClCompile Include="..\code\TimeCounter.cpp" />
-    <ClCompile Include="..\code\TimeOut.cpp" />
-    <ClCompile Include="..\code\xml\xml.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\code\Board.h" />
-    <ClInclude Include="..\code\Classids.h" />
-    <ClInclude Include="..\code\Common.h" />
-    <ClInclude Include="..\code\CountDown.h" />
-    <ClInclude Include="..\code\Encouragement.h" />
-    <ClInclude Include="..\code\fsm.h" />
-    <ClInclude Include="..\code\Game.h" />
-    <ClInclude Include="..\code\graphic\Anim.h" />
-    <ClInclude Include="..\code\graphic\CTargaImage.h" />
-    <ClInclude Include="..\code\graphic\Sprite.h" />
-    <ClInclude Include="..\code\graphic\TexturesManager.h" />
-    <ClInclude Include="..\code\Intro.h" />
-    <ClInclude Include="..\code\Mem\allocator.h" />
-    <ClInclude Include="..\code\Mem\MemNew.h" />
-    <ClInclude Include="..\code\Mem\MemTracker.h" />
-    <ClInclude Include="..\code\Object.h" />
-    <ClInclude Include="..\code\ObjectsManager.h" />
-    <ClInclude Include="..\code\ObjectsRectangles.h" />
-    <ClInclude Include="..\code\Rectangle.h" />
-    <ClInclude Include="..\code\Score.h" />
-    <ClInclude Include="..\code\Settings.h" />
-    <ClInclude Include="..\code\Tile.h" />
-    <ClInclude Include="..\code\TimeCounter.h" />
-    <ClInclude Include="..\code\TimeOut.h" />
-    <ClInclude Include="..\code\xml\xml.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="exe\data\anim1.xml">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="exe\data\goodNwow.xml">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </None>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,30 +1,53 @@
-#include <windows.h>
+/*
+ *		This Code Was Created By Tom Stanis / Jeff Molofee 2000
+ *		A HUGE Thanks To Fredric Echols For Cleaning Up
+ *		And Optimizing The Base Code, Making It More Flexible!
+ *		If You've Found This Code Useful, Please Let Me Know.
+ *		Visit My Site At nehe.gamedev.net
+ */
 
-#include <GL/gl.h>
-#include <glut\glut.h>
+#include <windows.h>		// Header File For Windows
+#include <stdio.h>			// Header File For Standard Input/Output
+#include <gl\gl.h>			// Header File For The OpenGL32 Library
+#include <gl\glu.h>			// Header File For The GLu32 Library
 
-#include "rectangle.h"
 #include "game.h"
-#include "board.h"
+//#include "board.h"
 #include "classids.h"
 #include "objectsmanager.h"
 #include "ObjectsRectangles.h"
-#include "common.h"
+//#include "common.h"
 #include "graphic/TexturesManager.h"
 
 #include "Mem/MemNew.h"
 
-namespace hb
-{
-void DrawText(const char *txt, signed int x, signed int y)
-{
-	if(x>-1 && y>-1)
-		glRasterPos2f(x, y);
 
-	const char* p= txt;
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-}
-}
+HDC			hDC=NULL;		// Private GDI Device Context
+HGLRC		hRC=NULL;		// Permanent Rendering Context
+HWND		hWnd=NULL;		// Holds Our Window Handle
+HINSTANCE	hInstance;		// Holds The Instance Of The Application
+
+bool	keys[256];			// Array Used For The Keyboard Routine
+bool	active=TRUE;		// Window Active Flag Set To TRUE By Default
+
+
+
+
+LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);	// Declaration For WndProc
+
+
+#ifdef TIMEOFSWAP
+extern LARGE_INTEGER g_swapstart;
+extern LARGE_INTEGER g_swapend;
+#endif
+
+#ifdef TIMEOFSWAP2
+extern LARGE_INTEGER g_swapstart2;
+extern LARGE_INTEGER g_swapend2;
+extern LONGLONG		g_diffticks2;
+extern Tile*		g_tile2time;
+extern char timeofswapbuf2[80];
+#endif
 
 LARGE_INTEGER	g_frequency;
 LARGE_INTEGER	g_start;
@@ -33,8 +56,91 @@ LONGLONG diffMax=-1;
 LONGLONG diffMin=MAXLONGLONG;
 double timeinSecondsMax;
 double timeinSecondsMin;
-		char timeinSecondsMaxbuf[80];
-		char timeinSecondsMinbuf[80];
+char timeinSecondsMaxbuf[80];
+char timeinSecondsMinbuf[80];
+char timeinSecondsMinbufdisplay[80];
+char timeinSecondsMaxbufdisplay[80];
+#ifdef TIMEOFSWAP
+char timeofswapbuf[80];
+#endif
+LARGE_INTEGER	g_displaycalled;
+LARGE_INTEGER	g_lasttimecalled;
+bool			g_firsttime=true;
+
+LONGLONG diffMaxdisplay=-1;
+LONGLONG diffMindisplay=MAXLONGLONG;
+
+
+
+
+
+GLuint	base;				// Base Display List For The Font Set
+
+GLvoid BuildFont(GLvoid)								// Build Our Bitmap Font
+{
+	HFONT	font;										// Windows Font ID
+	HFONT	oldfont;									// Used For Good House Keeping
+
+	base = glGenLists(96);								// Storage For 96 Characters
+
+	font = CreateFont(	-24,							// Height Of Font
+						0,								// Width Of Font
+						0,								// Angle Of Escapement
+						0,								// Orientation Angle
+						FW_BOLD,						// Font Weight
+						FALSE,							// Italic
+						FALSE,							// Underline
+						FALSE,							// Strikeout
+						ANSI_CHARSET,					// Character Set Identifier
+						OUT_TT_PRECIS,					// Output Precision
+						CLIP_DEFAULT_PRECIS,			// Clipping Precision
+						ANTIALIASED_QUALITY,			// Output Quality
+						FF_DONTCARE|DEFAULT_PITCH,		// Family And Pitch
+						"Courier New");					// Font Name
+
+	oldfont = (HFONT)SelectObject(hDC, font);           // Selects The Font We Want
+	wglUseFontBitmaps(hDC, 32, 96, base);				// Builds 96 Characters Starting At Character 32
+	SelectObject(hDC, oldfont);							// Selects The Font We Want
+	DeleteObject(font);									// Delete The Font
+}
+
+GLvoid KillFont(GLvoid)									// Delete The Font List
+{
+	glDeleteLists(base, 96);							// Delete All 96 Characters
+}
+
+GLvoid glPrint(const char *fmt, ...)					// Custom GL "Print" Routine
+{
+	char		text[256];								// Holds Our String
+	va_list		ap;										// Pointer To List Of Arguments
+
+	if (fmt == NULL)									// If There's No Text
+		return;											// Do Nothing
+
+	va_start(ap, fmt);									// Parses The String For Variables
+	    vsprintf(text, fmt, ap);						// And Converts Symbols To Actual Numbers
+	va_end(ap);											// Results Are Stored In Text
+
+	glPushAttrib(GL_LIST_BIT);							// Pushes The Display List Bits
+	glListBase(base - 32);								// Sets The Base Character to 32
+	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);	// Draws The Display List Text
+	glPopAttrib();										// Pops The Display List Bits
+}
+
+namespace hb
+{
+void DrawText(const char *txt, signed int x, signed int y)
+{
+	if(x>-1 && y>-1)
+		glRasterPos2i(x, y);
+
+	glPushAttrib(GL_LIST_BIT);							// Pushes The Display List Bits
+	glListBase(base - 32);								// Sets The Base Character to 32
+	glCallLists(strlen(txt), GL_UNSIGNED_BYTE, txt);	// Draws The Display List Text
+	glPopAttrib();										// Pops The Display List Bits
+
+}
+}
 
 void AtExit()
 {
@@ -53,36 +159,101 @@ void game_init()
 
 	ObjectsManager::GetInstance().PushBack(CLASSID_game,true);
 	
+#ifdef TIMEOFSWAP
+	timeofswapbuf[0]=0;
+#endif
 }
 void game_deinit()
 {
 }
 
-void onMouse( int button, int state, int x, int y) 
+void OnMouse( int x, int y) 
 {
-	if(button==GLUT_LEFT_BUTTON)
-	{
-		if(state==GLUT_DOWN)
-		{
-			ObjectsManager::GetInstance().GetMaster()->OnClick(
-				static_cast<unsigned int>(x),
-				static_cast<unsigned int>(ObjectsRectangles[e_rect_window].t - y));
-		}
-	}
+	ObjectsManager::GetInstance().GetMaster()->OnClick(
+		static_cast<unsigned int>(x),
+		static_cast<unsigned int>(ObjectsRectangles[e_rect_window].t - y));
 }
 
-
-void display(void)
+int InitGL(GLvoid)										// All Setup For OpenGL Goes Here
 {
-/*  clear all pixels  */
+    glClearColor (0.0, 0.0, 0.0, 0.0);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+	gluOrtho2D(	ObjectsRectangles[e_rect_window].l,ObjectsRectangles[e_rect_window].r,
+				ObjectsRectangles[e_rect_window].b,ObjectsRectangles[e_rect_window].t);
+
+	glViewport(0,0,
+		static_cast<int>(ObjectsRectangles[e_rect_window].r-ObjectsRectangles[e_rect_window].l),
+		static_cast<int>(ObjectsRectangles[e_rect_window].t-ObjectsRectangles[e_rect_window].b)
+		);
+
+	BuildFont();										// Build The Font
+
+	QueryPerformanceFrequency(&g_frequency);
+
+	return TRUE;										// Initialization Went OK
+}
+
+int MainLoop()
+{
+#ifdef PERF1
+	QueryPerformanceCounter(&g_displaycalled);
+
+	//{
+		char bufdisplay[80];
+	if(!g_firsttime)
+	{
+		LONGLONG 	diff=g_displaycalled.QuadPart-g_lasttimecalled.QuadPart;
+
+		if(diffMaxdisplay<diff)
+		{
+			diffMaxdisplay=diff;
+			double timeinSeconds = (double)diffMaxdisplay/g_frequency.QuadPart;
+
+			sprintf(timeinSecondsMaxbufdisplay,"%E",timeinSeconds );
+		}
+
+
+		double timeinSeconds = (double)diff/g_frequency.QuadPart;
+		sprintf(bufdisplay,"%E",timeinSeconds );
+
+		if( diffMindisplay>diff)
+		{
+			diffMindisplay=diff;
+			double timeinSeconds = (double)diffMindisplay/g_frequency.QuadPart;
+
+			sprintf(timeinSecondsMinbufdisplay,"%E",timeinSecondsMin );
+		}
+	}
+
+	g_firsttime=false;
+
+	g_lasttimecalled.QuadPart=g_displaycalled.QuadPart;
+
+//}
+
+
+/*
     glClear (GL_COLOR_BUFFER_BIT);
 
+	glColor3f (1.0, 0.0, 0.0);
+	hb::DrawText(timeinSecondsMaxbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+120);
+	hb::DrawText(bufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+100);
+	hb::DrawText(timeinSecondsMinbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+80);
+
+	return TRUE;										// Keep Going
+*/
 	QueryPerformanceCounter(&g_start);
+#endif
+
+    glClear (GL_COLOR_BUFFER_BIT);
 
 	ObjectsManager::GetInstance().Update();
 	ObjectsManager::GetInstance().Draw();
 	ObjectsManager::GetInstance().RunDelayedFunctions();
 
+#ifdef PERF1
 	QueryPerformanceCounter(&g_end);
 
 	LONGLONG diff = g_end.QuadPart - g_start.QuadPart;
@@ -94,14 +265,11 @@ void display(void)
 		sprintf(timeinSecondsMaxbuf,"%E",timeinSecondsMax );
 	}
 
-	glColor3f (1.0, 1.0, 1.0);
 
-	hb::DrawText(timeinSecondsMaxbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+60);
 
 	double timeinSeconds = (double)diff/g_frequency.QuadPart;
 	char buf[80];
 	sprintf(buf,"%E",timeinSeconds);
-	hb::DrawText(buf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+40);
 
 	if(diffMin>diff)
 	{
@@ -110,44 +278,345 @@ void display(void)
 
 		sprintf(timeinSecondsMinbuf,"%E",timeinSecondsMin );
 	}
+
+	glColor3f (1.0, 0.0, 0.0);
+
+#ifdef TIMEOFSWAP
+	
+	if(timeofswapbuf[0]==0)
+	{
+		if(g_swapstart.QuadPart > -1 && g_swapend.QuadPart > -1 )
+		{
+			double timeinSeconds = (double)(g_swapend.QuadPart -g_swapstart.QuadPart)/g_frequency.QuadPart;
+
+			sprintf(timeofswapbuf,"%E",timeinSeconds );
+		}
+	}
+
+	hb::DrawText(timeofswapbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+140);
+#endif
+#ifdef TIMEOFSWAP2
+	if(g_diffticks2 && !g_tile2time && timeofswapbuf2[0]==0)
+	{
+		double timeinSeconds = (double)g_diffticks2/g_frequency.QuadPart;
+		sprintf(timeofswapbuf2,"%E",timeinSeconds );
+	}
+	hb::DrawText(timeofswapbuf2,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+140);
+#endif
+
+	hb::DrawText(timeinSecondsMaxbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+120);
+	hb::DrawText(bufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+100);
+	hb::DrawText(timeinSecondsMinbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+80);
+	glColor3f (1.0, 1.0, 1.0);
+	hb::DrawText(timeinSecondsMaxbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+60);
+	hb::DrawText(buf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+40);
 	hb::DrawText(timeinSecondsMinbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+20);
 
- glutSwapBuffers ( );
 
+#endif //#ifdef PERF1
+
+
+	return TRUE;										// Keep Going
 }
 
-void init (void) 
+GLvoid KillGLWindow(GLvoid)								// Properly Kill The Window
 {
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+	if (hRC)											// Do We Have A Rendering Context?
+	{
+		if (!wglMakeCurrent(NULL,NULL))					// Are We Able To Release The DC And RC Contexts?
+		{
+			MessageBox(NULL,"Release Of DC And RC Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		}
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-	gluOrtho2D(	ObjectsRectangles[e_rect_window].l,ObjectsRectangles[e_rect_window].r,
-				ObjectsRectangles[e_rect_window].b,ObjectsRectangles[e_rect_window].t);
+		if (!wglDeleteContext(hRC))						// Are We Able To Delete The RC?
+		{
+			MessageBox(NULL,"Release Rendering Context Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		}
+		hRC=NULL;										// Set RC To NULL
+	}
 
+	if (hDC && !ReleaseDC(hWnd,hDC))					// Are We Able To Release The DC
+	{
+		MessageBox(NULL,"Release Device Context Failed.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hDC=NULL;										// Set DC To NULL
+	}
 
-	QueryPerformanceFrequency(&g_frequency);
+	if (hWnd && !DestroyWindow(hWnd))					// Are We Able To Destroy The Window?
+	{
+		MessageBox(NULL,"Could Not Release hWnd.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hWnd=NULL;										// Set hWnd To NULL
+	}
+
+	if (!UnregisterClass("OpenGL",hInstance))			// Are We Able To Unregister Class
+	{
+		MessageBox(NULL,"Could Not Unregister Class.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
+		hInstance=NULL;									// Set hInstance To NULL
+	}
+
+	KillFont();
 }
 
-int main(int argc, char** argv)
+/*	This Code Creates Our OpenGL Window.  Parameters Are:					*
+ *	title			- Title To Appear At The Top Of The Window				*
+ *	width			- Width Of The GL Window Or Fullscreen Mode				*
+ *	height			- Height Of The GL Window Or Fullscreen Mode			*
+ *	bits			- Number Of Bits To Use For Color (8/16/24/32)			*
+ *	fullscreenflag	- Use Fullscreen Mode (TRUE) Or Windowed Mode (FALSE)	*/
+ 
+BOOL CreateGLWindow(char* title, int width, int height, int bits)
 {
-    glutInit(&argc, argv);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize (	
-		static_cast<int>(ObjectsRectangles[e_rect_window].r)-static_cast<int>(ObjectsRectangles[e_rect_window].l),
-		static_cast<int>(ObjectsRectangles[e_rect_window].t)-static_cast<int>(ObjectsRectangles[e_rect_window].b)
-		);
+	GLuint		PixelFormat;			// Holds The Results After Searching For A Match
+	WNDCLASS	wc;						// Windows Class Structure
+	DWORD		dwExStyle;				// Window Extended Style
+	DWORD		dwStyle;				// Window Style
+	RECT		WindowRect;				// Grabs Rectangle Upper Left / Lower Right Values
+	WindowRect.left=(long)0;			// Set Left Value To 0
+	WindowRect.right=(long)width;		// Set Right Value To Requested Width
+	WindowRect.top=(long)0;				// Set Top Value To 0
+	WindowRect.bottom=(long)height;		// Set Bottom Value To Requested Height
 
-    glutInitWindowPosition (0, 0);
-    glutCreateWindow ("The Three Stones");
-    init ();
+
+	hInstance			= GetModuleHandle(NULL);				// Grab An Instance For Our Window
+	wc.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraw On Size, And Own DC For Window.
+	wc.lpfnWndProc		= (WNDPROC) WndProc;					// WndProc Handles Messages
+	wc.cbClsExtra		= 0;									// No Extra Window Data
+	wc.cbWndExtra		= 0;									// No Extra Window Data
+	wc.hInstance		= hInstance;							// Set The Instance
+	wc.hIcon			= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
+	wc.hCursor			= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
+	wc.hbrBackground	= NULL;									// No Background Required For GL
+	wc.lpszMenuName		= NULL;									// We Don't Want A Menu
+	wc.lpszClassName	= "OpenGL";								// Set The Class Name
+
+	if (!RegisterClass(&wc))									// Attempt To Register The Window Class
+	{
+		MessageBox(NULL,"Failed To Register The Window Class.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;											// Return FALSE
+	}
+	
+	dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
+	dwStyle=
+		//WS_OVERLAPPEDWINDOW;							// Windows Style
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;
+
+
+	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
+
+	// Create The Window
+	if (!(hWnd=CreateWindowEx(	dwExStyle,							// Extended Style For The Window
+								"OpenGL",							// Class Name
+								title,								// Window Title
+								dwStyle |							// Defined Window Style
+								WS_CLIPSIBLINGS |					// Required Window Style
+								WS_CLIPCHILDREN,					// Required Window Style
+								0, 0,								// Window Position
+								WindowRect.right-WindowRect.left,	// Calculate Window Width
+								WindowRect.bottom-WindowRect.top,	// Calculate Window Height
+								NULL,								// No Parent Window
+								NULL,								// No Menu
+								hInstance,							// Instance
+								NULL)))								// Dont Pass Anything To WM_CREATE
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Window Creation Error.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	static	PIXELFORMATDESCRIPTOR pfd=				// pfd Tells Windows How We Want Things To Be
+	{
+		sizeof(PIXELFORMATDESCRIPTOR),				// Size Of This Pixel Format Descriptor
+		1,											// Version Number
+		PFD_DRAW_TO_WINDOW |						// Format Must Support Window
+		PFD_SUPPORT_OPENGL |						// Format Must Support OpenGL
+		PFD_DOUBLEBUFFER,							// Must Support Double Buffering
+		PFD_TYPE_RGBA,								// Request An RGBA Format
+		bits,										// Select Our Color Depth
+		0, 0, 0, 0, 0, 0,							// Color Bits Ignored
+		0,											// No Alpha Buffer
+		0,											// Shift Bit Ignored
+		0,											// No Accumulation Buffer
+		0, 0, 0, 0,									// Accumulation Bits Ignored
+		16,											// 16Bit Z-Buffer (Depth Buffer)  
+		0,											// No Stencil Buffer
+		0,											// No Auxiliary Buffer
+		PFD_MAIN_PLANE,								// Main Drawing Layer
+		0,											// Reserved
+		0, 0, 0										// Layer Masks Ignored
+	};
+	
+	if (!(hDC=GetDC(hWnd)))							// Did We Get A Device Context?
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Can't Create A GL Device Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if (!(PixelFormat=ChoosePixelFormat(hDC,&pfd)))	// Did Windows Find A Matching Pixel Format?
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Can't Find A Suitable PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if(!SetPixelFormat(hDC,PixelFormat,&pfd))		// Are We Able To Set The Pixel Format?
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Can't Set The PixelFormat.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if (!(hRC=wglCreateContext(hDC)))				// Are We Able To Get A Rendering Context?
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Can't Create A GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	if(!wglMakeCurrent(hDC,hRC))					// Try To Activate The Rendering Context
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Can't Activate The GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	ShowWindow(hWnd,SW_SHOW);						// Show The Window
+	SetForegroundWindow(hWnd);						// Slightly Higher Priority
+	SetFocus(hWnd);									// Sets Keyboard Focus To The Window
+
+	if (!InitGL())									// Initialize Our Newly Created GL Window
+	{
+		KillGLWindow();								// Reset The Display
+		MessageBox(NULL,"Initialization Failed.","ERROR",MB_OK|MB_ICONEXCLAMATION);
+		return FALSE;								// Return FALSE
+	}
+
+	return TRUE;									// Success
+}
+
+LRESULT CALLBACK WndProc(	HWND	hWnd,			// Handle For This Window
+							UINT	uMsg,			// Message For This Window
+							WPARAM	wParam,			// Additional Message Information
+							LPARAM	lParam)			// Additional Message Information
+{
+	switch (uMsg)									// Check For Windows Messages
+	{
+		case WM_ACTIVATE:							// Watch For Window Activate Message
+		{
+			if (!HIWORD(wParam))					// Check Minimization State
+			{
+				active=TRUE;						// Program Is Active
+			}
+			else
+			{
+				active=FALSE;						// Program Is No Longer Active
+			}
+
+			return 0;								// Return To The Message Loop
+		}
+
+		case WM_SYSCOMMAND:							// Intercept System Commands
+		{
+			switch (wParam)							// Check System Calls
+			{
+				case SC_SCREENSAVE:					// Screensaver Trying To Start?
+				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
+				return 0;							// Prevent From Happening
+			}
+			break;									// Exit
+		}
+
+		case WM_CLOSE:								// Did We Receive A Close Message?
+		{
+			PostQuitMessage(0);						// Send A Quit Message
+			return 0;								// Jump Back
+		}
+
+		case WM_KEYDOWN:							// Is A Key Being Held Down?
+		{
+			keys[wParam] = TRUE;					// If So, Mark It As TRUE
+			return 0;								// Jump Back
+		}
+
+		case WM_KEYUP:								// Has A Key Been Released?
+		{
+			keys[wParam] = FALSE;					// If So, Mark It As FALSE
+			return 0;								// Jump Back
+		}
+
+		case WM_LBUTTONDOWN:
+		{
+			if(wParam==MK_LBUTTON)
+				OnMouse(LOWORD(lParam),HIWORD(lParam));
+			return 0;
+		}
+
+	}
+
+	// Pass All Unhandled Messages To DefWindowProc
+	return DefWindowProc(hWnd,uMsg,wParam,lParam);
+}
+
+int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
+					HINSTANCE	hPrevInstance,		// Previous Instance
+					LPSTR		lpCmdLine,			// Command Line Parameters
+					int			nCmdShow)			// Window Show State
+{
+	MSG		msg;									// Windows Message Structure
+	BOOL	done=FALSE;								// Bool Variable To Exit Loop
+
+
+	// Create Our OpenGL Window
+	if (!CreateGLWindow("Hassan Boulmarouf's \"The 3 Stones\"",
+		ObjectsRectangles[e_rect_window].r-ObjectsRectangles[e_rect_window].l,
+		ObjectsRectangles[e_rect_window].t-ObjectsRectangles[e_rect_window].b,
+		16))
+	{
+		return 0;									// Quit If Window Was Not Created
+	}
+
 	game_init();
-    glutDisplayFunc(display); 
-	glutMouseFunc( onMouse);
 
-	glutIdleFunc		  ( display );
-    glutMainLoop();
+	while(!done)									// Loop That Runs While done=FALSE
+	{
+#ifdef BETTERLOOP
+		MainLoop();
+		SwapBuffers(hDC);
+#endif
+		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))	// Is There A Message Waiting?
+		{
+			if (msg.message==WM_QUIT)				// Have We Received A Quit Message?
+			{
+				done=TRUE;							// If So done=TRUE
+			}
+			else									// If Not, Deal With Window Messages
+			{
+				TranslateMessage(&msg);				// Translate The Message
+				DispatchMessage(&msg);				// Dispatch The Message
+			}
+		}
+		else										// If There Are No Messages
+		{
+			// Draw The Scene.  Watch For ESC Key And Quit Messages From MainLoop()
+			if (
+#ifndef BETTERLOOP
+				(active && !MainLoop()) ||
+#endif
+				keys[VK_ESCAPE])	// Active?  Was There A Quit Received?
+			{
+				done=TRUE;							// ESC or MainLoop Signalled A Quit
+			}
+			else									// Not Time To Quit, Update Screen
+			{
+#ifndef BETTERLOOP
+				SwapBuffers(hDC);					// Swap Buffers (Double Buffering)
+#endif
+			}
+		}
+	}
+
 	game_deinit();
-    return 0; 
-}
 
+	// Shutdown
+	KillGLWindow();									// Kill The Window
+	return (msg.wParam);							// Exit The Program
+}

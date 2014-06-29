@@ -3,7 +3,7 @@
 #define _OBJECTSRECTANGLES_
 
 
-#include "rectangle.h"
+#include "Rectangle.h"
 #include "board.h"
 #include "Score.h"
 #include "TimeCounter.h"
@@ -31,9 +31,8 @@ enum
 
 const hb::Rectangle ObjectsRectangles[]=
 {
-
 	//windowRectangle
-	hb::Rectangle(0.0, 0.0, 
+	hb::Rectangle(0, 0, 
 					Board::e_ColumnSize*Square::e_Width+140, Board::e_RowSize*Square::e_Height+10),
 //board
 	hb::Rectangle(ObjectsRectangles[e_rect_window].r-Board::e_ColumnSize*Square::e_Width-5,
@@ -73,7 +72,6 @@ const hb::Rectangle ObjectsRectangles[]=
 		ObjectsRectangles[e_rect_Intro].b+10, 
 		ObjectsRectangles[e_rect_Intro].r - (ObjectsRectangles[e_rect_Intro].r -ObjectsRectangles[e_rect_Intro].l)/2 +Intro::e_width/2,
 		ObjectsRectangles[e_rect_Intro].b+5+10+40),
-
 };
 
 #endif _OBJECTSRECTANGLES_

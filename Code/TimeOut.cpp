@@ -57,10 +57,10 @@ void TimeOut::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2i (rDim.l, rDim.b);
+        glVertex2i (rDim.r, rDim.b);
+        glVertex2i (rDim.r, rDim.t);
+        glVertex2i (rDim.l, rDim.t);
     glEnd();
 
 	glDisable(GL_BLEND); 
@@ -113,26 +113,26 @@ void TimeOut::Draw()
 	}
 
 
-    glColor3f (1.0, 1.0, 0.2);
+    glColor3f (1.f, 1.f, 0.2f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (m_rplay->l, m_rplay->b);
-        glVertex2f (m_rplay->r, m_rplay->b);
-        glVertex2f (m_rplay->r, m_rplay->t);
-        glVertex2f (m_rplay->l, m_rplay->t);
+        glVertex2i (m_rplay->l, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->t);
+        glVertex2i (m_rplay->l, m_rplay->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
 	hb::DrawText("play again",m_rplay->l+10, m_rplay->b+(m_rplay->t-m_rplay->b)/2);
 
 
-    glColor3f (1.0, 1.0, 0.2);
+    glColor3f (1.0f, 1.0f, 0.2f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (m_rquit->l, m_rquit->b);
-        glVertex2f (m_rquit->r, m_rquit->b);
-        glVertex2f (m_rquit->r, m_rquit->t);
-        glVertex2f (m_rquit->l, m_rquit->t);
+        glVertex2i (m_rquit->l, m_rquit->b);
+        glVertex2i (m_rquit->r, m_rquit->b);
+        glVertex2i (m_rquit->r, m_rquit->t);
+        glVertex2i (m_rquit->l, m_rquit->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);

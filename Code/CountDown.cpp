@@ -28,36 +28,37 @@ CountDown::~CountDown()
 
 void CountDown::Update()
 {
-	DWORD t=timeGetTime();
-	
+					ObjectsManager::GetInstance().Pop(this,false);
+return;
+/*
 	if(m_t0==0)
 	{
 		m_t0=timeGetTime();
+		return;
 	}
-	else
-	{
-		t=t-m_t0;
-		if(t>e_timeperframe)
-		{
-			m_t0=timeGetTime();
 
-			m_currentframe++;
-			if(m_currentframe>=e_nbrframes)
+	DWORD t=timeGetTime();
+	
+	if(t-m_t0>e_timeperframe)
+	{
+		m_t0=t;
+
+		m_currentframe++;
+		if(m_currentframe>=e_nbrframes)
+		{
+			if(m_currentfigure>1)
 			{
-				if(m_currentfigure>1)
-				{
-					m_currentfigure--;
-					m_currentframe=0;
-				}
-				else
-				{
-					m_currentframe--; //to avoid drawing e_nbrframes frame
-					ObjectsManager::GetInstance().Pop(this,false);
-				}
+				m_currentfigure--;
+				m_currentframe=0;
+			}
+			else
+			{
+				m_currentframe--; //to avoid drawing e_nbrframes frame
+				ObjectsManager::GetInstance().Pop(this,false);
 			}
 		}
 	}
-
+	*/
 }
 
 
@@ -71,10 +72,10 @@ void CountDown::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2i (rDim.l, rDim.b);
+        glVertex2i (rDim.r, rDim.b);
+        glVertex2i (rDim.r, rDim.t);
+        glVertex2i (rDim.l, rDim.t);
     glEnd();
 
 	glDisable(GL_BLEND); 
@@ -99,10 +100,10 @@ void CountDown::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(rtxl, rtxb); glVertex2f (m_rect.l, m_rect.b);
-        glTexCoord2f(rtxr, rtxb); glVertex2f (m_rect.r, m_rect.b);
-        glTexCoord2f(rtxr, rtxt); glVertex2f (m_rect.r, m_rect.t);
-        glTexCoord2f(rtxl, rtxt); glVertex2f (m_rect.l, m_rect.t);
+        glTexCoord2f(rtxl, rtxb); glVertex2i (m_rect.l, m_rect.b);
+        glTexCoord2f(rtxr, rtxb); glVertex2i (m_rect.r, m_rect.b);
+        glTexCoord2f(rtxr, rtxt); glVertex2i (m_rect.r, m_rect.t);
+        glTexCoord2f(rtxl, rtxt); glVertex2i (m_rect.l, m_rect.t);
     glEnd();
 	
 	glDisable(GL_ALPHA_TEST);

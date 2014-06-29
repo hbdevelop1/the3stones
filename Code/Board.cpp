@@ -25,9 +25,28 @@ bool PositionInBoard::operator==(PositionInBoard  b)
 	return rect==b.rect;
 }
 
+#ifdef TIMEOFSWAP
+LARGE_INTEGER g_swapstart;
+LARGE_INTEGER g_swapend;
+#endif
+
+#ifdef TIMEOFSWAP2
+LARGE_INTEGER g_swapstart2;
+LARGE_INTEGER g_swapend2;
+LONGLONG		g_diffticks2=0;
+Tile*		g_tile2time=NULL;
+char timeofswapbuf2[80];
+#endif
+
+
 Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
 				m_selectedTilesPosition(hb::Pointu8::Invalid)
 {
+#ifdef TIMEOFSWAP
+	g_swapstart.QuadPart=-1;
+	g_swapend.QuadPart=-1;
+#endif
+
 	Tile::m_board=this;
 	m_click.notprocessed=false;
 
@@ -104,13 +123,13 @@ hb::Pointu32 sPoint,ePoint;
 
 void Board::Draw()
 {
-    glColor3f (0.8, 0.6, 1.0);
+    glColor3f (0.8f, 0.6f, 1.0f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (m_rect->l, m_rect->b);
-        glVertex2f (m_rect->r, m_rect->b);
-        glVertex2f (m_rect->r, m_rect->t);
-        glVertex2f (m_rect->l, m_rect->t);
+        glVertex2i (m_rect->l, m_rect->b);
+        glVertex2i (m_rect->r, m_rect->b);
+        glVertex2i (m_rect->r, m_rect->t);
+        glVertex2i (m_rect->l, m_rect->t);
     glEnd();
 
 	glEnable(GL_TEXTURE_2D);
@@ -137,7 +156,26 @@ void Board::Update()
 	{
 		for(int j=0; j<e_RowSize; ++j)
 		{
-			m_tiles[i*e_RowSize+j].Update();
+
+#ifdef TIMEOFSWAP2
+			if(g_tile2time == &m_tiles[i*e_RowSize+j])
+			{
+				LARGE_INTEGER tt1;
+				QueryPerformanceCounter(&tt1);
+	
+				m_tiles[i*e_RowSize+j].Update();
+
+				LARGE_INTEGER tt2;
+				QueryPerformanceCounter(&tt2);
+
+				g_diffticks2+=tt2.QuadPart-tt1.QuadPart;
+			}
+			else
+#endif
+			{
+				m_tiles[i*e_RowSize+j].Update();
+			}
+
 		}
 	}
 }
@@ -218,6 +256,13 @@ void Board::Behavior_Swapping()
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
 		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
+
+#ifdef TIMEOFSWAP2
+	g_tile2time = m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile;
+	g_diffticks2=0;
+	timeofswapbuf2[0]=0;
+#endif
+
 #ifdef _timeinsteadofframes_
 		m_time2WaitAfterSwap=clock();
 #else
@@ -232,6 +277,9 @@ void Board::Behavior_Swapping()
 		if(m_positions[m_click.p.x][m_click.p.y].tile->m_freePositionToMoveTo==NULL && 
 			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
 		{
+#ifdef TIMEOFSWAP2
+			g_tile2time = NULL;
+#endif
 			//todo:use time instead of frames
 #ifdef _timeinsteadofframes_
 			clock_t tempt=clock();
