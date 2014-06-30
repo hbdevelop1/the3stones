@@ -36,7 +36,7 @@ public:
 	void Stop();
 	void Reset();
 
-	friend class game;
+	friend class Game;
 };
 
 

@@ -130,7 +130,7 @@ Object * classname##_Creator();
 
 DeclareCreator(Score);
 DeclareCreator(CountDown);
-DeclareCreator(game);
+DeclareCreator(Game);
 DeclareCreator(TimeOut);
 DeclareCreator(Intro);
 

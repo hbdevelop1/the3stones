@@ -12,7 +12,7 @@ static ObjectsCreators objectscreators[]=
 	NULL,
 	NULL,
 	CountDown_Creator,
-	game_Creator,
+	Game_Creator,
 	TimeOut_Creator,
 	Intro_Creator,
 };

@@ -123,7 +123,7 @@ void TimeOut::Draw()
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("play again",m_rplay->l+10, m_rplay->b+(m_rplay->t-m_rplay->b)/2);
+	hb::DrawText("play again",m_rplay->l+23, m_rplay->b+(m_rplay->t-m_rplay->b)/2);
 
 
     glColor3f (1.0f, 1.0f, 0.2f);
@@ -136,7 +136,7 @@ void TimeOut::Draw()
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("quit game",m_rquit->l+10, m_rquit->b+(m_rquit->t-m_rquit->b)/2);
+	hb::DrawText("quit game",m_rquit->l+23, m_rquit->b+(m_rquit->t-m_rquit->b)/2);
 
 
 }

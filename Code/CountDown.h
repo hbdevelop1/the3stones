@@ -6,7 +6,7 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
-
+#include <time.h>
 
 
 
@@ -15,7 +15,7 @@ class CountDown : public Object
 	const hb::Rectangle & m_rect;
 	unsigned int		m_texObj;
 
-	DWORD				m_t0;
+	clock_t				m_t0;
 	char				m_currentframe;
 	char				m_currentfigure;
 	enum

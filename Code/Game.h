@@ -12,7 +12,7 @@ class TimeCounter;
 class Score;
 class Encouragement;
 
-class game : public Object
+class Game : public Object
 {
 	
 	boost::scoped_ptr<Board>			board;
@@ -23,7 +23,7 @@ class game : public Object
 
 private:
 	State 	m_state;
-	void (game::*m_currentbehavior)(void);
+	void (Game::*m_currentbehavior)(void);
 
 	void Behavior_intro();
 	void Behavior_countdown();
@@ -31,8 +31,8 @@ private:
 	void Behavior_timeout();
 	
 public:
-	game();
-	~game();
+	Game();
+	~Game();
 
 	void Draw();
 	void Update();

@@ -61,11 +61,7 @@ private:
 	Event					m_click;
 	hb::Pointu8				m_selectedTilesPosition;
 
-#ifdef _timeinsteadofframes_
 	clock_t					m_time2WaitAfterSwap;
-#else
-	int						m_nbrOfFrames2WaitAfterSwap;
-#endif
 
 private:
 	Board(const Board &);

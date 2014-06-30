@@ -32,6 +32,7 @@
     <ClCompile Include="..\Code\Mem\MemTracker.cpp">
       <Filter>Mem</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\Board.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="..\Code\Mem\MemTracker.h">
       <Filter>Mem</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphic">

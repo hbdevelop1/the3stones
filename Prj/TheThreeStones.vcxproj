@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Board.cpp" />
+    <ClCompile Include="..\Code\Console.cpp" />
     <ClCompile Include="..\Code\CountDown.cpp" />
     <ClCompile Include="..\Code\Encouragement.cpp" />
     <ClCompile Include="..\Code\Entry.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="..\Code\Board.h" />
     <ClInclude Include="..\Code\Classids.h" />
     <ClInclude Include="..\Code\Common.h" />
+    <ClInclude Include="..\Code\Console.h" />
     <ClInclude Include="..\Code\CountDown.h" />
     <ClInclude Include="..\Code\Encouragement.h" />
     <ClInclude Include="..\Code\fsm.h" />
@@ -101,7 +103,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>PERF1R;_timeinsteadofframes_;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BETTERLOOP;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,7 +118,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>PERF1R;_timeinsteadofframes_;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BETTERLOOP;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

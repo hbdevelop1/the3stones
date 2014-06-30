@@ -18,9 +18,11 @@
 #include "ObjectsRectangles.h"
 //#include "common.h"
 #include "graphic/TexturesManager.h"
+#include "Console.h"
 
 #include "Mem/MemNew.h"
 
+#pragma warning (disable:4996)
 
 HDC			hDC=NULL;		// Private GDI Device Context
 HGLRC		hRC=NULL;		// Permanent Rendering Context
@@ -36,43 +38,6 @@ bool	active=TRUE;		// Window Active Flag Set To TRUE By Default
 LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);	// Declaration For WndProc
 
 
-#ifdef TIMEOFSWAP
-extern LARGE_INTEGER g_swapstart;
-extern LARGE_INTEGER g_swapend;
-#endif
-
-#ifdef TIMEOFSWAP2
-extern LARGE_INTEGER g_swapstart2;
-extern LARGE_INTEGER g_swapend2;
-extern LONGLONG		g_diffticks2;
-extern Tile*		g_tile2time;
-extern char timeofswapbuf2[80];
-#endif
-
-LARGE_INTEGER	g_frequency;
-LARGE_INTEGER	g_start;
-LARGE_INTEGER	g_end;
-LONGLONG diffMax=-1;
-LONGLONG diffMin=MAXLONGLONG;
-double timeinSecondsMax;
-double timeinSecondsMin;
-char timeinSecondsMaxbuf[80];
-char timeinSecondsMinbuf[80];
-char timeinSecondsMinbufdisplay[80];
-char timeinSecondsMaxbufdisplay[80];
-#ifdef TIMEOFSWAP
-char timeofswapbuf[80];
-#endif
-LARGE_INTEGER	g_displaycalled;
-LARGE_INTEGER	g_lasttimecalled;
-bool			g_firsttime=true;
-
-LONGLONG diffMaxdisplay=-1;
-LONGLONG diffMindisplay=MAXLONGLONG;
-
-
-
-
 
 GLuint	base;				// Base Display List For The Font Set
 
@@ -83,11 +48,11 @@ GLvoid BuildFont(GLvoid)								// Build Our Bitmap Font
 
 	base = glGenLists(96);								// Storage For 96 Characters
 
-	font = CreateFont(	-24,							// Height Of Font
+	font = CreateFont(	-18,							// Height Of Font
 						0,								// Width Of Font
 						0,								// Angle Of Escapement
 						0,								// Orientation Angle
-						FW_BOLD,						// Font Weight
+						FW_NORMAL,						// Font Weight
 						FALSE,							// Italic
 						FALSE,							// Underline
 						FALSE,							// Strikeout
@@ -96,7 +61,7 @@ GLvoid BuildFont(GLvoid)								// Build Our Bitmap Font
 						CLIP_DEFAULT_PRECIS,			// Clipping Precision
 						ANTIALIASED_QUALITY,			// Output Quality
 						FF_DONTCARE|DEFAULT_PITCH,		// Family And Pitch
-						"Courier New");					// Font Name
+						"Arial");					// Font Name
 
 	oldfont = (HFONT)SelectObject(hDC, font);           // Selects The Font We Want
 	wglUseFontBitmaps(hDC, 32, 96, base);				// Builds 96 Characters Starting At Character 32
@@ -109,23 +74,6 @@ GLvoid KillFont(GLvoid)									// Delete The Font List
 	glDeleteLists(base, 96);							// Delete All 96 Characters
 }
 
-GLvoid glPrint(const char *fmt, ...)					// Custom GL "Print" Routine
-{
-	char		text[256];								// Holds Our String
-	va_list		ap;										// Pointer To List Of Arguments
-
-	if (fmt == NULL)									// If There's No Text
-		return;											// Do Nothing
-
-	va_start(ap, fmt);									// Parses The String For Variables
-	    vsprintf(text, fmt, ap);						// And Converts Symbols To Actual Numbers
-	va_end(ap);											// Results Are Stored In Text
-
-	glPushAttrib(GL_LIST_BIT);							// Pushes The Display List Bits
-	glListBase(base - 32);								// Sets The Base Character to 32
-	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);	// Draws The Display List Text
-	glPopAttrib();										// Pops The Display List Bits
-}
 
 namespace hb
 {
@@ -157,11 +105,10 @@ void game_init()
 	if(!TexturesManager::GetInstance().TexInit())
 		exit(1);
 
-	ObjectsManager::GetInstance().PushBack(CLASSID_game,true);
+	ObjectsManager::GetInstance().PushBack(CLASSID_Game,true);
 	
-#ifdef TIMEOFSWAP
-	timeofswapbuf[0]=0;
-#endif
+	RedirectIOToConsole();
+
 }
 void game_deinit()
 {
@@ -190,133 +137,18 @@ int InitGL(GLvoid)										// All Setup For OpenGL Goes Here
 
 	BuildFont();										// Build The Font
 
-	QueryPerformanceFrequency(&g_frequency);
-
 	return TRUE;										// Initialization Went OK
 }
 
 int MainLoop()
 {
-#ifdef PERF1
-	QueryPerformanceCounter(&g_displaycalled);
-
-	//{
-		char bufdisplay[80];
-	if(!g_firsttime)
-	{
-		LONGLONG 	diff=g_displaycalled.QuadPart-g_lasttimecalled.QuadPart;
-
-		if(diffMaxdisplay<diff)
-		{
-			diffMaxdisplay=diff;
-			double timeinSeconds = (double)diffMaxdisplay/g_frequency.QuadPart;
-
-			sprintf(timeinSecondsMaxbufdisplay,"%E",timeinSeconds );
-		}
-
-
-		double timeinSeconds = (double)diff/g_frequency.QuadPart;
-		sprintf(bufdisplay,"%E",timeinSeconds );
-
-		if( diffMindisplay>diff)
-		{
-			diffMindisplay=diff;
-			double timeinSeconds = (double)diffMindisplay/g_frequency.QuadPart;
-
-			sprintf(timeinSecondsMinbufdisplay,"%E",timeinSecondsMin );
-		}
-	}
-
-	g_firsttime=false;
-
-	g_lasttimecalled.QuadPart=g_displaycalled.QuadPart;
-
-//}
-
-
-/*
-    glClear (GL_COLOR_BUFFER_BIT);
-
-	glColor3f (1.0, 0.0, 0.0);
-	hb::DrawText(timeinSecondsMaxbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+120);
-	hb::DrawText(bufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+100);
-	hb::DrawText(timeinSecondsMinbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+80);
-
-	return TRUE;										// Keep Going
-*/
-	QueryPerformanceCounter(&g_start);
-#endif
-
     glClear (GL_COLOR_BUFFER_BIT);
 
 	ObjectsManager::GetInstance().Update();
 	ObjectsManager::GetInstance().Draw();
 	ObjectsManager::GetInstance().RunDelayedFunctions();
 
-#ifdef PERF1
-	QueryPerformanceCounter(&g_end);
-
-	LONGLONG diff = g_end.QuadPart - g_start.QuadPart;
-	if(diffMax<diff)
-	{
-		diffMax=diff;
-		timeinSecondsMax = (double)diffMax/g_frequency.QuadPart;
-
-		sprintf(timeinSecondsMaxbuf,"%E",timeinSecondsMax );
-	}
-
-
-
-	double timeinSeconds = (double)diff/g_frequency.QuadPart;
-	char buf[80];
-	sprintf(buf,"%E",timeinSeconds);
-
-	if(diffMin>diff)
-	{
-		diffMin=diff;
-		timeinSecondsMin = (double)diffMin/g_frequency.QuadPart;
-
-		sprintf(timeinSecondsMinbuf,"%E",timeinSecondsMin );
-	}
-
-	glColor3f (1.0, 0.0, 0.0);
-
-#ifdef TIMEOFSWAP
-	
-	if(timeofswapbuf[0]==0)
-	{
-		if(g_swapstart.QuadPart > -1 && g_swapend.QuadPart > -1 )
-		{
-			double timeinSeconds = (double)(g_swapend.QuadPart -g_swapstart.QuadPart)/g_frequency.QuadPart;
-
-			sprintf(timeofswapbuf,"%E",timeinSeconds );
-		}
-	}
-
-	hb::DrawText(timeofswapbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+140);
-#endif
-#ifdef TIMEOFSWAP2
-	if(g_diffticks2 && !g_tile2time && timeofswapbuf2[0]==0)
-	{
-		double timeinSeconds = (double)g_diffticks2/g_frequency.QuadPart;
-		sprintf(timeofswapbuf2,"%E",timeinSeconds );
-	}
-	hb::DrawText(timeofswapbuf2,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+140);
-#endif
-
-	hb::DrawText(timeinSecondsMaxbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+120);
-	hb::DrawText(bufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+100);
-	hb::DrawText(timeinSecondsMinbufdisplay,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+80);
-	glColor3f (1.0, 1.0, 1.0);
-	hb::DrawText(timeinSecondsMaxbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+60);
-	hb::DrawText(buf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+40);
-	hb::DrawText(timeinSecondsMinbuf,ObjectsRectangles[e_rect_window].l+2, ObjectsRectangles[e_rect_window].b+20);
-
-
-#endif //#ifdef PERF1
-
-
-	return TRUE;										// Keep Going
+	return TRUE;										
 }
 
 GLvoid KillGLWindow(GLvoid)								// Properly Kill The Window
@@ -394,7 +226,7 @@ BOOL CreateGLWindow(char* title, int width, int height, int bits)
 		return FALSE;											// Return FALSE
 	}
 	
-	dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;			// Window Extended Style
+	dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE | WS_EX_TOPMOST;			// Window Extended Style
 	dwStyle=
 		//WS_OVERLAPPEDWINDOW;							// Windows Style
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;

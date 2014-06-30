@@ -25,27 +25,10 @@ bool PositionInBoard::operator==(PositionInBoard  b)
 	return rect==b.rect;
 }
 
-#ifdef TIMEOFSWAP
-LARGE_INTEGER g_swapstart;
-LARGE_INTEGER g_swapend;
-#endif
-
-#ifdef TIMEOFSWAP2
-LARGE_INTEGER g_swapstart2;
-LARGE_INTEGER g_swapend2;
-LONGLONG		g_diffticks2=0;
-Tile*		g_tile2time=NULL;
-char timeofswapbuf2[80];
-#endif
-
 
 Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
 				m_selectedTilesPosition(hb::Pointu8::Invalid)
 {
-#ifdef TIMEOFSWAP
-	g_swapstart.QuadPart=-1;
-	g_swapend.QuadPart=-1;
-#endif
 
 	Tile::m_board=this;
 	m_click.notprocessed=false;
@@ -156,26 +139,7 @@ void Board::Update()
 	{
 		for(int j=0; j<e_RowSize; ++j)
 		{
-
-#ifdef TIMEOFSWAP2
-			if(g_tile2time == &m_tiles[i*e_RowSize+j])
-			{
-				LARGE_INTEGER tt1;
-				QueryPerformanceCounter(&tt1);
-	
-				m_tiles[i*e_RowSize+j].Update();
-
-				LARGE_INTEGER tt2;
-				QueryPerformanceCounter(&tt2);
-
-				g_diffticks2+=tt2.QuadPart-tt1.QuadPart;
-			}
-			else
-#endif
-			{
-				m_tiles[i*e_RowSize+j].Update();
-			}
-
+			m_tiles[i*e_RowSize+j].Update();
 		}
 	}
 }
@@ -257,17 +221,7 @@ void Board::Behavior_Swapping()
 	{
 		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
 
-#ifdef TIMEOFSWAP2
-	g_tile2time = m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile;
-	g_diffticks2=0;
-	timeofswapbuf2[0]=0;
-#endif
-
-#ifdef _timeinsteadofframes_
 		m_time2WaitAfterSwap=clock();
-#else
-		m_nbrOfFrames2WaitAfterSwap=Settings::NbrOfFramesToWaitToCheckMatchesAfterSwap;
-#endif
 	}
 	CONSTRUCT_BEHAVIOR_END
 
@@ -277,21 +231,12 @@ void Board::Behavior_Swapping()
 		if(m_positions[m_click.p.x][m_click.p.y].tile->m_freePositionToMoveTo==NULL && 
 			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
 		{
-#ifdef TIMEOFSWAP2
-			g_tile2time = NULL;
-#endif
 			//todo:use time instead of frames
-#ifdef _timeinsteadofframes_
 			clock_t tempt=clock();
 			if(tempt-m_time2WaitAfterSwap >= Settings::TimeToWaitToCheckMatchesAfterSwap)
 			{
 				m_time2WaitAfterSwap=tempt;
-#else
-			if(m_nbrOfFrames2WaitAfterSwap>0)
-				--m_nbrOfFrames2WaitAfterSwap;
-			else
-			{
-#endif
+
 				//check for matches from each tile's side, horizontally and vertically
 				if(m_positions[m_click.p.x][m_click.p.y].tile->CheckMatches() || 
 					m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->CheckMatches()

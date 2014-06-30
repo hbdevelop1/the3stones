@@ -28,16 +28,13 @@ CountDown::~CountDown()
 
 void CountDown::Update()
 {
-					ObjectsManager::GetInstance().Pop(this,false);
-return;
-/*
 	if(m_t0==0)
 	{
-		m_t0=timeGetTime();
+		m_t0=clock();
 		return;
 	}
 
-	DWORD t=timeGetTime();
+	clock_t t=clock();
 	
 	if(t-m_t0>e_timeperframe)
 	{
@@ -58,7 +55,6 @@ return;
 			}
 		}
 	}
-	*/
 }
 
 

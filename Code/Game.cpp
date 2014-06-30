@@ -11,14 +11,14 @@
 #include <new>
 
 
-ImplementCreator(game)
+ImplementCreator(Game)
 
-game::game()
+Game::Game()
 {
 
 	SetFlag(e_FLAG_MASTER);
 
-	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_game);
+	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_Game);
 
 	board.reset(new Board );
 	score.reset( new Score );
@@ -32,32 +32,32 @@ game::game()
 	ObjectsManager::GetInstance().PushBack(encouragement.get(),false);
 
 
-	START_BEHAVIOR(game, Behavior_intro);
+	START_BEHAVIOR(Game, Behavior_intro);
 }
 
-game::~game()
+Game::~Game()
 {
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
 }
 
 /*
-void game::WhenPushed()
+void Game::WhenPushed()
 {
 	ObjectsManager::GetInstance().PushBack(board.get());
 	ObjectsManager::GetInstance().PushBack(score.get());
 	ObjectsManager::GetInstance().PushBack(timer.get());
 }
 */
-void game::Update()
+void Game::Update()
 {
 	(this->*m_currentbehavior)();
 }
 
-void game::Draw()
+void Game::Draw()
 {
 }
 
-void game::Behavior_intro()
+void Game::Behavior_intro()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
@@ -71,7 +71,7 @@ void game::Behavior_intro()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		CHANGE_BEHAVIOR(game,Behavior_countdown);
+		CHANGE_BEHAVIOR(Game,Behavior_countdown);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -81,7 +81,7 @@ void game::Behavior_intro()
 	DESTRUCT_BEHAVIOR_END
 
 }
-void game::Behavior_countdown()
+void Game::Behavior_countdown()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
@@ -95,7 +95,7 @@ void game::Behavior_countdown()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		CHANGE_BEHAVIOR(game,Behavior_playing);
+		CHANGE_BEHAVIOR(Game,Behavior_playing);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -109,7 +109,7 @@ void game::Behavior_countdown()
 	Behavior_playing;
 	*/
 }
-void game::Behavior_playing()
+void Game::Behavior_playing()
 {
 /*
 	when timeout;
@@ -125,7 +125,7 @@ void game::Behavior_playing()
 	UPDATE_BEHAVIOR_BEGIN
 	{
 		if(timer->m_timeout)
-			CHANGE_BEHAVIOR(game,Behavior_timeout);
+			CHANGE_BEHAVIOR(Game,Behavior_timeout);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -135,7 +135,7 @@ void game::Behavior_playing()
 	DESTRUCT_BEHAVIOR_END
 
 }
-void game::Behavior_timeout()
+void Game::Behavior_timeout()
 {
 	/*
 	show button to restart;
@@ -149,7 +149,7 @@ void game::Behavior_timeout()
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		CHANGE_BEHAVIOR(game,Behavior_countdown);
+		CHANGE_BEHAVIOR(Game,Behavior_countdown);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -159,8 +159,8 @@ void game::Behavior_timeout()
 	DESTRUCT_BEHAVIOR_END
 }
 
-void game::OnClick(unsigned int x, unsigned int y)
+void Game::OnClick(unsigned int x, unsigned int y)
 {
-	if(m_currentbehavior == &game::Behavior_playing)
+	if(m_currentbehavior == &Game::Behavior_playing)
 		board->OnClick(x,y);
 }
