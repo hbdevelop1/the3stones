@@ -1,4 +1,3 @@
-#if 1
 
 #ifndef _MEMNEW_
 #define _MEMNEW_
@@ -9,4 +8,4 @@
 
 #endif _MEMNEW_
 
-#endif 
+ 

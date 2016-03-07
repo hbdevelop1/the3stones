@@ -1,4 +1,3 @@
-#if 1
 #ifndef _HB_ALLOCATOR_H_
 #define _HB_ALLOCATOR_H_
 
@@ -17,9 +16,9 @@ template<class _Ty> inline
 		_Count = 0;
 	else if (((size_t)(-1) / sizeof (_Ty) < _Count)
 		  || (_Ptr = new char[sizeof(_Ty) *_Count]) == 0)
-#if _MSC_VER = 1700
+#if _MSC_VER == 1700
           throw new std::bad_alloc;
-#elif _MSC_VER = 1600
+#elif _MSC_VER == 1600
 		_THROW_NCEE(std::bad_alloc, 0);
 #endif
 
@@ -56,5 +55,3 @@ public:
 }//hb
 
 #endif //_HB_ALLOCATOR_H_
-
-#endif 
