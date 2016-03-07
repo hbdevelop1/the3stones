@@ -1,111 +1,58 @@
 #include "common.h"
 #include "countdown.h"
+#include "objectsrectangles.h"
 #include "objectsmanager.h"
 #include "classids.h"
-#include "objectsrectangles.h"
-#include "TexturesManager.h"
+#include "graphic/TexturesManager.h"
 
-
-
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif //_use_my_mem_tracker_
+#include "Mem/MemNew.h"
 
 ImplementCreator(CountDown)
 
-CountDown::CountDown():r(ObjectsRectangles[e_rect_countdown]),
-						rf(r.l+25, r.b+25, r.l+25+25, r.b+25+25)
+CountDown::CountDown():m_rect(ObjectsRectangles[e_rect_countdown])
 {
-
 	SetFlag(e_FLAG_MASTER);
-
-#ifdef DEBUGMODE
-#ifdef TESTING
-//for tests only
-	UnSetFlag(e_FLAG_MASTER);
-	ObjectsManager::GetInstance().RegisterGlobalObject(this, CLASSID_CountDown);
-#else
-	hbassert(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_CountDown)==0);
-	hbassert(GetFlag() & e_FLAG_MASTER);
-
-#endif //TESTING
-
-
-#endif //DEBUGMODE
 
 	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_countdown);
 
-	counter=3001;
-	color_index=2;
-
-	t0=0;
-	currentframe=-1;
-	currentfigure=3;
+	m_t0=0;
+	m_currentframe=-1;
+	m_currentfigure=3;
 }
 
 CountDown::~CountDown()
 {
-
-#if DEBUGMODE & TESTING
-
-	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
-
-#endif //DEBUGMODE TESTING
 }
 
 void CountDown::Update()
 {
-	/*
-	--counter;
-
-	if(counter>2000)
+	if(m_t0==0)
 	{
-		color_index=2;
-	}
-	else if(counter>1000)
-	{
-		color_index=1;
-	}
-	else
-	{
-		color_index=0;
+		m_t0=clock();
+		return;
 	}
 
-	if(counter<=0)
-	{
-		ObjectsManager::GetInstance().Pop(this,false);
-	}
-	*/
-	DWORD t=timeGetTime();
+	clock_t t=clock();
 	
-	if(t0==0)
+	if(t-m_t0>e_timeperframe)
 	{
-		t0=timeGetTime();
-	}
-	else
-	{
-		t=t-t0;
-		if(t>e_timeperframe)
-		{
-			t0=timeGetTime();
+		m_t0=t;
 
-			currentframe++;
-			if(currentframe>=e_nbrframes)
+		m_currentframe++;
+		if(m_currentframe>=e_nbrframes)
+		{
+			if(m_currentfigure>1)
 			{
-				if(currentfigure>1)
-				{
-					currentfigure--;
-					currentframe=0;
-				}
-				else
-				{
-					currentframe--; //to avoid drawing e_nbrframes frame
-					ObjectsManager::GetInstance().Pop(this,false);
-				}
+				m_currentfigure--;
+				m_currentframe=0;
+			}
+			else
+			{
+				m_currentframe--; //to avoid drawing e_nbrframes frame
+				ObjectsManager::GetInstance().Pop(this,false);
 			}
 		}
 	}
-
 }
 
 
@@ -119,32 +66,25 @@ void CountDown::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2i (rDim.l, rDim.b);
+        glVertex2i (rDim.r, rDim.b);
+        glVertex2i (rDim.r, rDim.t);
+        glVertex2i (rDim.l, rDim.t);
     glEnd();
 
 	glDisable(GL_BLEND); 
 
 
-
-	if(currentframe<0)
+	if(m_currentframe<0)
 		return;
 
-
-
-
-	int fx = (currentframe % e_nbrframes) * e_tilewidth;
-	int fy =e_tileheight*(currentfigure-1);
+	int fx = (m_currentframe % e_nbrframes) * e_tilewidth;
+	int fy =e_tileheight*(m_currentfigure-1);
 
 	GLfloat rtxl=((GLfloat)fx)/e_imagewidth;
 	GLfloat rtxb=((GLfloat)fy)/e_imageheight;
 	GLfloat rtxr=((GLfloat)fx+e_tilewidth)/e_imagewidth;
 	GLfloat rtxt=((GLfloat)fy+e_tileheight)/e_imageheight;
-
-
-
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_ALPHA_TEST);
@@ -154,10 +94,10 @@ void CountDown::Draw()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
 	glBegin(GL_POLYGON);
-        glTexCoord2f(rtxl, rtxb); glVertex2f (r.l, r.b);
-        glTexCoord2f(rtxr, rtxb); glVertex2f (r.r, r.b);
-        glTexCoord2f(rtxr, rtxt); glVertex2f (r.r, r.t);
-        glTexCoord2f(rtxl, rtxt); glVertex2f (r.l, r.t);
+        glTexCoord2f(rtxl, rtxb); glVertex2i (m_rect.l, m_rect.b);
+        glTexCoord2f(rtxr, rtxb); glVertex2i (m_rect.r, m_rect.b);
+        glTexCoord2f(rtxr, rtxt); glVertex2i (m_rect.r, m_rect.t);
+        glTexCoord2f(rtxl, rtxt); glVertex2i (m_rect.l, m_rect.t);
     glEnd();
 	
 	glDisable(GL_ALPHA_TEST);
@@ -166,44 +106,3 @@ void CountDown::Draw()
     
 }
 
-
-void CountDown::Animate()
-{
-	//currentframe : 0,1,2
-	//currentfigure:3,2,1
-	/*
-	int fx = (currentframe % e_nbrcolumns) * e_tilewidth;
-	int fy =e_tileheight*(currentfigure-1);
-
-
-	l=((GLfloat)fx)/e_imagewidth;
-	b=((GLfloat)fy)/e_imageheight;
-	r=((GLfloat)fx+e_tilewidth)/e_imagewidth;
-	t=((GLfloat)fy+e_tileheight)/e_imageheight;
-	*/
-}
-
-
-/*
-void CountDown::Draw()
-{
-    glColor3f (0.0, 0.0, 1.0);
-
-    glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
-    glEnd();
-
-    glColor3f (figures[color_index].r, figures[color_index].g, figures[color_index].b);
-
-    glBegin(GL_POLYGON);
-        glVertex2f (rf.l, rf.b);
-        glVertex2f (rf.r, rf.b);
-        glVertex2f (rf.r, rf.t);
-        glVertex2f (rf.l, rf.t);
-    glEnd();
-
-}
-*/

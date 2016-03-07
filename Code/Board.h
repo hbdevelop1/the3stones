@@ -6,21 +6,21 @@
 #include "fsm.h"
 #include "rectangle.h"
 #include "object.h"
+#include <time.h>
 
-#ifdef _use_smart_ptr_
-#include "boost/smart_ptr/scoped_array.hpp"
-#endif 
 
-struct Tile;
-struct TileColored;
-struct TileTex;
+#include <boost/smart_ptr/scoped_array.hpp>
+
+
+
+class Tile;
 
 //namespace hb{
 
 struct Event
 {
 	hb::Pointu8 p;
-	bool notprocessed;
+	bool		notprocessed;
 };
 
 namespace Square
@@ -34,11 +34,10 @@ namespace Square
 
 struct PositionInBoard
 {
-	hb::Pointu8	point;
-	Tile		*tile;
-	hb::Rectangle r;
+	hb::Pointu8		point;
+	Tile			*tile;
+	hb::Rectangle	rect;
 
-public:
 	PositionInBoard();
 	~PositionInBoard();
 	bool operator==(PositionInBoard );
@@ -54,20 +53,15 @@ public:
 		e_ColumnSize=8
 	};
 private:
-	//std::vector<std::vector<Square> > 
-	//SquareColored squares[e_RowSize][e_ColumnSize];
-	PositionInBoard positions[e_ColumnSize][e_RowSize+1];
-	//TileColored 
-#ifdef _use_smart_ptr_
-	boost::scoped_array<TileTex> tiles;
-#else
-	TileTex * tiles;
-#endif
-	const hb::Rectangle & r;
-	Event		click;
-	hb::Pointu8	SelectedTilesPosition;
+	PositionInBoard			m_positions[e_ColumnSize][e_RowSize+1];
 
-	int nbrofframes2waitafterswap;
+	boost::scoped_array<Tile> m_tiles;
+
+	const hb::Rectangle *	m_rect;
+	Event					m_click;
+	hb::Pointu8				m_selectedTilesPosition;
+
+	clock_t					m_time2WaitAfterSwap;
 
 private:
 	Board(const Board &);
@@ -94,16 +88,16 @@ public:
 	Board();
 	~Board();
 
-	hb::Rectangle GetRectangle() {return r;}
+	const hb::Rectangle * GetRectangle() {return m_rect;}
 	void Draw();
 	void Update();
 	PositionInBoard * GetFreePositionBelow(hb::Pointu8 l);
-	void OnClick(uint32 x, uint32 y);
+	void OnClick(unsigned int x, unsigned int y);
 	void Reset();
 
 	void test();
 
-	friend struct Tile;
+	friend class Tile;
 };
 
 //}//namespace hb

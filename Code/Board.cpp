@@ -4,23 +4,16 @@
 #include "tile.h"
 #include <assert.h>
 
+#include "ObjectsRectangles.h"
 #include "objectsmanager.h"
-#include "objectsrectangles.h"
 
-#ifdef _use_smart_ptr_
-#include "smartptrs/scoped_ptr.hpp"
-#endif 
+#include "settings.h"
 
-
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif
-
+#include "Mem/MemNew.h"
 
 
 PositionInBoard::PositionInBoard():tile(NULL)
 {
-	;
 }
 
 PositionInBoard::~PositionInBoard()
@@ -29,52 +22,36 @@ PositionInBoard::~PositionInBoard()
 
 bool PositionInBoard::operator==(PositionInBoard  b)
 {
-	return r==b.r;
+	return rect==b.rect;
 }
 
 
-//#define _testingclick_ 2
-
-Board::Board():r(ObjectsRectangles[e_rect_board]),
-				SelectedTilesPosition(hb::Pointu8::Invalid)
+Board::Board():m_rect(&ObjectsRectangles[e_rect_board]),
+				m_selectedTilesPosition(hb::Pointu8::Invalid)
 {
 
-	Tile::board=this;
-	click.notprocessed=false;
+	Tile::m_board=this;
+	m_click.notprocessed=false;
 
-#ifdef _use_smart_ptr_
-	tiles.reset(new TileTex [e_RowSize*e_ColumnSize]);
-#else
-	tiles=new TileTex [e_RowSize*e_ColumnSize];
-#endif
-	
-	
+	m_tiles.reset(new Tile [e_RowSize*e_ColumnSize]);
 	for(uint8 i=0; i<e_ColumnSize; ++i)
 	{
 		for(uint8 j=0; j<e_RowSize+1; ++j)
 		{
-			positions[i][j].point=hb::Pointu8(i,j);
-			positions[i][j].r=hb::Rectangle(r.l+i*Square::e_Width,		r.b+j*Square::e_Height,
-											r.l+(i+1)*Square::e_Width,	r.b+(j+1)*Square::e_Height);
+			m_positions[i][j].point=hb::Pointu8(i,j);
+			m_positions[i][j].rect=hb::Rectangle(m_rect->l+i*Square::e_Width,		m_rect->b+j*Square::e_Height,
+											m_rect->l+(i+1)*Square::e_Width,	m_rect->b+(j+1)*Square::e_Height);
 		}
 	}
 
 	Reset();
-
-
-#if (_testingclick_==2)
-	{
-		test();
-	}
-#endif //#if (_testingmove_=2)
-
 }
 
 void Board::Reset()
 {
-	SelectedTilesPosition=hb::Pointu8::Invalid;
+	m_selectedTilesPosition=hb::Pointu8::Invalid;
 
-	click.notprocessed=false;
+	m_click.notprocessed=false;
 
 	Tile::type t=Tile::e_type1;
 	
@@ -82,9 +59,9 @@ void Board::Reset()
 	{
 		for(uint8 j=0; j<e_RowSize; ++j)
 		{
-			positions[i][j].tile=&tiles[i*e_RowSize+j];
+			m_positions[i][j].tile=&m_tiles[i*e_RowSize+j];
 			t=static_cast<Tile::type>(t+1); if (t>Tile::e_type5) t=Tile::e_type1;
-			tiles[i*e_RowSize+j].Set(&positions[i][j],t);
+			m_tiles[i*e_RowSize+j].Set(&m_positions[i][j],t);
 		}
 	}
 
@@ -94,28 +71,26 @@ void Board::Reset()
 	{
 		uint8 j=e_RowSize;
 
-		positions[i][j].tile=NULL;
+		m_positions[i][j].tile=NULL;
 	}
 	
+	Tile::type g[][e_RowSize]=
+	{
+		{ Tile::e_type3,Tile::e_type2,Tile::e_type4,Tile::e_type4,Tile::e_type1,Tile::e_type4,Tile::e_type3,Tile::e_type2},
+		{ Tile::e_type5,Tile::e_type1,Tile::e_type2,Tile::e_type3,Tile::e_type1,Tile::e_type2,Tile::e_type3,Tile::e_type5},
+		{ Tile::e_type3,Tile::e_type4,Tile::e_type3,Tile::e_type2,Tile::e_type5,Tile::e_type1,Tile::e_type2,Tile::e_type3},
+		{ Tile::e_type1,Tile::e_type3,Tile::e_type1,Tile::e_type5,Tile::e_type3,Tile::e_type3,Tile::e_type5,Tile::e_type4},
+		{ Tile::e_type4,Tile::e_type5,Tile::e_type2,Tile::e_type2,Tile::e_type5,Tile::e_type2,Tile::e_type5,Tile::e_type4},
+		{ Tile::e_type2,Tile::e_type3,Tile::e_type4,Tile::e_type1,Tile::e_type5,Tile::e_type1,Tile::e_type4,Tile::e_type2},
+		{ Tile::e_type5,Tile::e_type1,Tile::e_type1,Tile::e_type4,Tile::e_type1,Tile::e_type2,Tile::e_type1,Tile::e_type1},
+		{ Tile::e_type4,Tile::e_type5,Tile::e_type1,Tile::e_type4,Tile::e_type3,Tile::e_type1,Tile::e_type4,Tile::e_type3}
+	};
 
-	{//set map
-		Tile::type g[][e_RowSize]={
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5},
-			{ Tile::e_type4, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type5},
-			{ Tile::e_type2, Tile::e_type4, Tile::e_type3, Tile::e_type1, Tile::e_type3, Tile::e_type2, Tile::e_type5, Tile::e_type3},
-			{ Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2},
-			{ Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type3, Tile::e_type5, Tile::e_type5, Tile::e_type3, Tile::e_type1},
-			{ Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1},
-			{ Tile::e_type3, Tile::e_type3, Tile::e_type4, Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4},
-			{ Tile::e_type2, Tile::e_type5, Tile::e_type3, Tile::e_type1, Tile::e_type4, Tile::e_type2, Tile::e_type1, Tile::e_type3}
-		};
-
-		for(uint8 i=0; i<e_ColumnSize; ++i)
+	for(uint8 i=0; i<e_ColumnSize; ++i)
+	{
+		for(uint8 j=0; j<e_RowSize; ++j)
 		{
-			for(uint8 j=0; j<e_RowSize; ++j)
-			{
-				tiles[i*e_RowSize+j].Reset(g[i][j]);
-			}
+			m_tiles[i*e_RowSize+j].Reset(g[i][j]);
 		}
 	}
 
@@ -125,28 +100,20 @@ void Board::Reset()
 
 Board::~Board()
 {
-#ifdef _use_smart_ptr_
-#elif _use_my_mem_tracker_
-	deletea<TileTex>(tiles);
-#else
-	delete [] tiles;
-#endif 
 }
+
+hb::Pointu32 sPoint,ePoint;
+
 void Board::Draw()
 {
-    glColor3f (0.0, 0.0, 0.0);
+    glColor3f (0.8f, 0.6f, 1.0f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
+        glVertex2i (m_rect->l, m_rect->b);
+        glVertex2i (m_rect->r, m_rect->b);
+        glVertex2i (m_rect->r, m_rect->t);
+        glVertex2i (m_rect->l, m_rect->t);
     glEnd();
-#if (_testingmove_==1)
-			tiles[0].Draw();
-			tiles[2].Draw();
-			return;
-#endif //_testingmove_==1
 
 	glEnable(GL_TEXTURE_2D);
 
@@ -155,7 +122,7 @@ void Board::Draw()
 	{
 		for(int j=0; j<e_RowSize; ++j)
 		{
-			tiles[i*e_RowSize+j].Draw();
+			m_tiles[i*e_RowSize+j].Draw();
 		}
 	}
 
@@ -165,21 +132,14 @@ void Board::Draw()
 
 void Board::Update()
 {
-
 	(this->*m_currentbehavior)();
 
-
-#if (_testingmove_==1)
-			tiles[0].Tick();
-			tiles[2].Tick();
-			return;
-#endif //_testingmove_==1
 	//tiles can be considered independent objects and be ticked on their own and not be tide to Board::Update
 	for(int i=0; i<e_ColumnSize; ++i)
 	{
 		for(int j=0; j<e_RowSize; ++j)
 		{
-			tiles[i*e_RowSize+j].Update();
+			m_tiles[i*e_RowSize+j].Update();
 		}
 	}
 }
@@ -188,8 +148,8 @@ PositionInBoard * Board::GetFreePositionBelow(hb::Pointu8 l)
 {
 	//'l' could be row 3 and column 6 -> check row 2 and column 6
 	if (l.y>0)
-		if (positions[l.x][l.y-1].tile == NULL)
-			return &positions[l.x][l.y-1];
+		if (m_positions[l.x][l.y-1].tile == NULL)
+			return &m_positions[l.x][l.y-1];
 	return NULL;
 }
 
@@ -200,12 +160,12 @@ void Board::OnClick(uint32 x, uint32 y)
 
 	if(m_currentbehavior == &Board::Behavior_Stable && m_state != e_Ending)
 	{
-		if(r.l<=x && x<=r.r && r.b<=y && y<=r.t)
+		if(m_rect->l<=x && x<=m_rect->r && m_rect->b<=y && y<=m_rect->t)
 		{
 			//determine if it's a tile the 
-			click.notprocessed = true;
-			click.p.x=(x-r.l)/Square::e_Width;
-			click.p.y=(y-r.b)/Square::e_Height;
+			m_click.notprocessed = true;
+			m_click.p.x=(x-m_rect->l)/Square::e_Width;
+			m_click.p.y=(y-m_rect->b)/Square::e_Height;
 		}
 	}
 }
@@ -214,42 +174,42 @@ void Board::OnClick(uint32 x, uint32 y)
 void Board::Behavior_Stable()
 {
 
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-	SelectedTilesPosition=hb::Pointu8::Invalid;
-}
-CONSTRUCT_BEHAVIOR_END
-
-UPDATE_BEHAVIOR_BEGIN
-{
-	if(click.notprocessed)
+	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		click.notprocessed=false;
+		m_selectedTilesPosition=hb::Pointu8::Invalid;
+	}
+	CONSTRUCT_BEHAVIOR_END
 
-		if(SelectedTilesPosition==hb::Pointu8::Invalid)//the first click goes into SelectedTilesPosition
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		if(m_click.notprocessed)
 		{
-			if(positions[click.p.x][click.p.y].tile->SetSelected(true)) //a tile can be selected only when in Behavior_Resting
-				SelectedTilesPosition=click.p;
-		}
-		else if(NextToEachOther(SelectedTilesPosition,click.p))
-		{
-			positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->SetSelected(false);
-			CHANGE_BEHAVIOR(Board,Behavior_Swapping);
-		}
-		else//if the tiles are not next to each others. 
-		//note:the board can not receive a third click as it will be in Behavior_Swapping right after the second one.
-		{
-			positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->SetSelected(false);
-			SelectedTilesPosition=hb::Pointu8::Invalid;
+			m_click.notprocessed=false;
+
+			if(m_selectedTilesPosition==hb::Pointu8::Invalid)//the first m_click goes into m_selectedTilesPosition
+			{
+				if(m_positions[m_click.p.x][m_click.p.y].tile->SetSelected(true)) //a tile can be selected only when in Behavior_Resting
+					m_selectedTilesPosition=m_click.p;
+			}
+			else if(NextToEachOther(m_selectedTilesPosition,m_click.p))
+			{
+				m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->SetSelected(false);
+				CHANGE_BEHAVIOR(Board,Behavior_Swapping);
+			}
+			else//if the tiles are not next to each others. 
+			//note:the board can not receive a third m_click as it will be in Behavior_Swapping right after the second one.
+			{
+				m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->SetSelected(false);
+				m_selectedTilesPosition=hb::Pointu8::Invalid;
+			}
 		}
 	}
-}
-UPDATE_BEHAVIOR_END
+	UPDATE_BEHAVIOR_END
 
-DESTRUCT_BEHAVIOR_BEGIN
-{
-}
-DESTRUCT_BEHAVIOR_END
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
 
 }
 
@@ -257,45 +217,46 @@ DESTRUCT_BEHAVIOR_END
 void Board::Behavior_Swapping()
 {
 
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-	Swap(positions[click.p.x][click.p.y].tile,positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile);
-	nbrofframes2waitafterswap=50;
-}
-CONSTRUCT_BEHAVIOR_END
-
-UPDATE_BEHAVIOR_BEGIN
-{
-	//wait for the swapping to finish;
-	if(positions[click.p.x][click.p.y].tile->pFreePositionToMoveTo==NULL && 
-		positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->pFreePositionToMoveTo==NULL)
+	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		if(nbrofframes2waitafterswap>0)
-			--nbrofframes2waitafterswap;
-		else
+		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
+
+		m_time2WaitAfterSwap=clock();
+	}
+	CONSTRUCT_BEHAVIOR_END
+
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		//wait for the swapping to finish;
+		if(m_positions[m_click.p.x][m_click.p.y].tile->m_freePositionToMoveTo==NULL && 
+			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
 		{
-			//check for matches from each tile's side, horizontally and vertically
-			if(positions[click.p.x][click.p.y].tile->CheckMatches() || 
-				positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->CheckMatches()
-				)
+			//todo:use time instead of frames
+			clock_t tempt=clock();
+			if(tempt-m_time2WaitAfterSwap >= Settings::TimeToWaitToCheckMatchesAfterSwap)
 			{
-				CHANGE_BEHAVIOR(Board,Behavior_InTransition);//the board is closed to interaction
+				m_time2WaitAfterSwap=tempt;
+
+				//check for matches from each tile's side, horizontally and vertically
+				if(m_positions[m_click.p.x][m_click.p.y].tile->CheckMatches() || 
+					m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->CheckMatches()
+					)
+				{
+					CHANGE_BEHAVIOR(Board,Behavior_InTransition);//the board is closed to interaction
+				}
+				else
+				{
+					CHANGE_BEHAVIOR(Board,Behavior_SwappingBack);
+				}
 			}
-			else
-				CHANGE_BEHAVIOR(Board,Behavior_SwappingBack);
 		}
 	}
+	UPDATE_BEHAVIOR_END
 
-
-
-
-}
-UPDATE_BEHAVIOR_END
-
-DESTRUCT_BEHAVIOR_BEGIN
-{
-}
-DESTRUCT_BEHAVIOR_END
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
 
 }
 
@@ -303,35 +264,35 @@ DESTRUCT_BEHAVIOR_END
 void Board::Behavior_SwappingBack()
 {
 
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-	Swap(positions[click.p.x][click.p.y].tile,positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile);
-	nbrofframes2waitafterswap=0;
-}
-CONSTRUCT_BEHAVIOR_END
-
-UPDATE_BEHAVIOR_BEGIN
-{
-	//wait for the swap-back to finish;
-	if(positions[click.p.x][click.p.y].tile->pFreePositionToMoveTo==NULL && 
-		positions[SelectedTilesPosition.x][SelectedTilesPosition.y].tile->pFreePositionToMoveTo==NULL)
+	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		if(nbrofframes2waitafterswap>0)
-			--nbrofframes2waitafterswap;
-		else
-		{
-			SelectedTilesPosition=hb::Pointu8::Invalid;
-			CHANGE_BEHAVIOR(Board,Behavior_Stable);
-		}
+		Swap(m_positions[m_click.p.x][m_click.p.y].tile,m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile);
+		//m_nbrOfFrames2WaitAfterSwap=0;
 	}
+	CONSTRUCT_BEHAVIOR_END
 
-}
-UPDATE_BEHAVIOR_END
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		//wait for the swap-back to finish;
+		if(m_positions[m_click.p.x][m_click.p.y].tile->m_freePositionToMoveTo==NULL && 
+			m_positions[m_selectedTilesPosition.x][m_selectedTilesPosition.y].tile->m_freePositionToMoveTo==NULL)
+		{
+/*			if(m_nbrOfFrames2WaitAfterSwap>0)
+				--m_nbrOfFrames2WaitAfterSwap;
+			else*/
+			{
+				m_selectedTilesPosition=hb::Pointu8::Invalid;
+				CHANGE_BEHAVIOR(Board,Behavior_Stable);
+			}
+		}
 
-DESTRUCT_BEHAVIOR_BEGIN
-{
-}
-DESTRUCT_BEHAVIOR_END
+	}
+	UPDATE_BEHAVIOR_END
+
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
 
 }
 
@@ -339,40 +300,41 @@ DESTRUCT_BEHAVIOR_END
 void Board::Behavior_InTransition()
 {
 
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-}
-CONSTRUCT_BEHAVIOR_END
-
-UPDATE_BEHAVIOR_BEGIN
-{
-	for(uint8 i=0; i<e_ColumnSize; ++i)
+	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		for(uint8 j=0; j<e_RowSize; ++j)
+	}
+	CONSTRUCT_BEHAVIOR_END
+
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		for(uint8 i=0; i<e_ColumnSize; ++i)
 		{
-			if(positions[i][j].tile==NULL || positions[i][j].tile->m_currentbehavior != &Tile::Behavior_Resting)
-				return; // no need to go any further. there is a tile not in Behavior_Resting
+			for(uint8 j=0; j<e_RowSize; ++j)
+			{
+				if(m_positions[i][j].tile==NULL || m_positions[i][j].tile->m_currentbehavior != &Tile::Behavior_Resting)
+					return; // no need to go any further. there is a tile not in Behavior_Resting
+			}
+		}
+		bool someMatchesFound=false;
+		for(uint8 i=0; i<e_ColumnSize; ++i)
+		{
+			for(uint8 j=0; j<e_RowSize; ++j)
+			{
+                //mark all tiles that need destroying
+				someMatchesFound |= m_positions[i][j].tile->CheckMatches();
+			}
+		}
+		if(someMatchesFound==false)
+		{
+			CHANGE_BEHAVIOR(Board,Behavior_Stable);
 		}
 	}
-	bool someMatchesFound=false;
-	for(uint8 i=0; i<e_ColumnSize; ++i)
-	{
-		for(uint8 j=0; j<e_RowSize; ++j)
-		{
-			someMatchesFound |= positions[i][j].tile->CheckMatches();
-		}
-	}
-	if(someMatchesFound==false)
-	{
-		CHANGE_BEHAVIOR(Board,Behavior_Stable);
-	}
-}
-UPDATE_BEHAVIOR_END
+	UPDATE_BEHAVIOR_END
 
-DESTRUCT_BEHAVIOR_BEGIN
-{
-}
-DESTRUCT_BEHAVIOR_END
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
 
 }
 

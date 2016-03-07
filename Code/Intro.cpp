@@ -2,13 +2,11 @@
 #include "Intro.h"
 #include "objectsmanager.h"
 #include "classids.h"
-#include "objectsrectangles.h"
-#include "TexturesManager.h"
+#include "ObjectsRectangles.h"
+#include "graphic/TexturesManager.h"
 #include "common.h"
 
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif //_use_my_mem_tracker_
+
 
 
 ImplementCreator(Intro)
@@ -16,26 +14,27 @@ ImplementCreator(Intro)
 const char *Introtextmsgs[]=
 {
 	"Rules of the game :",
-	"Arrange three tiles of the same color",
-	"to win 100 points.",
+
+	"Click on one tile, then click on a neigbooring one to swap",
+	"their positions.",
+	"If three tiles of the same color are lined up, vertically",
+	"or horizontally, you win 100 points.",
 };
 
-
-Intro::Intro():r(ObjectsRectangles[e_rect_Intro]),
-					rplay(ObjectsRectangles[e_rect_Intro_start])
+Intro::Intro():
+	Sprite(& ObjectsRectangles[e_rect_Intro], e_tex_Intro)
+	,m_rplay(& ObjectsRectangles[e_rect_Intro_startbutton])
 {
 	SetFlag(e_FLAG_MASTER);
-
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_Intro);
 }
 
 Intro::~Intro()
 {
 }
 
+
 void Intro::Update()
 {
-	;
 }
 
 void Intro::Draw()
@@ -48,29 +47,15 @@ void Intro::Draw()
 	glColor4f (0.0, 0.0, 0.0,.25);
 
 	glBegin(GL_POLYGON);
-        glVertex2f (rDim.l, rDim.b);
-        glVertex2f (rDim.r, rDim.b);
-        glVertex2f (rDim.r, rDim.t);
-        glVertex2f (rDim.l, rDim.t);
+        glVertex2i (rDim.l, rDim.b);
+        glVertex2i (rDim.r, rDim.b);
+        glVertex2i (rDim.r, rDim.t);
+        glVertex2i (rDim.l, rDim.t);
     glEnd();
 
 	glDisable(GL_BLEND); 
 
-
-	glEnable(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
-    glEnd();
-	
-	
-	glDisable(GL_TEXTURE_2D);
+	Sprite::Draw();
 
 	glColor3f (0.0, 0.0, 1.0);
 
@@ -78,42 +63,47 @@ void Intro::Draw()
 	
 	unsigned int line,column_left; 
 
-	line=r.t-30;
-	column_left=r.l+25;
-	
-	hb::DrawText(Introtextmsgs[e_msg_rules],column_left, line);
+	line=m_rect->t-30;
+	column_left=m_rect->l+25;
 
+
+	int i=e_msg_rules;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	
 	line-=30;
-	hb::DrawText(Introtextmsgs[e_msg_arrange],column_left, line);
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	line-=20;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
 		
 	line-=30;
-	hb::DrawText(Introtextmsgs[e_msg_win],column_left, line);
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
+	line-=20;
+	hb::DrawText(Introtextmsgs[i++],column_left, line);
 
 
 
 	//button
 
-    glColor3f (1.0, 1.0, 0.2);
+    glColor3f (1.0f, 1.0f, 0.2f);
 
     glBegin(GL_POLYGON);
-        glVertex2f (rplay.l, rplay.b);
-        glVertex2f (rplay.r, rplay.b);
-        glVertex2f (rplay.r, rplay.t);
-        glVertex2f (rplay.l, rplay.t);
+        glVertex2i (m_rplay->l, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->b);
+        glVertex2i (m_rplay->r, m_rplay->t);
+        glVertex2i (m_rplay->l, m_rplay->t);
     glEnd();
 
 	glColor3f (0.0, 0.0, 1.0);
-	hb::DrawText("Start",rplay.l+10, rplay.b+(rplay.t-rplay.b)/2);
+	hb::DrawText("Start",m_rplay->l+30, m_rplay->b+20);
 
 
 
 }
 
-void Intro::OnClick(uint32 x,uint32 y)
+void Intro::OnClick( unsigned int x, unsigned int y)
 {
-	if(rplay.l<=x && x<=rplay.r && rplay.b<=y && y<=rplay.t)
+	if(m_rplay->l<=x && x<=m_rplay->r && m_rplay->b<=y && y<=m_rplay->t)
 	{
-		ObjectsManager::GetInstance().Pop(this);
+		ObjectsManager::GetInstance().Pop(this,false);
 	}
-
 }

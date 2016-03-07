@@ -6,22 +6,18 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
-
+#include <time.h>
 
 
 
 class CountDown : public Object
 {
-	const hb::Rectangle & r;
-	hb::Rectangle rf;
-	Color figures[3];
-	int		counter;
-	int		color_index;
-	unsigned int m_texObj;
+	const hb::Rectangle & m_rect;
+	unsigned int		m_texObj;
 
-	DWORD t0;
-	char currentframe;
-	char currentfigure;
+	clock_t				m_t0;
+	char				m_currentframe;
+	char				m_currentfigure;
 	enum
 	{
 		e_nbrframes=5,

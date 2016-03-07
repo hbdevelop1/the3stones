@@ -5,20 +5,23 @@
 #include "board.h"
 #include "ObjectsManager.h"
 #include "classids.h"
-#include "TexturesManager.h"
-#include "objectsrectangles.h"
+#include "graphic/TexturesManager.h"
+#include "ObjectsRectangles.h"
+#include "Encouragement.h"
+#include "Settings.h"
 
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif //_use_my_mem_tracker_
+#include "xml/xml.h"
+#include <string>
+using namespace std;
 
 #pragma warning (disable:4996)
 
 uint32	Score::highestscore_i=0;
 
+
 ImplementCreator(Score)
 
-Score::Score()
+Score::Score():m_is(m_gs)
 {
 	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_Score);
 }
@@ -36,7 +39,6 @@ void Score::Update()
 
 void Score::Add(hb::Pointu32 sp)
 {
-	m_gs.Add();
 	m_is.Add(sp);
 }
 
@@ -59,22 +61,22 @@ void Score::WhenDeactivated()
 
 bool Score::UpdateHighestScore()
 {
-	if(Score::highestscore_i < m_gs.score_i)
+	if(Score::highestscore_i < m_gs.m_score_i)
 	{
-		Score::highestscore_i = m_gs.score_i;
+		Score::highestscore_i = m_gs.m_score_i;
 		return true;//new score
 	}
 	return false;//no new score
 }
 
-unsigned int Score::GetHighestScore()
+uint32 Score::GetHighestScore()
 {
 	return Score::highestscore_i;
 }
 
-unsigned int Score::GetScore()
+uint32 Score::GetScore()
 {
-	return m_gs.score_i;
+	return m_gs.m_score_i;
 }
 /////////////
 
@@ -83,148 +85,219 @@ unsigned int Score::GetScore()
 #define DIV		100
 
 
-const char	IndividualScore::score_str[]="+100";
-const int	IndividualScore::score_i=100;
+const char	IndividualScore::ms_score_str[]="+100";
+const int	IndividualScore::ms_score_i=100;
 
+float Text::stept=.05f;
 
-Text::Text(const char* s, hb::Pointu32 sp):screenPos(sp)
+Text::Text()
+	:t(0)
+	,tmNcrg(tm=clock())
+	,end(false)
+	,gs(NULL)
+	,encouraged(false)
 {
-	strncpy(str,s,MAXSTRSZ-1);
-	life=MAXLIFE;
 }
 
-IndividualScore::IndividualScore()
+Text::Text(const char* s, hb::Pointu32 sp, GlobalScore & gs)
+	:initialPos(sp)
+	,currentPos(sp)
+	,controlPoint(sp.x,ObjectsRectangles[e_rect_window].t)
+	,landingPoint(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b)
+	,t(0)
+	,tmNcrg(tm=clock())
+	,end(false)
+	,gs(&gs)
+	,encouraged(false)
+{
+	strncpy(str,s,MAXSTRSZ-1);
+}
+
+Text::~Text()
+{
+}
+
+void Text::Reset(const char* s, hb::Pointu32 sp)
+{
+	currentPos=sp;
+	initialPos=sp;
+	controlPoint=hb::Pointu32(sp.x,ObjectsRectangles[e_rect_window].t);
+	landingPoint=hb::Pointu32(ObjectsRectangles[e_rect_score].l,ObjectsRectangles[e_rect_score].b);
+
+	t=0;
+	tmNcrg=tm=clock();
+	end=false;
+	encouraged=false;
+
+	strncpy(str,s,MAXSTRSZ-1);
+}
+
+void Text::Update()
+{
+	clock_t tempt=clock();
+
+	if(tempt-tm >= Settings::TimeOfIndividualTextScoreUpdate)
+	{
+		tm=tempt;
+
+		if(t>=1.f)
+		{
+			gs->Increment();
+			end=true;
+		}
+
+		float _1_t = 1-t;
+		float _1_t__2 = _1_t * _1_t;
+		float t2=t * t;
+			
+		float C=t2;
+		float B=2 * _1_t * t;
+		float A=_1_t__2;
+
+		float x=A*initialPos.x+B*controlPoint.x+C*landingPoint.x;
+		float y=A*initialPos.y+B*controlPoint.y+C*landingPoint.y;
+
+		currentPos.x=static_cast<uint32>(x);
+		currentPos.y=static_cast<uint32>(y);
+		t+=Text::stept;
+	}
+}
+
+IndividualScore::IndividualScore(GlobalScore & gs):m_gs(gs)
 {
 	Reset();
 }
 
 IndividualScore::~IndividualScore()
 {
-	scores.clear();
-}
-
-void IndividualScore::Update()
-{
-	for(deque<Text>::iterator it=scores.begin();it!=scores.end(); ++it)
+	for(auto it=m_texts.begin(); it!=m_texts.end();)
 	{
-		if(it->life>=0)
-		{
-			if(it->life % DIV == 0)				
-				it->screenPos.y+=4;
-			--it->life;
-		}
-	}
-}
-
-void IndividualScore::Add(hb::Pointu32 sp)
-{
-	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
-
-	for(deque<Text>::iterator it=scores.begin();it!=scores.end(); ++it)
-	{
-		if(it->life<=0)
-		{
-			strncpy(it->str, IndividualScore::score_str, MAXSTRSZ-1);
-			it->life=MAXLIFE;
-			it->screenPos=sp;
-			return;
-		}
-	}
-	
-	scores.push_back(Text(IndividualScore::score_str,sp));
-
-}
-
-void IndividualScore::Draw()
-{
-	glColor3f(.0f,.0f,.0f);
-
-	for(deque<Text>::iterator it=scores.begin();it!=scores.end(); ++it)
-	{
-		if(it->life>=0)
-		{
-			glRasterPos2f(it->screenPos.x, it->screenPos.y);
-			char* p = (char*) (*it).str;
-			while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-		}
+		it=m_texts.erase(it);
 	}
 }
 
 void IndividualScore::Reset()
 {
-	scores.clear();
+	m_texts.clear();
 }
+
+
+void IndividualScore::Update()
+{
+	for(auto it=m_texts.begin(); it!=m_texts.end();)
+	{
+		if(!it->end)
+		{
+			it->Update();
+			++it;
+		}
+		else
+		{
+			it=m_texts.erase(it);
+		}
+	}
+}
+void IndividualScore::Add(hb::Pointu32 sp)
+{
+	sp=sp+hb::Pointu32(Square::e_Height>>2,Square::e_Height>>1);
+
+	for(hb::list::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	{
+		if(it->end)
+		{
+			it->Reset(IndividualScore::ms_score_str,sp);
+			return;
+		}
+	}
+
+	m_texts.push_back(Text(IndividualScore::ms_score_str,sp,m_gs));
+}
+void IndividualScore::Draw()
+{
+	glColor3f(.0f,.0f,.0f);
+
+	for(hb::list::iterator it=m_texts.begin();it!=m_texts.end(); ++it)
+	{
+		if(!it->end && it->t!=0 /*to avoid drawing a static text*/)
+		{
+			hb::DrawText((*it).str,it->currentPos.x, it->currentPos.y);
+		}
+	}
+}
+
 ////////////////
 
-GlobalScore::GlobalScore():r(ObjectsRectangles[e_rect_score])
-										
+GlobalScore::GlobalScore():Sprite(& ObjectsRectangles[e_rect_score], e_tex_score)
 {
-	m_texObj=TexturesManager::GetInstance().GetTextureObj(e_tex_score);
-
 	Reset();
 }
 
 GlobalScore::~GlobalScore()
 {
+	listOfTimesNcrgd.clear();
 }
+
 
 void GlobalScore::Update()
 {
+	ConfirmEncouragement confirmNcrg;
+
+	if (auto encourg=dynamic_cast<Encouragement*>(ObjectsManager::GetInstance().GetGlobalObject(CLASSID_Encouragement)))
+	{
+		int i=0;
+
+		for(auto rit=listOfTimesNcrgd.rbegin(), end=listOfTimesNcrgd.rend(); rit!=end; ++i,++rit)
+		{
+#define threshold_wow 4
+#define threshold_good 2
+
+			if(i== threshold_wow-1)
+			{
+				clock_t diff=listOfTimesNcrgd.rbegin()->time - rit->time;
+				if( diff< 1400)
+				{
+					encourg->Display(e_ncrg_wow);
+					listOfTimesNcrgd.clear();
+					break;
+				}
+			}
+			else if(i== threshold_good-1 && !rit->encouraged)
+			{
+				confirmNcrg.Add( &(*rit) );
+
+				clock_t diff=listOfTimesNcrgd.rbegin()->time - rit->time;
+				if( diff< 1000)
+				{
+					encourg->Display(e_ncrg_good);
+					confirmNcrg.confirm=true;
+					break;
+				}
+			}
+		}
+	}
 }
 
-void GlobalScore::Add()
+void GlobalScore::Increment()
 {
-	score_i += IndividualScore::score_i;
-	_itoa(score_i,score_str,10);
+	listOfTimesNcrgd.push_back(TimeNcrgd());
+
+	m_score_i += IndividualScore::ms_score_i;
+	_itoa(m_score_i,m_score_str,10);
 }
 
 void GlobalScore::Draw()
 {
-	glEnable(GL_TEXTURE_2D);
+	Sprite::Draw();
 
-	glBindTexture(GL_TEXTURE_2D, m_texObj);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
 
-	glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex2f (r.l, r.b);
-        glTexCoord2f(1, 0); glVertex2f (r.r, r.b);
-        glTexCoord2f(1, 1); glVertex2f (r.r, r.t);
-        glTexCoord2f(0, 1); glVertex2f (r.l, r.t);
-    glEnd();
-	
-	
-	glDisable(GL_TEXTURE_2D);
+	glColor3f (1.0f, 1.0f, 0.0f);
 
-	glColor3f (1.0, 1.0, 0.0);
-	glRasterPos2f(r.l+30, r.t-50);
-
-	char* p = (char*) score_str;
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-										//GLUT_BITMAP_TIMES_ROMAN_24
-		
+	hb::DrawText(m_score_str,m_rect->l+30, m_rect->t-50);
 }
-#if 0
-void GlobalScore::Draw()
-{
-    glColor3f (1.0, 0.0, 1.0);
 
-    glBegin(GL_POLYGON);
-        glVertex2f (r.l, r.b);
-        glVertex2f (r.r, r.b);
-        glVertex2f (r.r, r.t);
-        glVertex2f (r.l, r.t);
-    glEnd();
-
-	glColor3f (0.0, 0.0, 0.0);
-	glRasterPos2f(r.l+30, r.t-50);
-
-	char* p = (char*) score_str;
-	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-}
-#endif
 void GlobalScore::Reset()
 {
-	score_str[0]='0';
-	score_str[1]=0;
-	score_i=0;
+	m_score_str[0]='0';
+	m_score_str[1]=0;
+	m_score_i=0;
 }

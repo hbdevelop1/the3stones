@@ -1,0 +1,29 @@
+
+<root2>
+
+
+  <keyframe value="0 0       80 -80   
+                   0 0      -80  80 " />
+  <keyframe value="0 0      0  0 
+                   0 0    0 0 " />
+  <keyframe value="0 0        80 -80
+                  0 0         -80 80 " />
+  <keyframe value="0 0        0 0
+                  0 0       0 0 " />
+  <keyframe value="0 0          80 -80
+                   0  0       -80 80 " />
+
+
+  <keyframe value="-80 -80   0 0 
+                   80 80     0 0   " />
+  <keyframe value="0 0         0 0
+                   0 0         0 0" />
+  <keyframe value="-80 -80   0 0
+                  80 80      0 0" />
+  <keyframe value="0 0         0 0
+                   0 0         0 0" />
+  <keyframe value="-80 -80   0 0
+                   80  80    0 0" />
+  <keyframe value="0 0       80 -80   
+                   0 0      -80  80    " />
+</root2>

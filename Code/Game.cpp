@@ -6,152 +6,96 @@
 #include "board.h"
 #include "timecounter.h"
 #include "score.h"
-
-#ifdef _use_smart_ptr_
-//#include <memory> //to use auto_ptr for assignement to scoped_ptr, as there is no function in the later for that effect
-//#include "smartptrs/autoptr.h"
-#endif
-
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif
+#include "encouragement.h"
+#include "graphic\TexturesManager.h"
+#include <new>
 
 
+ImplementCreator(Game)
 
-ImplementCreator(game)
-
-game::game()
+Game::Game()
 {
 
 	SetFlag(e_FLAG_MASTER);
 
-//	ObjectsManager::GetInstance().PushBack(this); supposed to be done in game_init
-	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_game);
+	ObjectsManager::GetInstance().RegisterGlobalObject(this,CLASSID_Game);
+
+	m_board.reset(new Board );
+	m_score.reset( new Score );
+	m_timer.reset( new TimeCounter);
+
+	m_encouragement.reset( new Encouragement("data/goodNwow.xml") );
+
+	ObjectsManager::GetInstance().PushBack(m_board.get(),false);
+	ObjectsManager::GetInstance().PushBack(m_score.get(),false);
+	ObjectsManager::GetInstance().PushBack(m_timer.get(),false);
+	ObjectsManager::GetInstance().PushBack(m_encouragement.get(),false);
 
 
-#ifdef _use_smart_ptr_
-	board.reset(new Board );
-	score.reset( new Score );
-	timer.reset( new TimeCounter);
-	
-	/*
-	std::auto_ptr<Board> b( new Board );
-	board.reset(b.release());
-
-	std::auto_ptr<Score> s( new Score );
-	score.reset(s.release());
-
-	std::auto_ptr<TimeCounter> t( new TimeCounter);
-	timer.reset(t.release());
-	*/
-#else
-	board=new Board;
-	score=new Score;
-	timer=new TimeCounter;
-
-#endif
-
-	//ObjectsManager::GetInstance().PushBack(board,false);
-	//ObjectsManager::GetInstance().PushBack(CLASSID_Score);
-	//ObjectsManager::GetInstance().PushBack(score,false);
-//	ObjectsManager::GetInstance().PushBack(timer,false);
-
-
-
-	START_BEHAVIOR(game, 
-		Behavior_intro
-		//Behavior_countdown
-		//Behavior_timeout
-		);
+	START_BEHAVIOR(Game, Behavior_intro);
 }
 
-game::~game()
+Game::~Game()
 {
 	ObjectsManager::GetInstance().UnRegisterGlobalObject(this);
-
-#ifdef _use_smart_ptr_
-#elif _use_my_mem_tracker_ 
-	deleteo<Board>(board);
-	deleteo<Score>(score);
-	deleteo<TimeCounter>(timer);
-#else
-	delete board;
-	delete score;
-	delete timer;
-#endif
-
-
 }
 
-void game::WhenPushed()
-{
-	ObjectsManager::GetInstance().PushBack(board.get());
-	ObjectsManager::GetInstance().PushBack(score.get());
-	ObjectsManager::GetInstance().PushBack(timer.get());
-}
-
-void game::Update()
-{
-	/*
-	board.Update();
-	score.Update();
-	timer.Update();
-	*/
-
-	(this->*m_currentbehavior)();
-
-}
-
-void game::Draw()
-{
 /*
-	drawing depends on the behavior
-
-	board.Draw();
-	score.Draw();
-	timer.Draw();
-	*/
+void Game::WhenPushed()
+{
+	ObjectsManager::GetInstance().PushBack(m_board.get());
+	ObjectsManager::GetInstance().PushBack(m_score.get());
+	ObjectsManager::GetInstance().PushBack(m_timer.get());
+}
+*/
+void Game::Update()
+{
+	(this->*m_currentbehavior)();
 }
 
-void game::Behavior_intro()
-{
-CONSTRUCT_BEHAVIOR_BEGIN
-{
-		timer->Reset();
-		board->Reset();
-		score->Reset();
-
-	ObjectsManager::GetInstance().PushBack(CLASSID_Intro);
-}
-CONSTRUCT_BEHAVIOR_END
-
-UPDATE_BEHAVIOR_BEGIN
-{
-	CHANGE_BEHAVIOR(game,Behavior_countdown);
-}
-UPDATE_BEHAVIOR_END
-
-DESTRUCT_BEHAVIOR_BEGIN
+void Game::Draw()
 {
 }
-DESTRUCT_BEHAVIOR_END
 
-}
-void game::Behavior_countdown()
+void Game::Behavior_intro()
 {
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		timer->Reset();
-		board->Reset();
-		score->Reset();
+			m_timer->Reset();
+			m_board->Reset();
+			m_score->Reset();
 
-		ObjectsManager::GetInstance().PushBack(CLASSID_CountDown);
+		ObjectsManager::GetInstance().PushBack(CLASSID_Intro,false);
 	}
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		CHANGE_BEHAVIOR(game,Behavior_playing);
+		CHANGE_BEHAVIOR(Game,Behavior_countdown);
+	}
+	UPDATE_BEHAVIOR_END
+
+	DESTRUCT_BEHAVIOR_BEGIN
+	{
+	}
+	DESTRUCT_BEHAVIOR_END
+
+}
+void Game::Behavior_countdown()
+{
+	CONSTRUCT_BEHAVIOR_BEGIN
+	{
+		m_timer->Reset();
+		m_board->Reset();
+		m_score->Reset();
+
+		ObjectsManager::GetInstance().PushBack(CLASSID_CountDown,false);
+	}
+	CONSTRUCT_BEHAVIOR_END
+
+	UPDATE_BEHAVIOR_BEGIN
+	{
+		CHANGE_BEHAVIOR(Game,Behavior_playing);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -165,7 +109,7 @@ void game::Behavior_countdown()
 	Behavior_playing;
 	*/
 }
-void game::Behavior_playing()
+void Game::Behavior_playing()
 {
 /*
 	when timeout;
@@ -173,15 +117,15 @@ void game::Behavior_playing()
 		*/
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		timer->Start();
+		m_timer->Start();
 
 	}
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		if(timer->m_timeout)
-			CHANGE_BEHAVIOR(game,Behavior_timeout);
+		if(m_timer->m_timeout)
+			CHANGE_BEHAVIOR(Game,Behavior_timeout);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -191,7 +135,7 @@ void game::Behavior_playing()
 	DESTRUCT_BEHAVIOR_END
 
 }
-void game::Behavior_timeout()
+void Game::Behavior_timeout()
 {
 	/*
 	show button to restart;
@@ -199,13 +143,13 @@ void game::Behavior_timeout()
 	*/
 	CONSTRUCT_BEHAVIOR_BEGIN
 	{
-		ObjectsManager::GetInstance().PushBack(CLASSID_TimeOut);
+		ObjectsManager::GetInstance().PushBack(CLASSID_TimeOut,false);
 	}
 	CONSTRUCT_BEHAVIOR_END
 
 	UPDATE_BEHAVIOR_BEGIN
 	{
-		CHANGE_BEHAVIOR(game,Behavior_countdown);
+		CHANGE_BEHAVIOR(Game,Behavior_countdown);
 	}
 	UPDATE_BEHAVIOR_END
 
@@ -215,13 +159,8 @@ void game::Behavior_timeout()
 	DESTRUCT_BEHAVIOR_END
 }
 
-void game::OnClick(uint32 x, uint32 y)
+void Game::OnClick(unsigned int x, unsigned int y)
 {
-	if(m_currentbehavior == &game::Behavior_playing)
-		board->OnClick(x,y);
-/*
-	if(m_currentbehavior == &game::Behavior_timeout)
-		//dynamic_cast<TimeOut*>(
-		ObjectsManager::GetInstance().GetGlobalObject(CLASSID_TimeOut)->OnClick(x,y);
-		*/
+	if(m_currentbehavior == &Game::Behavior_playing)
+		m_board->OnClick(x,y);
 }

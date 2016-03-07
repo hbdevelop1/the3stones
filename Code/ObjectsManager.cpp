@@ -1,11 +1,8 @@
 
 #include "classids.h"
 #include "objectsmanager.h"
-#include "common.h"
 
-#ifdef _use_my_mem_tracker_
-#define new new(__FILE__,__LINE__)
-#endif //_use_my_mem_tracker_
+unsigned int g_currentframe=0;
 
 typedef Object * (*ObjectsCreators)(void);
 
@@ -15,7 +12,7 @@ static ObjectsCreators objectscreators[]=
 	NULL,
 	NULL,
 	CountDown_Creator,
-	game_Creator,
+	Game_Creator,
 	TimeOut_Creator,
 	Intro_Creator,
 };
@@ -42,10 +39,6 @@ void ObjectsManager::reset()
 
 	activeobjects.next=&activeobjectstail;
 	activeobjects.prev=&activeobjectstail;
-#if (DEBUGMODE & TESTING)
-	activeobjectstail.name='t';
-	activeobjects.name='a';
-#endif //DEBUGMODE & TESTING
 
 	DelayedPops.NbrOfPopsToRun=0;
 }
@@ -57,23 +50,29 @@ void ObjectsManager::FastInsertBefore(Object * newobj, Object * before)
 	newobj->prev->next=newobj;
 	before->prev=newobj;
 }
-void ObjectsManager::PushBack(int classid)
+void ObjectsManager::PushBack(int classid, bool immediate)
 {
-	hbassert(classid);
-	hbassert(objectscreators[classid]);
+	assert(classid);
+	assert(objectscreators[classid]);
+
+	if(!immediate )
+	{
+		typedef void (ObjectsManager::*FunctionType)(int,bool);
+		dfi.RegisterFunction<ObjectsManager,FunctionType,int,bool>(this,&ObjectsManager::PushBack,classid,true);
+		return;
+	}
 
 	Object * newobj = objectscreators[classid]();
 	newobj->SetFlag(Object::e_FLAG_DELETE_ON_POP);
 
-	PushBack(newobj);
+	PushBack(newobj,true);
 }
 
 
-void ObjectsManager::PushBack(Object * obj)
+void ObjectsManager::PushBack(Object * obj, bool immediate)
 {
 //sanity check:what if i push an object already pushed ?
-//#if DEBUGMODE
-	hbassert(obj);
+	assert(obj);
 
 	Object *o;
 	for(o=activeobjectstail.next;o!=&activeobjectstail;o=o->next)
@@ -81,16 +80,22 @@ void ObjectsManager::PushBack(Object * obj)
 		if(o==obj)
 			break;
 	}
-	hbassert(o!=obj);
-//#endif //DEBUGMODE
+	assert(o!=obj);
+
+	if(!immediate )
+	{
+		typedef void (ObjectsManager::*FunctionType)(Object *,bool);
+		dfi.RegisterFunction<ObjectsManager,FunctionType,Object*,bool>(this,&ObjectsManager::PushBack,obj,true);
+		return;
+	}
 
 	if(obj->GetFlag() & Object::e_FLAG_MASTER)
 	{
 
-		for(o=activeobjects.next;o!=&activeobjectstail;o=o->next)
+/*		for(o=activeobjects.next;o!=&activeobjectstail;o=o->next)
 		{
 			o->WhenDeactivated();
-		}
+		}*/
 
 		activeobjects.next->prev=activeobjects.prev;
 		activeobjects.prev->next=activeobjects.next;
@@ -99,15 +104,13 @@ void ObjectsManager::PushBack(Object * obj)
 		activeobjects.prev=activeobjectstail.prev;
 		activeobjectstail.prev->next=&activeobjects;
 		activeobjectstail.prev=&activeobjects;
-		//activeobjectstail.next;
-
 	}
 
 	FastInsertBefore(obj,&activeobjectstail);
 
-	obj->WhenPushed();
+//	obj->WhenPushed();
 
-	hbassert(activeobjects.next->GetFlag() & Object::e_FLAG_MASTER);
+	assert(activeobjects.next->GetFlag() & Object::e_FLAG_MASTER);
 }
 
 void ObjectsManager::Update()
@@ -130,7 +133,7 @@ void ObjectsManager::Draw()
 
 Object * ObjectsManager::Remove(Object * obj)
 {
-	obj->WhenPopped();
+//	obj->WhenPopped();
 
 	Object * prev=obj->prev;
 
@@ -138,12 +141,9 @@ Object * ObjectsManager::Remove(Object * obj)
 	obj->prev->next=obj->next;
 
 	if(obj->GetFlag() & Object::e_FLAG_DELETE_ON_POP)
-#ifdef _use_my_mem_tracker_
-		deleteo<Object>(obj);
-#else //_use_my_mem_tracker_
+		////delete obj;
+		//deleteo<Object>(obj);
 		delete obj;
-#endif //_use_my_mem_tracker_
-
 
 	return prev;
 }
@@ -151,38 +151,29 @@ Object * ObjectsManager::Remove(Object * obj)
 
 void ObjectsManager::RunDelayedFunctions()
 {
-	for(unsigned int i=0; i<DelayedPops.NbrOfPopsToRun; ++i)
-	{
-		Pop(DelayedPops.Args[i],true);
-	}
-	DelayedPops.NbrOfPopsToRun=0;
+	dfi.execute();
 }
 
 void ObjectsManager::Pop(Object * obj,bool immediate)
 {
-	if(!immediate)
-	{
-		hbassert(DelayedPops.NbrOfPopsToRun<e_NumberOfDelayedPopsToRun);
-
-		DelayedPops.Args[DelayedPops.NbrOfPopsToRun]=obj;
-		DelayedPops.NbrOfPopsToRun++;
-
-		return;
-	}
-
 	Object *o;
 
-//sanity check:make sure the object is really in the list. otherwise i'll have infinite looping
-//#if DEBUGMODE
-	hbassert(obj);
+//sanity check:make sure the object is really in the list. otherwise i'll have an infinite loop
+	assert(obj);
+
+	if(!immediate )
+	{
+		typedef void (ObjectsManager::*FunctionType)(Object *,bool);
+		dfi.RegisterFunction<ObjectsManager,FunctionType,Object*,bool>(this,&ObjectsManager::Pop,obj,true);
+		return;
+	}
 
 	for(o=activeobjectstail.next;o!=&activeobjectstail;o=o->next)
 	{
 		if(o==obj)
 			break;
 	}
-	hbassert(o==obj);
-//#endif //_DEBUG_
+	assert(o==obj);
 
 	if(obj->GetFlag() & Object::e_FLAG_MASTER)
 	{
@@ -200,10 +191,10 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 					Remove(&activeobjects);
 					FastInsertBefore(&activeobjects,o);
 
-					for(o=activeobjects.next;o!=&activeobjectstail;o=o->next)
+/*					for(o=activeobjects.next;o!=&activeobjectstail;o=o->next)
 					{
 						o->WhenActivated();
-					}
+					}*/
 
 					break;
 				}
@@ -211,7 +202,7 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 
 			if(o==&activeobjectstail)
 			{
-				hbassert(activeobjects.prev==&activeobjectstail); 
+				assert(activeobjects.prev==&activeobjectstail); 
 			}
 		}
 		else
@@ -234,6 +225,18 @@ void ObjectsManager::Pop(Object * obj,bool immediate)
 		Remove(o);
 }
 
+void ObjectsManager::Clear()
+{
+	Object *obj;
+	for(obj=activeobjects.next;obj!=&activeobjects;obj=obj->next)
+	{
+		if(obj->GetFlag() & Object::e_FLAG_MASTER)
+			Pop(obj,false);
+	}
+
+	RunDelayedFunctions();
+}
+
 Object * ObjectsManager::GetMaster()
 {
 	return activeobjects.next;
@@ -241,21 +244,21 @@ Object * ObjectsManager::GetMaster()
 
 Object * ObjectsManager::GetGlobalObject(int classid)
 {
-	hbassert(classid<CLASSIDS);
+	assert(classid<CLASSIDS);
 	
 	return globalobjects[classid];
 }
 
 void ObjectsManager::RegisterGlobalObject(Object * obj, int classid)
 {
-	hbassert(classid<CLASSIDS);
+	assert(classid<CLASSIDS);
 	
 	globalobjects[classid]=obj;
 }
 
 void ObjectsManager::UnRegisterGlobalObject(Object * obj)
 {
-	hbassert(obj);
+	assert(obj);
 
 	for(int i=0; i<CLASSIDS; ++i)
 		if(globalobjects[i]==obj)
@@ -264,7 +267,7 @@ void ObjectsManager::UnRegisterGlobalObject(Object * obj)
 			return;
 		}
 	
-	hbassert(0);
+	assert(0);
 }
 
 

@@ -4,16 +4,16 @@
 #include "common.h"
 #include "rectangle.h"
 #include "object.h"
+#include "graphic\sprite.h"
+
 
 #include <time.h>
 
-class TimeCounter : public Object
+class TimeCounter : public Object, public Sprite
 {
 	bool	m_timeout;
-	time_t	starttime;
-	char	time_str[20];
-	const hb::Rectangle & r;
-	unsigned int m_texObj;
+	time_t	m_startTime;
+	char	m_time_str[20];
 
 public:
 	enum
@@ -36,7 +36,7 @@ public:
 	void Stop();
 	void Reset();
 
-	friend class game;
+	friend class Game;
 };
 
 

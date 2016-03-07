@@ -3,7 +3,7 @@
 #define _OBJECTSRECTANGLES_
 
 
-#include "rectangle.h"
+#include "Rectangle.h"
 #include "board.h"
 #include "Score.h"
 #include "TimeCounter.h"
@@ -22,7 +22,7 @@ enum
 	e_rect_timeout_playagain,
 	e_rect_timeout_quitgame,
 	e_rect_Intro,
-	e_rect_Intro_start,
+	e_rect_Intro_startbutton,
 
 	e_rect_nbrofrectangles
 };
@@ -31,9 +31,8 @@ enum
 
 const hb::Rectangle ObjectsRectangles[]=
 {
-
 	//windowRectangle
-	hb::Rectangle(0.0, 0.0, 
+	hb::Rectangle(0, 0, 
 					Board::e_ColumnSize*Square::e_Width+140, Board::e_RowSize*Square::e_Height+10),
 //board
 	hb::Rectangle(ObjectsRectangles[e_rect_window].r-Board::e_ColumnSize*Square::e_Width-5,
@@ -63,18 +62,16 @@ const hb::Rectangle ObjectsRectangles[]=
 //e_rect_timeout_quitgame
 	hb::Rectangle(ObjectsRectangles[e_rect_timeout_playagain]+hb::Rectangle(128+20,0,128+20,0)),
 //e_rect_Intro
-	hb::Rectangle(ObjectsRectangles[e_rect_board].l+90, 
+	hb::Rectangle(ObjectsRectangles[e_rect_board].l-20, 
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2-TimeOut::e_Height/2,
-				  ObjectsRectangles[e_rect_board].r-90, 
+				  ObjectsRectangles[e_rect_board].r-10, 
 			ObjectsRectangles[e_rect_board].b+(ObjectsRectangles[e_rect_board].t-ObjectsRectangles[e_rect_board].b)/2+TimeOut::e_Height/2),
-//e_rect_Intro_start
+//e_rect_Intro_startbutton
 	hb::Rectangle( 
 		ObjectsRectangles[e_rect_Intro].l + (ObjectsRectangles[e_rect_Intro].r -ObjectsRectangles[e_rect_Intro].l)/2 -Intro::e_width/2,
 		ObjectsRectangles[e_rect_Intro].b+10, 
 		ObjectsRectangles[e_rect_Intro].r - (ObjectsRectangles[e_rect_Intro].r -ObjectsRectangles[e_rect_Intro].l)/2 +Intro::e_width/2,
 		ObjectsRectangles[e_rect_Intro].b+5+10+40),
-
 };
-
 
 #endif _OBJECTSRECTANGLES_

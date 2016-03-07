@@ -5,25 +5,21 @@
 
 #include "rectangle.h"
 #include "object.h"
+#include "graphic\sprite.h"
 
 
-
-class TimeOut : public Object
+class TimeOut : public Object, public Sprite
 {
-	const hb::Rectangle & r;
-	hb::Rectangle rplay;
-	hb::Rectangle rquit;
+	const hb::Rectangle * m_rplay;
+	const hb::Rectangle * m_rquit;
 
-	unsigned int m_texObj;
 
 	enum
 	{
-		e_max_chars=10, //highest score is 6000 points -> char[5] is enough to hold the scores.
+		e_max_chars=5, //highest score is 6000 points -> char[5] is enough to hold the scores.
 	};
-	char	scoretxt[e_max_chars];
-	char	hscoretxt[e_max_chars];
-
-	bool clicked;
+	char	m_scoretxt[e_max_chars];
+	char	m_hscoretxt[e_max_chars];
 
 	
 	enum
@@ -52,7 +48,7 @@ public:
 	void Update();
 	void Draw();
 
-	void OnClick(uint32 x,uint32 y);
+	void OnClick(unsigned int x,unsigned int y);
 };
 
 #endif //_TIMEOUT_

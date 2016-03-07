@@ -2,15 +2,12 @@
 #ifndef _OBJECT_
 #define _OBJECT_
 
+#include <boost/noncopyable.hpp>
 
 class ObjectsManager;
 
-class Object
+class Object  : private boost::noncopyable
 {
-#if DEBUGMODE & TESTING
-	public:
-		char name;
-#endif //DEBUGMODE & TESTING
 public:
 
 	enum FLAGS
@@ -37,11 +34,11 @@ public:
 	virtual void Draw()=0;
 	virtual void Update()=0;
 	virtual void OnClick(unsigned int, unsigned int){}
-	virtual void WhenPushed(){}
+/*	virtual void WhenPushed(){}
 	virtual void WhenPopped(){}
 	virtual void WhenDeactivated(){}
 	virtual void WhenActivated(){}
-
+	*/
 
 
 	friend class ObjectsManager;

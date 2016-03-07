@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Code\Board.cpp" />
+    <ClCompile Include="..\Code\CountDown.cpp" />
+    <ClCompile Include="..\Code\Encouragement.cpp" />
+    <ClCompile Include="..\Code\Entry.cpp" />
+    <ClCompile Include="..\Code\Game.cpp" />
+    <ClCompile Include="..\Code\Intro.cpp" />
+    <ClCompile Include="..\Code\Object.cpp" />
+    <ClCompile Include="..\Code\ObjectsManager.cpp" />
+    <ClCompile Include="..\Code\Rectangle.cpp" />
+    <ClCompile Include="..\Code\Score.cpp" />
+    <ClCompile Include="..\Code\Tile.cpp" />
+    <ClCompile Include="..\Code\TimeCounter.cpp" />
+    <ClCompile Include="..\Code\TimeOut.cpp" />
+    <ClCompile Include="..\Code\Graphic\Anim.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Graphic\CTargaImage.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Graphic\Sprite.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Graphic\TexturesManager.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Xml\xml.cpp">
+      <Filter>Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Mem\MemTracker.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Console.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Code\Board.h" />
+    <ClInclude Include="..\Code\Classids.h" />
+    <ClInclude Include="..\Code\Common.h" />
+    <ClInclude Include="..\Code\CountDown.h" />
+    <ClInclude Include="..\Code\Encouragement.h" />
+    <ClInclude Include="..\Code\fsm.h" />
+    <ClInclude Include="..\Code\Game.h" />
+    <ClInclude Include="..\Code\Intro.h" />
+    <ClInclude Include="..\Code\Object.h" />
+    <ClInclude Include="..\Code\ObjectsManager.h" />
+    <ClInclude Include="..\Code\ObjectsRectangles.h" />
+    <ClInclude Include="..\Code\Rectangle.h" />
+    <ClInclude Include="..\Code\Score.h" />
+    <ClInclude Include="..\Code\Settings.h" />
+    <ClInclude Include="..\Code\Tile.h" />
+    <ClInclude Include="..\Code\TimeCounter.h" />
+    <ClInclude Include="..\Code\TimeOut.h" />
+    <ClInclude Include="..\Code\Graphic\Anim.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Graphic\CTargaImage.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Graphic\Sprite.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Graphic\TexturesManager.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Xml\expat.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Xml\xml.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Mem\allocator.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Mem\MemNew.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Mem\MemTracker.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Console.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Graphic">
+      <UniqueIdentifier>{828258b9-4ac2-412d-a7c8-99d66a7a0557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mem">
+      <UniqueIdentifier>{9ffa3053-916f-4209-9186-eda2a263d110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xml">
+      <UniqueIdentifier>{5674134c-64ed-4c26-b58e-1f80a54baa1b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

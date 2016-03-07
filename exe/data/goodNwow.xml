@@ -1,0 +1,11 @@
+<root>
+
+
+  <animatedsprite
+    points="10 10    100 10 
+            100 300   10 300"
+    animation="data/anim1.xml"
+  />
+
+		
+</root>

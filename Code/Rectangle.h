@@ -3,11 +3,19 @@
 
 #include "common.h"
 
+
+typedef unsigned int	uint32;
+typedef signed int		sint32;
+typedef unsigned char	uint8;
+typedef signed char		sint8;
+
+
 namespace hb
 {
 template <typename T1, typename T2=T1> struct Point
 {
-	T1 x,y;
+	T1 x;
+	T1 y;
 public:
 	static Point<T1, T2> Invalid;
 
@@ -50,36 +58,49 @@ template <typename T1,  typename T2> Point<T1,T2> Point<T1, T2>::operator+(const
 }
 
 
-//typedef Point<float> Pointf;
 typedef Point<uint8,sint8> Pointu8;
-//extern Pointi Pointi_Invalid;
 Pointu8 Pointu8::Invalid(0xFF,0xFF);
 typedef Point<sint8> Points8;
 typedef Point<uint32,sint32> Pointu32;
+typedef Point<sint32,sint32> Points32;
 
 
-/*
-struct Point
+
+template<class T> struct stRectangle
 {
-	float x,y;
+	T l;
+	T b;
+	T r;
+	T t; //optim:members are defined in the order of access
 public:
-	Point(float x,float y);
-};
-*/
-
-struct Rectangle
-{
-	uint32 l;  //correct the type fields
-	uint32 b;
-	uint32 r;
-	uint32 t; //optim:members are defined in the order of the access
-public:
-	Rectangle();
-	Rectangle(uint32 _l, uint32 _b, uint32 _r, uint32 _t);
-	bool operator==(const Rectangle & r);
-	Rectangle operator+(const Rectangle & e) const;
+	stRectangle();
+	stRectangle(T _l, T _b, T _r, T _t);
+	bool operator==(const stRectangle<T> & r);
+	stRectangle<T> operator+(const stRectangle<T> & e) const;
 
 };
+
+template<class T> stRectangle<T>::stRectangle()
+{
+}
+
+
+template<class T> stRectangle<T>::stRectangle(T _l, T _b, T _r, T _t):l(_l),b(_b), r(_r),t(_t)
+{
+}
+
+template<class T> bool stRectangle<T>::operator==(const stRectangle<T> & e)
+{
+	return (l==e.l && b==e.b && r==e.r && t==e.t );
+}
+
+template<class T> stRectangle<T> stRectangle<T>::operator+(const stRectangle<T> & e) const
+{
+	return stRectangle<T>(l+e.l, b+e.b, r+e.r, t+e.t );
+}
+
+typedef stRectangle<uint32> Rectangle;
+typedef stRectangle<sint32> sRectangle;
 
 }
 
